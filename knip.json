@@ -1,0 +1,9 @@
+{
+    "ignoreDependencies": [],
+    "ignoreBinaries": [
+        "eslint"
+    ],
+    "ignore": [
+        ".next/**"
+    ]
+}

@@ -1,0 +1,1246 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@plugin "@tailwindcss/typography";
+
+/* Dark mode: supports both .dark class (manual toggle) and system preference */
+@custom-variant dark (.dark &);
+
+/* Color palette from jakub.kr */
+@theme {
+  /* Gray scale - uses CSS variables that change in dark mode */
+  --color-gray-100: var(--color-gray-100);
+  --color-gray-200: var(--color-gray-200);
+  --color-gray-300: var(--color-gray-300);
+  --color-gray-400: var(--color-gray-400);
+  --color-gray-500: var(--color-gray-500);
+  --color-gray-600: var(--color-gray-600);
+  --color-gray-700: var(--color-gray-700);
+  --color-gray-800: var(--color-gray-800);
+  --color-gray-900: var(--color-gray-900);
+  --color-gray-1000: var(--color-gray-1000);
+  --color-gray-1100: var(--color-gray-1100);
+  --color-gray-1200: var(--color-gray-1200);
+  --color-gray-background: var(--color-gray-background);
+
+  /* Additional colors */
+  --color-red-200: lab(86.017% 19.8815 7.75869);
+  --color-red-500: lab(55.4814% 75.0732 48.8528);
+  --color-orange-100: lab(94.7127% 3.58394 14.3151);
+  --color-orange-400: lab(70.0429% 42.5156 75.8207);
+  --color-orange-500: lab(64.272% 57.1788 90.3583);
+  --color-orange-950: lab(14.1747% 23.4515 19.4461);
+  --color-lime-50: lab(98.7039% -5.32573 10.2149);
+  --color-lime-200: lab(94.0718% -22.5338 42.5238);
+  --color-lime-300: lab(89.9218% -35.6546 68.5254);
+  --color-lime-400: lab(83.7876% -45.0447 88.4738);
+  --color-lime-600: lab(61.1055% -41.0235 73.1483);
+  --color-lime-950: lab(16.5113% -15.1841 22.0145);
+  --color-green-100: lab(96.1861% -13.8464 6.52365);
+  --color-green-400: lab(78.503% -64.9265 39.7492);
+  --color-green-500: lab(70.5521% -66.5147 45.8073);
+  --color-green-600: lab(59.0978% -58.6621 41.2579);
+  --color-green-950: lab(15.6845% -20.4225 11.7249);
+  --color-cyan-50: lab(98.3304% -5.97432 -2.62108);
+  --color-cyan-200: lab(91.0821% -24.0435 -12.8306);
+  --color-cyan-300: lab(85.3886% -36.7636 -21.5716);
+  --color-cyan-400: lab(76.6045% -40.9406 -29.6231);
+  --color-cyan-600: lab(55.1767% -26.7496 -30.5139);
+  --color-cyan-950: lab(19.1528% -9.68757 -15.5267);
+  --color-sky-400: lab(70.687% -23.6078 -45.9483);
+  --color-sky-500: lab(63.3038% -18.433 -51.0407);
+  --color-blue-100: lab(92.0301% -2.24757 -11.6453);
+  --color-blue-400: lab(65.0361% -1.42065 -56.9802);
+  --color-blue-500: lab(54.1736% 13.3369 -74.6839);
+  --color-blue-600: lab(44.0605% 29.0279 -86.0352);
+  --color-blue-950: lab(15.6723% 8.86232 -32.2945);
+  --color-violet-50: lab(96.2416% 2.28849 -5.51657);
+  --color-violet-200: lab(87.0888% 8.53688 -19.4189);
+  --color-violet-300: lab(76.7419% 18.3911 -37.0706);
+  --color-violet-400: lab(62.8239% 34.9159 -60.0512);
+  --color-violet-500: lab(49.9355% 55.1776 -81.8963);
+  --color-violet-600: lab(41.088% 68.9966 -91.995);
+  --color-violet-950: lab(14.0706% 33.3353 -46.7553);
+  --color-rose-500: lab(56.101% 79.4328 31.4532);
+  --color-rose-600: lab(49.1882% 81.577 36.0311);
+  
+  /* Custom shadows */
+  --shadow-card: 0px 2px 2px 0px #0000000a, 0 0 0 1px #00000014;
+  --shadow-custom: 0px 0px 0px 1px #0000000f, 0px 1px 2px -1px #0000000f, 0px 2px 4px 0px #0000000a;
+
+  /* Easing functions */
+  --ease-in: cubic-bezier(.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, .2, 1);
+  --ease-in-out: cubic-bezier(.4, 0, .2, 1);
+
+  /* Fonts from jakub.kr */
+  --font-openrunde: "openRunde", "openRunde Fallback", system-ui, arial;
+  --font-berkeley-mono: "BerkeleyMono", "BerkeleyMono Fallback", system-ui, arial;
+  --font-source-serif: "Source Serif 4", "Source Serif 4 Fallback";
+  --font-inter: "interVariable", "interVariable Fallback", system-ui, arial;
+}
+
+/* Light mode (default) */
+:root {
+  color-scheme: light dark;
+  --color-gray-background: lab(98.956% 0 0);
+  --color-gray-100: lab(98.956% 0 0);
+  --color-gray-200: lab(96.752% 0 0);
+  --color-gray-300: lab(94.78% 0 0);
+  --color-gray-400: lab(91.996% 0 0);
+  --color-gray-500: lab(89.212% 0 0);
+  --color-gray-600: lab(86.66% 0 0);
+  --color-gray-700: lab(82.716% 0 0);
+  --color-gray-800: lab(75.872% 0 0);
+  --color-gray-900: lab(58.588% 0 0);
+  --color-gray-1000: lab(54.76% 0 0);
+  --color-gray-1100: lab(42.348% 0 0);
+  --color-gray-1200: lab(12.304% 0 0);
+}
+
+/* Dark mode - triggered by .dark class OR system preference (when no explicit class) */
+.dark {
+    --color-gray-background: lab(5.09437% 0 0);
+    --color-gray-100: lab(5.09437% 0 0);
+    --color-gray-200: lab(8.708% 0 0);
+    --color-gray-300: lab(13.232% 0 0);
+    --color-gray-400: lab(17.06% 0 0);
+    --color-gray-500: lab(20.308% 0 0);
+    --color-gray-600: lab(24.368% 0 0);
+    --color-gray-700: lab(30.632% 0 0);
+    --color-gray-800: lab(40.724% 0 0);
+    --color-gray-900: lab(46.408% 0 0);
+    --color-gray-1000: lab(51.628% 0 0);
+    --color-gray-1100: lab(73.668% 0 0);
+    --color-gray-1200: lab(94.084% 0 0);
+}
+
+html {
+  scroll-padding-top: 32px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #FCFCFC !important;
+}
+
+.dark body {
+  background-color: #111111 !important;
+}
+
+pre {
+  margin: 32px 0;
+  overflow: auto;
+  border-radius: 12px;
+  padding: 15px; /* Extra top padding for copy button */
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background-color: #f6f8fa;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.dark {
+    pre {
+      border-color: rgba(255, 255, 255, 0.05);
+      background-color: #0F0F0F !important;
+    }
+
+    /* Override any inline styles on pre elements in dark mode */
+    pre[style*="background"] {
+      background-color: #0F0F0F !important;
+    }
+}
+
+/* Code morph wrapper - uses same styles as regular code blocks */
+.code-morph-wrapper {
+  margin: 32px 0;
+  background-color: #fff;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.dark {
+    .code-morph-wrapper {
+      background-color: #0F0F0F !important;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+}
+
+.code-morph-wrapper pre {
+  margin: 0;
+  --smm-duration: 800ms;
+  --smm-delay-move: 0.3;
+  --smm-delay-leave: 0.1;
+  --smm-delay-enter: 0.7;
+  --smm-delay-container: 0.4;
+  --smm-easing: ease;
+  --smm-stagger: 0;
+}
+
+.code-morph-wrapper .shiki-magic-move-container {
+  font-size: 13px;
+  line-height: 1.625;
+  font-family: 'Geist Mono', ui-monospace, monospace;
+  padding: 16px;
+  white-space: pre;
+  height: 100% !important;
+  width: 100% !important;
+}
+
+.code-morph-wrapper .shiki-magic-move-item {
+  font-size: 13px;
+  line-height: 1.625;
+  font-family: 'Geist Mono', ui-monospace, monospace;
+}
+
+/* Shiki dual theme support */
+.shiki,
+.shiki span {
+  background-color: transparent !important;
+}
+
+.dark .shiki,
+.dark .shiki span {
+  color: var(--shiki-dark) !important;
+  background-color: transparent !important;
+}
+
+.dark {
+    .shiki,
+    .shiki span {
+      color: var(--shiki-dark) !important;
+      background-color: transparent !important;
+    }
+}
+
+pre code {
+  display: grid;
+  font-size: 12px;
+  line-height: 1.7;
+  font-family: 'Geist Mono', monospace;
+  background-color: transparent !important;
+}
+
+.dark {
+    pre code {
+      background-color: transparent !important;
+    }
+}
+
+/* Inline code */
+:not(pre) > code {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: 'Geist Mono', monospace;
+}
+
+.dark {
+    :not(pre) > code {
+      background: rgba(255, 255, 255, 0.1);
+    }
+}
+
+/* Icon animation styles - smooth like Framer Motion */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.icon-enter {
+  animation: fadeIn 0.15s ease-out forwards;
+}
+
+.icon-exit {
+  animation: fadeOut 0.15s ease-out forwards;
+}
+
+/* Ensure all code blocks use the dark background */
+.dark pre,
+.dark pre[class*="language-"],
+.dark code[class*="language-"],
+.dark .code-block,
+.dark [data-rehype-pretty-code-fragment] pre,
+.dark div[data-rehype-pretty-code-fragment] > pre {
+  background-color: #0F0F0F !important;
+}
+
+.dark {
+    figure[data-rehype-pretty-code-fragment] > pre {
+      background-color: #0F0F0F !important;
+    }
+}
+
+/* Force dark background on all wrapper divs around code */
+.dark div:has(> pre),
+.dark div:has(> pre[class*="language-"]) {
+  background-color: transparent !important;
+}
+
+.dark {
+    div:has(> pre),
+    div:has(> pre[class*="language-"]) {
+      background-color: transparent !important;
+    }
+}
+
+/* Mermaid diagram styling - sleek, minimal design */
+.mermaid-diagram,
+.mermaid-zoomed {
+  /* No background, transparent */
+}
+
+.mermaid-diagram svg,
+.mermaid-zoomed svg {
+  font-family: Arial, sans-serif !important;
+  overflow: visible !important;
+}
+
+/* Ensure text doesn't get clipped */
+.mermaid-diagram .node,
+.mermaid-diagram .node rect,
+.mermaid-diagram .label,
+.mermaid-diagram foreignObject,
+.mermaid-zoomed .node,
+.mermaid-zoomed .node rect,
+.mermaid-zoomed .label,
+.mermaid-zoomed foreignObject {
+  overflow: visible !important;
+}
+
+.mermaid-diagram .nodeLabel,
+.mermaid-diagram .label,
+.mermaid-zoomed .nodeLabel,
+.mermaid-zoomed .label {
+  white-space: nowrap !important;
+  overflow: visible !important;
+}
+
+/* Node styling - rounded pills with no border */
+.mermaid-diagram .node rect,
+.mermaid-diagram .node polygon,
+.mermaid-zoomed .node rect,
+.mermaid-zoomed .node polygon {
+  rx: 16px !important;
+  ry: 16px !important;
+  stroke-width: 0 !important;
+  stroke: none !important;
+}
+
+/* Light mode nodes */
+.mermaid-diagram .node rect,
+.mermaid-zoomed .node rect {
+  fill: #e8e8e8 !important;
+}
+
+.mermaid-diagram .node .label,
+.mermaid-diagram .nodeLabel,
+.mermaid-diagram .node text,
+.mermaid-zoomed .node .label,
+.mermaid-zoomed .nodeLabel,
+.mermaid-zoomed .node text {
+  color: #1a1a1a !important;
+  fill: #1a1a1a !important;
+  font-weight: 500 !important;
+  font-family: Arial, sans-serif !important;
+}
+
+/* Dark mode nodes */
+.dark .mermaid-diagram .node rect,
+.dark .mermaid-zoomed .node rect {
+  fill: #2a2a2a !important;
+}
+
+.dark .mermaid-diagram .node .label,
+.dark .mermaid-diagram .nodeLabel,
+.dark .mermaid-diagram .node text,
+.dark .mermaid-zoomed .node .label,
+.dark .mermaid-zoomed .nodeLabel,
+.dark .mermaid-zoomed .node text {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+  font-weight: 500 !important;
+}
+
+/* Edge/arrow styling - thin subtle lines with smooth curves */
+.mermaid-diagram .edgePath .path,
+.mermaid-diagram .flowchart-link,
+.mermaid-zoomed .edgePath .path,
+.mermaid-zoomed .flowchart-link {
+  stroke: #aaaaaa !important;
+  stroke-width: 1.5px !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+
+.dark .mermaid-diagram .edgePath .path,
+.dark .mermaid-diagram .flowchart-link,
+.dark .mermaid-zoomed .edgePath .path,
+.dark .mermaid-zoomed .flowchart-link {
+  stroke: #555555 !important;
+}
+
+/* Arrow markers - smaller and subtle */
+.mermaid-diagram marker,
+.mermaid-zoomed marker {
+  overflow: visible !important;
+}
+
+.mermaid-diagram marker path,
+.mermaid-zoomed marker path {
+  fill: #aaaaaa !important;
+  stroke: none !important;
+}
+
+.dark .mermaid-diagram marker path,
+.dark .mermaid-zoomed marker path {
+  fill: #555555 !important;
+}
+
+/* Edge labels - with solid background to prevent line strike-through */
+.mermaid-diagram .edgeLabel,
+.mermaid-zoomed .edgeLabel {
+  background-color: transparent !important;
+}
+
+/* Ensure edge label backgrounds are opaque */
+.mermaid-diagram .edgeLabel rect,
+.mermaid-zoomed .edgeLabel rect {
+  fill-opacity: 1 !important;
+  opacity: 1 !important;
+}
+
+/* Target foreignObject for proper edge label centering */
+.mermaid-diagram foreignObject,
+.mermaid-zoomed foreignObject {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: visible !important;
+}
+
+/* Style the paragraph inside edge labels */
+.mermaid-diagram foreignObject:has(.edgeLabel) p,
+.mermaid-zoomed foreignObject:has(.edgeLabel) p {
+  margin-inline: auto !important;
+  margin-block: 0 !important;
+  max-width: max-content !important;
+  border-radius: 4px !important;
+  padding: 4px 12px !important;
+  background-color: #f6f8fa !important;
+  border: 1px solid #ddd !important;
+  color: #555555 !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+}
+
+/* Improved edge label centering */
+.mermaid-diagram .edgeLabel rect,
+.mermaid-diagram .edgeLabel polygon,
+.mermaid-zoomed .edgeLabel rect,
+.mermaid-zoomed .edgeLabel polygon {
+  fill: #f6f8fa !important;
+  stroke: #ddd !important;
+  stroke-width: 1px !important;
+  opacity: 1 !important;
+  rx: 4px !important;
+  ry: 4px !important;
+}
+
+.mermaid-diagram .edgeLabel .labelBkg,
+.mermaid-zoomed .edgeLabel .labelBkg {
+  background-color: #f6f8fa !important;
+  fill: #f6f8fa !important;
+  stroke: #ddd !important;
+  stroke-width: 1px !important;
+  rx: 4px !important;
+  ry: 4px !important;
+}
+
+/* Ensure edge label text is properly centered */
+.mermaid-diagram .edgeLabel .label,
+.mermaid-diagram .edgeLabel text,
+.mermaid-diagram .edgeLabel span,
+.mermaid-diagram .edgeLabel foreignObject,
+.mermaid-diagram .edgeLabel foreignObject div,
+.mermaid-diagram .edgeLabel foreignObject span,
+.mermaid-zoomed .edgeLabel .label,
+.mermaid-zoomed .edgeLabel text,
+.mermaid-zoomed .edgeLabel span,
+.mermaid-zoomed .edgeLabel foreignObject,
+.mermaid-zoomed .edgeLabel foreignObject div,
+.mermaid-zoomed .edgeLabel foreignObject span {
+  color: #555555 !important;
+  fill: #555555 !important;
+  background-color: #f6f8fa !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  text-anchor: middle !important;
+  dominant-baseline: central !important;
+}
+
+.dark .mermaid-diagram .edgeLabel,
+.dark .mermaid-zoomed .edgeLabel {
+  background-color: #0F0F0F !important;
+}
+
+/* Dark mode foreignObject styling */
+.dark .mermaid-diagram foreignObject:has(.edgeLabel),
+.dark .mermaid-zoomed foreignObject:has(.edgeLabel) {
+  background-color: transparent !important;
+}
+
+.dark .mermaid-diagram foreignObject:has(.edgeLabel) .edgeLabel,
+.dark .mermaid-diagram foreignObject:has(.edgeLabel) .labelBkg,
+.dark .mermaid-zoomed foreignObject:has(.edgeLabel) .edgeLabel,
+.dark .mermaid-zoomed foreignObject:has(.edgeLabel) .labelBkg {
+  background-color: transparent !important;
+}
+
+/* Dark mode paragraph styling */
+.dark .mermaid-diagram foreignObject:has(.edgeLabel) p,
+.dark .mermaid-zoomed foreignObject:has(.edgeLabel) p {
+  background-color: #0F0F0F !important;
+  border: 1px solid #333 !important;
+  color: #888888 !important;
+}
+
+.dark .mermaid-diagram .edgeLabel rect,
+.dark .mermaid-diagram .edgeLabel polygon,
+.dark .mermaid-zoomed .edgeLabel rect,
+.dark .mermaid-zoomed .edgeLabel polygon {
+  fill: #0F0F0F !important;
+  stroke: #333 !important;
+  stroke-width: 1px !important;
+  rx: 4px !important;
+  ry: 4px !important;
+}
+
+.dark .mermaid-diagram .edgeLabel .labelBkg,
+.dark .mermaid-zoomed .edgeLabel .labelBkg {
+  background-color: #0F0F0F !important;
+  fill: #0F0F0F !important;
+  stroke: #333 !important;
+  stroke-width: 1px !important;
+  rx: 4px !important;
+  ry: 4px !important;
+}
+
+.dark .mermaid-diagram .edgeLabel .label,
+.dark .mermaid-diagram .edgeLabel text,
+.dark .mermaid-diagram .edgeLabel span,
+.dark .mermaid-diagram .edgeLabel foreignObject,
+.dark .mermaid-diagram .edgeLabel foreignObject div,
+.dark .mermaid-diagram .edgeLabel foreignObject span,
+.dark .mermaid-zoomed .edgeLabel .label,
+.dark .mermaid-zoomed .edgeLabel text,
+.dark .mermaid-zoomed .edgeLabel span,
+.dark .mermaid-zoomed .edgeLabel foreignObject,
+.dark .mermaid-zoomed .edgeLabel foreignObject div,
+.dark .mermaid-zoomed .edgeLabel foreignObject span {
+  color: #888888 !important;
+  fill: #888888 !important;
+  background-color: #0F0F0F !important;
+  font-weight: 500 !important;
+  text-anchor: middle !important;
+  dominant-baseline: central !important;
+}
+
+/* Cluster/subgraph styling - very subtle */
+.mermaid-diagram .cluster rect,
+.mermaid-zoomed .cluster rect {
+  fill: rgba(0,0,0,0.03) !important;
+  stroke: none !important;
+  rx: 16px !important;
+  ry: 16px !important;
+}
+
+.dark .mermaid-diagram .cluster rect,
+.dark .mermaid-zoomed .cluster rect {
+  fill: rgba(255,255,255,0.03) !important;
+  stroke: none !important;
+}
+
+/* Cluster/section titles */
+.mermaid-diagram .cluster-label .nodeLabel,
+.mermaid-zoomed .cluster-label .nodeLabel {
+  transform: translateY(20px);
+}
+
+.mermaid-diagram .cluster text,
+.mermaid-diagram .cluster .nodeLabel,
+.mermaid-zoomed .cluster text,
+.mermaid-zoomed .cluster .nodeLabel {
+  fill: #888888 !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+}
+
+.dark .mermaid-diagram .cluster text,
+.dark .mermaid-diagram .cluster .nodeLabel,
+.dark .mermaid-zoomed .cluster text,
+.dark .mermaid-zoomed .cluster .nodeLabel {
+  fill: #666666 !important;
+}
+
+/* Article container */
+.article {
+  max-width: 672px;
+}
+
+/* Article typography */
+.article h1 {
+  font-size: 32px;
+  line-height: 1.2;
+  font-weight: 600;
+  margin-bottom: 32px;
+  letter-spacing: -0.022em;
+}
+
+.article h2 {
+  font-size: 24px;
+  line-height: 1.3;
+  font-weight: 600;
+  margin-top: 48px;
+  margin-bottom: 20px;
+  letter-spacing: -0.016em;
+}
+
+.article h3 {
+  font-size: 18px;
+  line-height: 1.4;
+  font-weight: 550;
+  margin-top: 32px;
+  margin-bottom: 16px;
+  letter-spacing: -0.014em;
+}
+
+.article p {
+  margin-bottom: 24px;
+  font-size: 16px;
+  line-height: 1.7;
+  letter-spacing: -0.011em;
+}
+
+.footnotes p {
+  margin-bottom: 0 !important;
+}
+
+footer p {
+  margin-bottom: 0 !important;
+  font-size: 12px !important;
+}
+
+/* Select dropdown styling */
+select option {
+  background-color: #E5E5E5;
+  color: #000000;
+  padding: 8px 12px;
+  font-weight: 500;
+}
+
+select option:checked {
+  background-color: #D4D4D4;
+}
+
+.dark select option {
+  background-color: #262626;
+  color: #FFFFFF;
+}
+
+.dark select option:checked {
+  background-color: #404040;
+}
+
+.article ul,
+.article ol {
+  margin: 0 0 26px;
+  padding-left: 0;
+}
+
+.article ul {
+  list-style: none;
+}
+
+.article ol {
+  list-style: decimal;
+  padding-left: 24px;
+}
+
+.article li {
+  margin-bottom: 8px;
+  padding-left: 0;
+  font-size: 16px;
+  line-height: 1.65;
+  letter-spacing: -0.011em;
+  position: relative;
+}
+
+.article ul > li {
+  padding-left: 24px;
+}
+
+.article ul > li::before {
+  content: "•";
+  position: absolute;
+  left: 8px;
+  color: inherit;
+}
+
+.article a {
+  text-decoration-thickness: 1px;
+  transition: opacity 0.2s;
+}
+
+.article a:hover {
+  opacity: 0.6;
+}
+
+.article blockquote {
+  border-left: 2px solid rgba(0, 0, 0, 0.1);
+  padding-left: 20px;
+  margin: 26px 0;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.dark {
+    .article blockquote {
+      border-left-color: rgba(255, 255, 255, 0.2);
+      color: rgba(255, 255, 255, 0.7);
+    }
+}
+
+/* Layout */
+.root.layout-root {
+  max-width: 45rem;
+  margin: 0 auto;
+  padding: 48px 32px;
+  position: relative;
+}
+
+@media (min-width: 640px) {
+  .root.layout-root {
+    padding-top: 128px;
+    padding-bottom: 128px;
+  }
+}
+
+@media (min-width: 768px) {
+  .root.layout-root {
+    padding-top: 64px;
+    padding-bottom: 64px;
+  }
+}
+
+/* Mobile full width utility for breaking out of container */
+@media (max-width: 1023px) {
+  .mobile-full-width {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+  }
+}
+
+/* Sandpack custom styling - Emil Kowalski style */
+.sp-wrapper {
+  --sp-font-mono: 'SF Mono', Monaco, Consolas, monospace;
+}
+
+/* Remove default Sandpack padding */
+.sp-stack {
+  padding: 0 !important;
+}
+
+.sp-editor,
+.sp-preview {
+  padding: 0 !important;
+}
+
+.sp-layout {
+  border: none !important;
+  border-radius: 0 !important;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+@media (min-width: 640px) {
+  .sp-layout {
+    border-radius: 12px !important;
+  }
+}
+
+.sp-layout header {
+  background: #fff;
+  border-bottom: 1px solid #e9e9e7;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px 0 16px;
+}
+
+.dark {
+    .sp-layout header {
+      background: #0F0F0F;
+      border-bottom-color: #2c2c2a;
+    }
+}
+
+.sp-layout header span {
+  font-weight: 500;
+  font-size: 14px;
+  color: #21201c;
+}
+
+.dark {
+    .sp-layout header span {
+      color: #eeeeec;
+    }
+}
+
+.sp-tab-button {
+  font-size: 13px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.sp-tab-button:hover {
+  background-color: #f1f0ef;
+}
+
+.dark {
+    .sp-tab-button:hover {
+      background-color: #222221;
+    }
+}
+
+.sp-tab-button[data-active="true"] {
+  background-color: #e9e9e7;
+}
+
+.dark {
+    .sp-tab-button[data-active="true"] {
+      background-color: #2a2a28;
+    }
+}
+
+.sp-code-editor {
+  background: #fff;
+}
+
+.dark {
+    .sp-code-editor {
+      background: #0F0F0F !important;
+    }
+}
+
+.sp-preview-container {
+  background: #fff;
+}
+
+.dark {
+    .sp-preview-container {
+      background: #0F0F0F !important;
+    }
+}
+
+/* Custom scrollbar for code editor */
+.sp-cm .cm-scroller::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.sp-cm .cm-scroller::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sp-cm .cm-scroller::-webkit-scrollbar-thumb {
+  background: #cfceca;
+  border-radius: 4px;
+}
+
+.dark {
+    .sp-cm .cm-scroller::-webkit-scrollbar-thumb {
+      background: #494844;
+    }
+}
+
+.sp-cm .cm-scroller::-webkit-scrollbar-thumb:hover {
+  background: #bcbbb5;
+}
+
+.dark {
+    .sp-cm .cm-scroller::-webkit-scrollbar-thumb:hover {
+      background: #62605b;
+    }
+}
+
+/* Panel and resizer styling */
+.panel {
+  position: relative;
+}
+
+.items-string-offset-fuchsia-50 {
+  /* Custom utility class from Emil */
+}
+
+/* Resizer handle between editor and preview */
+.sp-layout button[class*="cursor-col-resize"] {
+  width: 12px;
+  background: white;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: col-resize;
+}
+
+.dark {
+    .sp-layout button[class*="cursor-col-resize"] {
+      background: #0d0d0d;
+    }
+}
+
+.sp-layout button[class*="cursor-col-resize"]:hover {
+  background: #f1f0ef;
+}
+
+.dark {
+    .sp-layout button[class*="cursor-col-resize"]:hover {
+      background: #222221;
+    }
+}
+
+/* Mobile full width utility */
+@media (max-width: 1023px) {
+  .mobile-full-width {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+  }
+}
+
+/* CodeMirror specific styling */
+.sp-cm .cm-editor {
+  height: 100%;
+}
+
+.sp-cm .cm-content {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.sp-cm .cm-gutterElement {
+  font-size: 13px;
+  color: #8d8d86;
+}
+
+.dark {
+    .sp-cm .cm-gutterElement {
+      color: #6f6d66;
+    }
+}
+
+.sp-cm .cm-matchingBracket {
+  background-color: #f1f0ef;
+}
+
+.dark {
+    .sp-cm .cm-matchingBracket {
+      background-color: #222221;
+    }
+}
+
+.sp-cm .cm-activeLine {
+  background-color: transparent;
+}
+
+/* ========================================
+   FOOTNOTES
+   ======================================== */
+
+.footnotes {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.dark {
+    .footnotes {
+      border-top-color: rgba(255, 255, 255, 0.06);
+    }
+}
+
+/* Hide the anchor wrapper but show the h2 */
+.footnotes > a {
+  display: contents;
+}
+
+.footnotes h2 {
+  display: none;
+}
+
+.footnotes ol {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  counter-reset: footnote;
+}
+
+.footnotes ol li,
+.article .footnotes ol li {
+  counter-increment: footnote;
+  margin-bottom: 6px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  gap: 6px;
+}
+
+.dark {
+    .footnotes ol li,
+    .article .footnotes ol li {
+      color: rgba(255, 255, 255, 0.45);
+    }
+}
+
+.footnotes ol li::before,
+.article .footnotes ol li::before {
+  content: counter(footnote);
+  color: rgba(0, 0, 0, 0.25);
+  font-size: 10px;
+  flex-shrink: 0;
+  min-width: 10px;
+}
+
+.dark {
+    .footnotes ol li::before,
+    .article .footnotes ol li::before {
+      color: rgba(255, 255, 255, 0.3);
+    }
+}
+
+.footnotes ol li::marker {
+  color: rgba(0, 0, 0, 0.3);
+  font-size: 13px;
+}
+
+.dark {
+    .footnotes ol li::marker {
+      color: rgba(255, 255, 255, 0.3);
+    }
+}
+
+.footnotes ol li p,
+.article .footnotes ol li p {
+  display: inline;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.footnotes a.data-footnote-backref {
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.3);
+  margin-left: 4px;
+  transition: color 0.15s ease;
+}
+
+.dark {
+    .footnotes a.data-footnote-backref {
+      color: rgba(255, 255, 255, 0.3);
+    }
+}
+
+.footnotes a.data-footnote-backref:hover {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.dark {
+    .footnotes a.data-footnote-backref:hover {
+      color: rgba(255, 255, 255, 0.6);
+    }
+}
+
+.footnotes p a:not(.data-footnote-backref) {
+  color: rgba(0, 0, 0, 0.6);
+  text-decoration: underline;
+  text-decoration-color: rgba(0, 0, 0, 0.2);
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+  transition: all 0.15s ease;
+}
+
+.dark {
+    .footnotes p a:not(.data-footnote-backref) {
+      color: rgba(255, 255, 255, 0.5);
+      text-decoration-color: rgba(255, 255, 255, 0.2);
+    }
+}
+
+.footnotes p a:not(.data-footnote-backref):hover {
+  color: rgba(0, 0, 0, 0.8);
+  text-decoration-color: rgba(0, 0, 0, 0.4);
+}
+
+.dark {
+    .footnotes p a:not(.data-footnote-backref):hover {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration-color: rgba(255, 255, 255, 0.4);
+    }
+}
+
+sup a[data-footnote-ref] {
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.5);
+  font-weight: 500;
+  font-size: 0.75em;
+  padding: 2px 4px;
+  border-radius: 3px;
+  transition: all 0.15s ease;
+}
+
+.dark {
+    sup a[data-footnote-ref] {
+      color: rgba(255, 255, 255, 0.5);
+    }
+}
+
+sup a[data-footnote-ref]:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.dark {
+    sup a[data-footnote-ref]:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      color: rgba(255, 255, 255, 0.8);
+    }
+}
+
+/* ========================================
+   SIDENOTES / MARGIN NOTES (Desktop only)
+   ======================================== */
+
+/* Footnote reference number in text */
+.footnote-ref {
+  font-size: 0.75em;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+  top: -0.4em;
+}
+
+.footnote-link {
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.5);
+  font-weight: 500;
+  padding: 2px 4px;
+  border-radius: 3px;
+  transition: all 0.15s ease;
+}
+
+.dark .footnote-link {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.footnote-link:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.dark .footnote-link:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Sidenote container */
+.sidenote {
+  /* Mobile: inline after the reference */
+  display: inline;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.6);
+  margin-left: 0.5rem;
+}
+
+.dark .sidenote {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.sidenote-number {
+  font-weight: 600;
+  margin-right: 0.25rem;
+}
+
+/* Desktop: move to margin */
+@media (min-width: 1024px) {
+  .sidenote {
+    display: block;
+    float: left;
+    clear: left;
+    margin-left: -280px;
+    width: 240px;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    position: relative;
+    padding-right: 1rem;
+    border-right: 2px solid rgba(0, 0, 0, 0.1);
+    text-align: right;
+  }
+
+  .dark .sidenote {
+    border-right-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .sidenote-number {
+    display: block;
+    font-size: 0.7rem;
+    margin-bottom: 0.25rem;
+    color: rgba(0, 0, 0, 0.4);
+  }
+
+  .dark .sidenote-number {
+    color: rgba(255, 255, 255, 0.4);
+  }
+}
+
+/* ========================================
+   FIGURE CAPTIONS
+   ======================================== */
+
+figure figcaption {
+  color: rgba(0, 0, 0, 0.45) !important;
+  font-size: 0.8rem;
+  font-style: italic;
+  margin-bottom: 2rem;
+}
+
+.dark figure figcaption {
+  color: rgba(255, 255, 255, 0.45) !important;
+}
+
