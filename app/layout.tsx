@@ -8,6 +8,29 @@ export const metadata: Metadata = {
   title: "Bernardo Trindade de Abreu - Senior Full Stack Engineer",
   description: "Senior Full Stack Engineer specializing in React, Node.js, Python, AI, and Cloud technologies at ustwo",
   generator: "v0.app",
+  metadataBase: new URL("https://blog-c30ge148o-bertrindades-projects.vercel.app"),
+  openGraph: {
+    title: "Bernardo Trindade de Abreu - Senior Full Stack Engineer",
+    description: "Senior Full Stack Engineer specializing in React, Node.js, Python, AI, and Cloud technologies at ustwo",
+    url: "https://blog-c30ge148o-bertrindades-projects.vercel.app",
+    siteName: "Bernardo Trindade de Abreu",
+    locale: "en_US",
+    type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Bernardo Trindade de Abreu - Senior Full Stack Engineer",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Bernardo Trindade de Abreu - Senior Full Stack Engineer",
+    description: "Senior Full Stack Engineer specializing in React, Node.js, Python, AI, and Cloud technologies",
+    images: ["/og-image.png"],
+  },
   icons: {
     icon: [
       {
