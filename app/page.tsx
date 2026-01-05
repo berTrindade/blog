@@ -43,6 +43,7 @@ export default function HomePage() {
         <Navigation />
       </header>
 
+      <main>
       {/* Today section */}
       <section className="mb-32">
         <h2 className="mb-6 text-lg font-medium leading-none text-black dark:text-white">Today</h2>
@@ -324,6 +325,7 @@ export default function HomePage() {
       <section className="mb-32">
         <Newsletter />
       </section>
+      </main>
     </div>
   )
 }

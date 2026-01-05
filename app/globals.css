@@ -92,7 +92,7 @@
   --color-gray-700: lab(82.716% 0 0);
   --color-gray-800: lab(75.872% 0 0);
   --color-gray-900: lab(58.588% 0 0);
-  --color-gray-1000: lab(54.76% 0 0);
+  --color-gray-1000: lab(45% 0 0);
   --color-gray-1100: lab(42.348% 0 0);
   --color-gray-1200: lab(12.304% 0 0);
 }
@@ -109,7 +109,7 @@
     --color-gray-700: lab(30.632% 0 0);
     --color-gray-800: lab(40.724% 0 0);
     --color-gray-900: lab(46.408% 0 0);
-    --color-gray-1000: lab(51.628% 0 0);
+    --color-gray-1000: lab(60% 0 0);
     --color-gray-1100: lab(73.668% 0 0);
     --color-gray-1200: lab(94.084% 0 0);
 }

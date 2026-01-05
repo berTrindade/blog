@@ -91,6 +91,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         <Navigation showShare />
       </header>
 
+      <main>
       <div className="article" data-main-content>
         {/* Article Header */}
         <h1 className="mb-2 font-semibold dark:text-white">{post.meta.title}</h1>
@@ -163,6 +164,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           <p>© {new Date().getFullYear()} Bernardo Trindade de Abreu. All rights reserved.</p>
         </footer>
       </div>
+      </main>
     </div>
   )
 }

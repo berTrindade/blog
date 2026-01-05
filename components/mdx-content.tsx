@@ -44,7 +44,7 @@ const components = {
   h5: (props: any) => <Heading level={5} {...props} />,
   h6: (props: any) => <Heading level={6} {...props} />,
   p: (props: any) => <p className="mb-[26px] opacity-[0.9]" {...props} />,
-  a: (props: any) => <a className="underline" {...props} />,
+  a: (props: any) => <a className="underline inline-block min-h-[24px] py-1" {...props} />,
   code: (props: any) => {
     // Inline code (not in pre block)
     if (!props.className) {
