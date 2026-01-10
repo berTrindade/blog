@@ -14,7 +14,14 @@ export function Mermaid({ chart }: MermaidProps) {
   const [svg, setSvg] = useState<string>('')
   const [isDark, setIsDark] = useState(false)
   const [isZoomed, setIsZoomed] = useState(false)
-  const [dragY, setDragY] = useState(0)
+  const [copied, setCopied] = useState(false)
+  const [hasTransformed, setHasTransformed] = useState(false)
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(chart)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   // Detect dark mode
   useEffect(() => {
@@ -24,7 +31,6 @@ export function Mermaid({ chart }: MermaidProps) {
     
     checkDarkMode()
     
-    // Watch for class changes on html element
     const observer = new MutationObserver(checkDarkMode)
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
     
@@ -57,80 +63,9 @@ export function Mermaid({ chart }: MermaidProps) {
   }, [isZoomed])
 
   useEffect(() => {
-    // Minimal, clean design inspired by the reference image
-    const lightTheme = {
-      primaryColor: '#e8e8e8',
-      primaryTextColor: '#1a1a1a',
-      primaryBorderColor: 'transparent',
-      lineColor: '#aaaaaa',
-      secondaryColor: '#e8e8e8',
-      tertiaryColor: '#e8e8e8',
-      background: 'transparent',
-      mainBkg: '#e8e8e8',
-      secondBkg: '#e8e8e8',
-      tertiaryBkg: '#e8e8e8',
-      nodeBorder: 'transparent',
-      clusterBkg: 'rgba(0,0,0,0.03)',
-      clusterBorder: 'transparent',
-      titleColor: '#888888',
-      edgeLabelBackground: '#f6f8fa',
-      textColor: '#1a1a1a',
-      nodeTextColor: '#1a1a1a',
-    }
-
-    const darkTheme = {
-      // Sleek dark theme matching the reference image
-      primaryColor: '#2a2a2a',
-      primaryTextColor: '#ffffff',
-      primaryBorderColor: 'transparent',
-      lineColor: '#555555',
-      secondaryColor: '#2a2a2a',
-      tertiaryColor: '#2a2a2a',
-      background: 'transparent',
-      mainBkg: '#2a2a2a',
-      secondBkg: '#2a2a2a',
-      tertiaryBkg: '#2a2a2a',
-      nodeBorder: 'transparent',
-      clusterBkg: 'rgba(255,255,255,0.03)',
-      clusterBorder: 'transparent',
-      titleColor: '#666666',
-      edgeLabelBackground: '#0F0F0F',
-      textColor: '#ffffff',
-      nodeTextColor: '#ffffff',
-    }
-
-    const theme = isDark ? darkTheme : lightTheme
-
     mermaid.initialize({
       startOnLoad: false,
-      theme: 'base',
-      fontFamily: 'Arial, sans-serif',
-      themeVariables: {
-        ...theme,
-        fontSize: '14px',
-        fontFamily: 'Arial, sans-serif',
-        // Node styling for rounded pill shapes
-        nodePadding: 20,
-        nodeRadius: 16,
-        // Arrow/edge styling
-        lineColor: isDark ? '#555555' : '#aaaaaa',
-      },
-      flowchart: {
-        htmlLabels: true,
-        curve: 'linear',
-        padding: 24,
-        nodeSpacing: 80,
-        rankSpacing: 80,
-        useMaxWidth: true,
-        diagramPadding: 16,
-        wrappingWidth: 300,
-        // Improve edge label positioning
-        edgeLabelBackground: isDark ? '#0F0F0F' : '#f6f8fa',
-        subGraphTitleMargin: {
-          top: 20,
-          bottom: 8,
-        },
-      },
+      theme: isDark ? 'dark' : 'neutral',
       securityLevel: 'loose',
     })
 
@@ -139,169 +74,137 @@ export function Mermaid({ chart }: MermaidProps) {
       
       const id = `mermaid-${Math.random().toString(36).substr(2, 9)}`
       
-      // Clean the chart string
       const cleanChart = typeof chart === 'string' 
         ? chart.trim() 
         : String(chart).trim()
       
       try {
-        const { svg } = await mermaid.render(id, cleanChart)
+        let { svg } = await mermaid.render(id, cleanChart)
         
-        // Post-process SVG to make it responsive and fit container
+        // Remove background-color from edge label spans using string replacement
+        // This handles the foreignObject HTML content that DOM queries can't reach
+        svg = svg.replace(/background-color:\s*[^;"\s]+[;]?/gi, '')
+        svg = svg.replace(/background:\s*[^;"\s]+[;]?/gi, '')
+        
+        // Make SVG responsive
         const parser = new DOMParser()
         const doc = parser.parseFromString(svg, 'image/svg+xml')
         const svgElement = doc.documentElement
         
-        // Get the original dimensions
         const width = svgElement.getAttribute('width')
         const height = svgElement.getAttribute('height')
         
-        // Set viewBox if not present and make SVG responsive
         if (width && height) {
           const numWidth = parseFloat(width)
           const numHeight = parseFloat(height)
           if (!svgElement.getAttribute('viewBox')) {
             svgElement.setAttribute('viewBox', `0 0 ${numWidth} ${numHeight}`)
           }
-          // Make it responsive - 90% width, centered, auto height
-          svgElement.setAttribute('width', '90%')
+          svgElement.setAttribute('width', '100%')
           svgElement.setAttribute('height', 'auto')
-          svgElement.style.maxWidth = '90%'
+          svgElement.style.maxWidth = '100%'
           svgElement.style.display = 'block'
           svgElement.style.margin = '0 auto'
         }
         
-        // Find all label containers and expand them
-        const labelContainers = doc.querySelectorAll('rect.basic.label-container')
-        labelContainers.forEach((rect) => {
-          const currentWidth = parseFloat(rect.getAttribute('width') || '0')
-          // Add 60px extra width to prevent clipping (increased from 40px)
-          rect.setAttribute('width', String(currentWidth + 60))
-          // Shift x position left by 30px to center
-          const currentX = parseFloat(rect.getAttribute('x') || '0')
-          rect.setAttribute('x', String(currentX - 30))
+        // Make edge label backgrounds semi-transparent
+        const edgeLabelBackgrounds = svgElement.querySelectorAll('.edgeLabel rect, .edgeLabel polygon, .labelBkg, g.edgeLabel > rect, g[class*="edgeLabel"] rect')
+        edgeLabelBackgrounds.forEach((el) => {
+          el.setAttribute('fill', isDark ? '#1e1e1e' : '#ffffff')
+          el.setAttribute('fill-opacity', '0.15')
+          el.setAttribute('stroke', 'none')
         })
         
-        // Ensure edge labels are visible and properly styled
-        const edgeLabels = doc.querySelectorAll('.edgeLabel')
-        edgeLabels.forEach((label) => {
-          // Style the background rect
-          let rect = label.querySelector('rect')
-          
-          // If no rect exists, create one
-          if (!rect) {
-            rect = doc.createElementNS('http://www.w3.org/2000/svg', 'rect')
-            const text = label.querySelector('text')
-            if (text) {
-              const bbox = text.getBBox()
-              rect.setAttribute('x', String(bbox.x - 6))
-              rect.setAttribute('y', String(bbox.y - 4))
-              rect.setAttribute('width', String(bbox.width + 12))
-              rect.setAttribute('height', String(bbox.height + 8))
-            }
-            // Insert rect before text so text appears on top
-            label.insertBefore(rect, label.firstChild)
-          }
-          
-          if (rect) {
-            rect.setAttribute('fill', isDark ? '#0F0F0F' : '#f6f8fa')
-            rect.setAttribute('stroke', isDark ? '#333' : '#ddd')
-            rect.setAttribute('stroke-width', '1')
-            rect.setAttribute('rx', '4')
-            rect.setAttribute('ry', '4')
-            rect.setAttribute('fill-opacity', '1')
-            rect.setAttribute('opacity', '1')
-            // Ensure padding around text
-            const currentWidth = parseFloat(rect.getAttribute('width') || '0')
-            const currentHeight = parseFloat(rect.getAttribute('height') || '0')
-            if (currentWidth > 0) {
-              rect.setAttribute('width', String(currentWidth + 12))
-              const currentX = parseFloat(rect.getAttribute('x') || '0')
-              rect.setAttribute('x', String(currentX - 6))
-            }
-            if (currentHeight > 0) {
-              rect.setAttribute('height', String(currentHeight + 8))
-              const currentY = parseFloat(rect.getAttribute('y') || '0')
-              rect.setAttribute('y', String(currentY - 4))
-            }
-          }
-          
-          // Ensure text is visible and properly styled
-          const text = label.querySelector('text')
-          if (text) {
-            text.setAttribute('fill', isDark ? '#888888' : '#555555')
-            text.setAttribute('text-anchor', 'middle')
-            text.setAttribute('dominant-baseline', 'middle')
-            text.style.fontSize = '12px'
-            text.style.fontWeight = '500'
-          }
+        // Make arrow lines lighter/more transparent
+        const edgePaths = svgElement.querySelectorAll('.edgePath path, .flowchart-link')
+        edgePaths.forEach((el) => {
+          el.setAttribute('stroke-opacity', '0.25')
         })
         
-        // Ensure nodes appear on top of edges by reordering DOM elements
-        // In SVG, elements drawn later appear on top
-        const allGroups = doc.querySelectorAll('svg > g > g')
-        if (allGroups.length > 0) {
-          const parent = allGroups[0].parentElement
-          if (parent) {
-            const nodeElements: Element[] = []
-            const otherElements: Element[] = []
-            
-            // Separate nodes from other elements
-            allGroups.forEach((element) => {
-              const classes = element.getAttribute('class') || ''
-              if (classes.includes('node')) {
-                nodeElements.push(element)
-              } else {
-                otherElements.push(element)
-              }
-            })
-            
-            // Reorder: move nodes to the end
-            nodeElements.forEach((node) => {
-              parent.appendChild(node)
-            })
-          }
-        }
+        // Also make arrowhead markers more transparent
+        const markers = svgElement.querySelectorAll('marker path, marker polygon')
+        markers.forEach((el) => {
+          el.setAttribute('fill-opacity', '0.25')
+          el.setAttribute('stroke-opacity', '0.25')
+        })
         
-        // Serialize back to string
+        
         const serializer = new XMLSerializer()
-        const fixedSvg = serializer.serializeToString(doc.documentElement)
-        
-        setSvg(fixedSvg)
-      } catch (error: any) {
+        setSvg(serializer.serializeToString(doc.documentElement))
+      } catch (error: unknown) {
         console.error('Mermaid rendering error:', error)
-        setSvg(`<pre class="text-red-500 p-4">Error rendering diagram: ${error.message}</pre>`)
+        const message = error instanceof Error ? error.message : 'Unknown error'
+        setSvg(`<pre class="text-red-500 p-4">Error rendering diagram: ${message}</pre>`)
       }
     }
 
-    // Wait for fonts to be ready before rendering
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(() => {
-        renderDiagram()
-      })
-    } else {
-      setTimeout(renderDiagram, 100)
-    }
+    renderDiagram()
   }, [chart, isDark])
 
   return (
     <>
-      <div 
-        className="group/mermaid relative cursor-zoom-in transition-opacity hover:opacity-95 active:opacity-90"
-        onClick={() => setIsZoomed(true)}
-        role="button"
-        tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault()
-            setIsZoomed(true)
-          }
-        }}
-        aria-label="Tap to expand diagram"
-      >
+      <div className="group/mermaid relative my-4">
+        {/* Cursor-style toolbar - top right, shows on hover */}
+        <div className="absolute right-3 top-3 z-10 flex items-center rounded-lg border border-gray-200 bg-white p-1 opacity-0 shadow-sm transition-opacity duration-200 group-hover/mermaid:opacity-100 dark:border-[#4a4a4a] dark:bg-[#323232] dark:shadow-none">
+          {/* Expand - two diagonal arrows pointing outward */}
+          <button
+            onClick={(e) => { e.stopPropagation(); setIsZoomed(true) }}
+            className="group/btn flex size-8 cursor-pointer items-center justify-center"
+            aria-label="Expand diagram"
+          >
+            <svg className="h-4 w-4 text-gray-1000 transition-colors group-hover/btn:text-gray-1200 dark:text-[#8c8c8c] dark:group-hover/btn:text-[#c0c0c0]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M20 9V4h-5" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M20 4l-6 6" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 15v5h5" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 20l6-6" />
+            </svg>
+          </button>
+          {/* Copy */}
+          <button
+            onClick={(e) => { e.stopPropagation(); handleCopy() }}
+            className="group/btn flex size-8 cursor-pointer items-center justify-center"
+            aria-label={copied ? "Copied!" : "Copy diagram code"}
+          >
+            <AnimatePresence mode="wait">
+              {copied ? (
+                <motion.svg
+                  key="check"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.1 }}
+                  className="h-5 w-5 text-gray-1000 dark:text-[#8c8c8c]"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 12l5 5L20 7" />
+                </motion.svg>
+              ) : (
+                <motion.svg
+                  key="copy"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.1 }}
+                  className="h-5 w-5 text-gray-1000 transition-colors group-hover/btn:text-gray-1200 dark:text-[#8c8c8c] dark:group-hover/btn:text-[#c0c0c0]"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                >
+                  <rect x="8" y="8" width="12" height="12" rx="2" />
+                  <path d="M16 8V6a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h2" />
+                </motion.svg>
+              )}
+            </AnimatePresence>
+          </button>
+        </div>
+        
         <div
           ref={ref}
-          className="mermaid-diagram my-4 overflow-hidden rounded-xl border border-black/6 bg-[#f6f8fa] p-6 dark:border-white/5 dark:bg-[#0F0F0F]"
+          className="mermaid-diagram overflow-hidden rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-[#1e1e1e]"
           dangerouslySetInnerHTML={{ __html: svg }}
         />
       </div>
@@ -313,37 +216,16 @@ export function Mermaid({ chart }: MermaidProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm"
-            onClick={() => setIsZoomed(false)}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 dark:bg-black/95"
+            onClick={() => { setIsZoomed(false); setHasTransformed(false) }}
           >
             <motion.div
-              initial={{ scale: 0.9, opacity: 0, y: 0 }}
-              animate={{ scale: 1, opacity: 1, y: dragY }}
-              exit={{ scale: 0.9, opacity: 0, y: 0 }}
-              drag="y"
-              dragConstraints={{ top: 0, bottom: 300 }}
-              dragElastic={{ top: 0, bottom: 0.8 }}
-              onDragEnd={(e, info) => {
-                if (info.offset.y > 100 || info.velocity.y > 500) {
-                  setIsZoomed(false)
-                  setDragY(0)
-                } else {
-                  setDragY(0)
-                }
-              }}
-              className="relative h-[90vh] w-full max-w-6xl rounded-xl border border-white/10 bg-[#f6f8fa] dark:bg-[#0F0F0F]"
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="relative h-[90vh] w-full max-w-6xl rounded-xl border border-gray-200 bg-white dark:border-gray-700 dark:bg-[#1e1e1e]"
               onClick={(e) => e.stopPropagation()}
             >
-              <button
-                onClick={() => setIsZoomed(false)}
-                className="absolute right-2 top-2 z-10 flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full bg-gray-300 dark:bg-gray-200 transition-colors duration-200 ease-out hover:bg-gray-400 dark:hover:bg-gray-300 active:scale-[0.97] will-change-transform md:right-4 md:top-4 md:size-9"
-                aria-label="Close zoom"
-              >
-                <svg className="h-6 w-6 md:h-5 md:w-5 stroke-gray-1000 transition-colors duration-200 ease-out group-hover:stroke-gray-1200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-              
               <TransformWrapper
                 initialScale={1}
                 minScale={0.5}
@@ -352,40 +234,120 @@ export function Mermaid({ chart }: MermaidProps) {
                 limitToBounds={false}
                 wheel={{ step: 0.1 }}
                 doubleClick={{ mode: 'toggle', step: 0.7 }}
+                onTransformed={(_, state) => {
+                  // Show extra controls when scale !== 1 or position has changed
+                  const isTransformed = state.scale !== 1 || state.positionX !== 0 || state.positionY !== 0
+                  setHasTransformed(isTransformed)
+                }}
               >
                 {({ zoomIn, zoomOut, resetTransform }) => (
                   <>
-                    <div className="absolute left-2 top-2 z-10 flex gap-2 md:left-4 md:top-4">
+                    {/* Cursor-style toolbar - top right, full toolbar */}
+                    <div className="absolute right-4 top-4 z-10 flex items-center rounded-lg border border-gray-200 bg-white p-1 shadow-sm dark:border-[#4a4a4a] dark:bg-[#323232] dark:shadow-none">
+                      {/* Collapse/Minimize - two diagonal arrows pointing inward ↙↗ */}
                       <button
-                        onClick={() => zoomIn()}
-                        className="flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full bg-gray-300 dark:bg-gray-200 transition-colors duration-200 ease-out hover:bg-gray-400 dark:hover:bg-gray-300 active:scale-[0.97] will-change-transform md:size-9"
-                        aria-label="Zoom in"
+                        onClick={() => { setIsZoomed(false); setHasTransformed(false) }}
+                        className="group/btn flex size-8 cursor-pointer items-center justify-center"
+                        aria-label="Minimize"
                       >
-                        <svg className="h-5 w-5 md:h-4 md:w-4 stroke-gray-1000 transition-colors duration-200 ease-out group-hover:stroke-gray-1200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                        <svg className="h-5 w-5 text-gray-1000 transition-colors group-hover/btn:text-gray-1200 dark:text-[#8c8c8c] dark:group-hover/btn:text-[#c0c0c0]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M20 4l-6 6m0-4v4h4" />
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M4 20l6-6m0 4v-4h-4" />
                         </svg>
                       </button>
+                      {/* Copy */}
                       <button
-                        onClick={() => zoomOut()}
-                        className="flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full bg-gray-300 dark:bg-gray-200 transition-colors duration-200 ease-out hover:bg-gray-400 dark:hover:bg-gray-300 active:scale-[0.97] will-change-transform md:size-9"
-                        aria-label="Zoom out"
+                        onClick={() => handleCopy()}
+                        className="group/btn flex size-8 cursor-pointer items-center justify-center"
+                        aria-label={copied ? "Copied!" : "Copy diagram code"}
                       >
-                        <svg className="h-5 w-5 md:h-4 md:w-4 stroke-gray-1000 transition-colors duration-200 ease-out group-hover:stroke-gray-1200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
-                        </svg>
+                        <AnimatePresence mode="wait">
+                          {copied ? (
+                            <motion.svg
+                              key="check"
+                              initial={{ opacity: 0, scale: 0.8 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              exit={{ opacity: 0, scale: 0.8 }}
+                              transition={{ duration: 0.1 }}
+                              className="h-5 w-5 text-gray-1000 dark:text-[#8c8c8c]"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                              strokeWidth={2}
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 12l5 5L20 7" />
+                            </motion.svg>
+                          ) : (
+                            <motion.svg
+                              key="copy"
+                              initial={{ opacity: 0, scale: 0.8 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              exit={{ opacity: 0, scale: 0.8 }}
+                              transition={{ duration: 0.1 }}
+                              className="h-5 w-5 text-gray-1000 transition-colors group-hover/btn:text-gray-1200 dark:text-[#8c8c8c] dark:group-hover/btn:text-[#c0c0c0]"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                              strokeWidth={2}
+                            >
+                              <rect x="8" y="8" width="12" height="12" rx="2" />
+                              <path d="M16 8V6a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h2" />
+                            </motion.svg>
+                          )}
+                        </AnimatePresence>
                       </button>
-                      <button
-                        onClick={() => resetTransform()}
-                        className="flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full bg-gray-300 dark:bg-gray-200 transition-colors duration-200 ease-out hover:bg-gray-400 dark:hover:bg-gray-300 active:scale-[0.97] will-change-transform md:size-9"
-                        aria-label="Reset zoom"
-                      >
-                        <svg className="h-5 w-5 md:h-4 md:w-4 stroke-gray-1000 transition-colors duration-200 ease-out group-hover:stroke-gray-1200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                        </svg>
-                      </button>
+                      {/* These buttons only show when diagram has been transformed */}
+                      {hasTransformed && (
+                        <>
+                          {/* Reset/Undo - curved arrow */}
+                          <button
+                            onClick={() => { resetTransform(); setHasTransformed(false) }}
+                            className="group/btn flex size-8 cursor-pointer items-center justify-center"
+                            aria-label="Reset view"
+                          >
+                            <svg className="h-5 w-5 text-gray-1000 transition-colors group-hover/btn:text-gray-1200 dark:text-[#8c8c8c] dark:group-hover/btn:text-[#c0c0c0]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h10c4 0 7 3 7 7M3 10l5-5M3 10l5 5" />
+                            </svg>
+                          </button>
+                          {/* Zoom In - magnifying glass with + */}
+                          <button
+                            onClick={() => zoomIn()}
+                            className="group/btn flex size-8 cursor-pointer items-center justify-center"
+                            aria-label="Zoom in"
+                          >
+                            <svg className="h-5 w-5 text-gray-1000 transition-colors group-hover/btn:text-gray-1200 dark:text-[#8c8c8c] dark:group-hover/btn:text-[#c0c0c0]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                              <circle cx="10" cy="10" r="6" />
+                              <path strokeLinecap="round" d="M14.5 14.5L20 20" />
+                              <path strokeLinecap="round" d="M10 7v6M7 10h6" />
+                            </svg>
+                          </button>
+                          {/* Zoom Out - magnifying glass with - */}
+                          <button
+                            onClick={() => zoomOut()}
+                            className="group/btn flex size-8 cursor-pointer items-center justify-center"
+                            aria-label="Zoom out"
+                          >
+                            <svg className="h-5 w-5 text-gray-1000 transition-colors group-hover/btn:text-gray-1200 dark:text-[#8c8c8c] dark:group-hover/btn:text-[#c0c0c0]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                              <circle cx="10" cy="10" r="6" />
+                              <path strokeLinecap="round" d="M14.5 14.5L20 20" />
+                              <path strokeLinecap="round" d="M7 10h6" />
+                            </svg>
+                          </button>
+                          {/* Close - X */}
+                          <button
+                            onClick={() => { setIsZoomed(false); setHasTransformed(false) }}
+                            className="group/btn flex size-8 cursor-pointer items-center justify-center"
+                            aria-label="Close"
+                          >
+                            <svg className="h-5 w-5 text-gray-1000 transition-colors group-hover/btn:text-gray-1200 dark:text-[#8c8c8c] dark:group-hover/btn:text-[#c0c0c0]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+                        </>
+                      )}
                     </div>
                     <TransformComponent
-                      wrapperClass="!w-full !h-full rounded-xl overflow-hidden"
+                      wrapperClass="!w-full !h-full rounded-xl overflow-hidden cursor-grab active:cursor-grabbing"
                       contentClass="!w-full !h-full flex items-center justify-center p-8"
                     >
                       <div 
