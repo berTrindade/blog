@@ -19,7 +19,17 @@ export async function GET(
       return new Response('Post not found', { status: 404 })
     }
 
-    const hasImage = !!post.meta.image
+    // Get the base URL from the request
+    const url = new URL(request.url)
+    const baseUrl = `${url.protocol}//${url.host}`
+    
+    // Convert relative image paths to absolute URLs
+    let imageUrl = post.meta.image
+    if (imageUrl && imageUrl.startsWith('/')) {
+      imageUrl = `${baseUrl}${imageUrl}`
+    }
+    
+    const hasImage = !!imageUrl
 
     const imageResponse = new ImageResponse(
       (
@@ -40,7 +50,8 @@ export async function GET(
             <>
               {/* Featured image as background */}
               <img
-                src={post.meta.image}
+                src={imageUrl}
+                alt=""
                 style={{
                   position: 'absolute',
                   top: 0,
