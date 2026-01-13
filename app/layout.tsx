@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-image.png",
+        url: "/api/og?page=home",
         width: 1200,
         height: 630,
         alt: "Bernardo Trindade de Abreu - Senior Full Stack Engineer",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Bernardo Trindade de Abreu - Senior Full Stack Engineer",
     description: "Senior Full Stack Engineer specializing in React, Node.js, Python, AI, and Cloud technologies",
-    images: ["/og-image.png"],
+    images: ["/api/og?page=home"],
   },
   icons: {
     icon: [

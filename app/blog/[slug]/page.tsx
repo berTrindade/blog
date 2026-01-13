@@ -5,7 +5,6 @@ import { TableOfContents } from "@/components/table-of-contents"
 import { Navigation } from "@/components/navigation"
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowLeft } from "lucide-react"
 
 export async function generateStaticParams() {
   const posts = await getAllBlogPosts()
@@ -19,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const post = await getBlogPost(slug)
   if (!post) return {}
 
-  const ogImage = `/og/${slug}.png` // You can create OG images later
+  const ogImage = `/api/og/${slug}`
 
   return {
     title: post.meta.title,
@@ -28,7 +27,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       title: post.meta.title,
       description: post.meta.excerpt,
       type: 'article',
-      images: [ogImage],
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: post.meta.title,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',

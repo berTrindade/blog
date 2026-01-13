@@ -1,6 +1,30 @@
 import Link from "next/link"
 import Image from "next/image"
 import { getAllFilms } from "@/lib/media-utils"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Movies - Bernardo Trindade de Abreu",
+  description: "Films I've watched recently and recommend.",
+  openGraph: {
+    title: "Movies - Bernardo Trindade de Abreu",
+    description: "Films that I love and recommend watching",
+    images: [
+      {
+        url: "/api/og?page=movies",
+        width: 1200,
+        height: 630,
+        alt: "Movies - Bernardo Trindade de Abreu",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Movies - Bernardo Trindade de Abreu",
+    description: "Films that I love and recommend watching",
+    images: ["/api/og?page=movies"],
+  },
+}
 
 export default function MoviesPage() {
   const films = getAllFilms()

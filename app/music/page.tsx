@@ -1,6 +1,30 @@
 import Link from "next/link"
 import Image from "next/image"
 import { getAllMusic } from "@/lib/media-utils"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Music - Bernardo Trindade de Abreu",
+  description: "My top tracks from Spotify and music that inspires my work.",
+  openGraph: {
+    title: "Music - Bernardo Trindade de Abreu",
+    description: "What I'm listening to and music that inspires my work",
+    images: [
+      {
+        url: "/api/og?page=music",
+        width: 1200,
+        height: 630,
+        alt: "Music - Bernardo Trindade de Abreu",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Music - Bernardo Trindade de Abreu",
+    description: "What I'm listening to and music that inspires my work",
+    images: ["/api/og?page=music"],
+  },
+}
 
 export default function MusicPage() {
   const music = getAllMusic()

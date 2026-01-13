@@ -1,9 +1,28 @@
 import { Navigation } from "@/components/navigation"
 import Link from "next/link"
+import type { Metadata } from "next"
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "About - Bernardo Trindade de Abreu",
   description: "Senior Full Stack Engineer specializing in React, Node.js, Python, AI, and Cloud technologies.",
+  openGraph: {
+    title: "About - Bernardo Trindade de Abreu",
+    description: "Learn more about my background, experience, and what drives me as a software engineer",
+    images: [
+      {
+        url: "/api/og?page=about",
+        width: 1200,
+        height: 630,
+        alt: "About - Bernardo Trindade de Abreu",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About - Bernardo Trindade de Abreu",
+    description: "Learn more about my background, experience, and what drives me as a software engineer",
+    images: ["/api/og?page=about"],
+  },
 }
 
 export default function AboutPage() {
