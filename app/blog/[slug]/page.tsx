@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation"
 import { getAllBlogPosts, getBlogPost } from "@/lib/blog-utils"
+import { generateOgMetadata, truncateText } from "@/lib/og-image"
 import { MDXContent } from "@/components/mdx-content"
 import { TableOfContents } from "@/components/table-of-contents"
 import { Navigation } from "@/components/navigation"
@@ -18,32 +19,16 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const post = await getBlogPost(slug)
   if (!post) return {}
 
-  // Always use generated OG image (1200x630px) for proper social sharing
-  const ogImage = `/api/og/${slug}`
-
-  return {
+  return generateOgMetadata({
     title: post.meta.title,
     description: post.meta.excerpt,
-    openGraph: {
-      title: post.meta.title,
-      description: post.meta.excerpt,
-      type: 'article',
-      images: [
-        {
-          url: ogImage,
-          width: 1200,
-          height: 630,
-          alt: post.meta.title,
-        },
-      ],
+    ogImageParams: {
+      type: 'blogArticle',
+      title: truncateText(post.meta.title, 60),
+      subtitle: truncateText(post.meta.excerpt, 120),
+      image: post.meta.image, // Pass the local image path
     },
-    twitter: {
-      card: 'summary_large_image',
-      title: post.meta.title,
-      description: post.meta.excerpt,
-      images: [ogImage],
-    },
-  }
+  })
 }
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
