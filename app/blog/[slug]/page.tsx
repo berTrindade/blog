@@ -18,7 +18,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const post = await getBlogPost(slug)
   if (!post) return {}
 
-  const ogImage = `/api/og/${slug}`
+  // Use featured image directly if available, otherwise use generated OG image
+  const ogImage = post.meta.image || `/api/og/${slug}`
 
   return {
     title: post.meta.title,
