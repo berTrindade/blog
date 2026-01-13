@@ -1,34 +1,26 @@
 import { ImageResponse } from 'next/og'
 import { getBlogPost } from '@/lib/blog-utils'
-import { readFile } from 'node:fs/promises'
-import { join } from 'node:path'
 
 export const runtime = 'nodejs'
 
 // Cache for 1 week, revalidate every day
 export const revalidate = 86400
 
-async function getImageAsDataUrl(imagePath: string): Promise<string | null> {
+async function fetchImageAsDataUrl(imageUrl: string): Promise<string | null> {
   try {
-    // Remove leading slash and construct full path
-    const relativePath = imagePath.startsWith('/') ? imagePath.slice(1) : imagePath
-    const fullPath = join(process.cwd(), 'public', relativePath)
+    const response = await fetch(imageUrl, { 
+      cache: 'force-cache',
+      // Short timeout to not block OG generation
+      signal: AbortSignal.timeout(3000)
+    })
     
-    const imageBuffer = await readFile(fullPath)
-    const base64 = imageBuffer.toString('base64')
+    if (!response.ok) return null
     
-    // Determine mime type from extension
-    const ext = imagePath.split('.').pop()?.toLowerCase()
-    const mimeTypes: Record<string, string> = {
-      'png': 'image/png',
-      'jpg': 'image/jpeg',
-      'jpeg': 'image/jpeg',
-      'gif': 'image/gif',
-      'webp': 'image/webp',
-    }
-    const mimeType = mimeTypes[ext || ''] || 'image/png'
+    const arrayBuffer = await response.arrayBuffer()
+    const base64 = Buffer.from(arrayBuffer).toString('base64')
+    const contentType = response.headers.get('content-type') || 'image/png'
     
-    return `data:${mimeType};base64,${base64}`
+    return `data:${contentType};base64,${base64}`
   } catch {
     return null
   }
@@ -47,19 +39,26 @@ export async function GET(
       return new Response('Post not found', { status: 404 })
     }
 
-    // Get image URL - either as data URL for local images or keep external URLs
+    // Get base URL for local images
+    const url = new URL(request.url)
+    const baseUrl = `${url.protocol}//${url.host}`
+    
+    // Get image URL - convert local paths to absolute URLs
     let imageUrl: string | null = null
+    let imageDataUrl: string | null = null
+    
     if (post.meta.image) {
       if (post.meta.image.startsWith('http://') || post.meta.image.startsWith('https://')) {
-        // External image - use as-is
-        imageUrl = post.meta.image
+        // External image - try to fetch it
+        imageDataUrl = await fetchImageAsDataUrl(post.meta.image)
       } else if (post.meta.image.startsWith('/')) {
-        // Local image - convert to data URL
-        imageUrl = await getImageAsDataUrl(post.meta.image)
+        // Local image - construct full URL and fetch
+        imageUrl = `${baseUrl}${post.meta.image}`
+        imageDataUrl = await fetchImageAsDataUrl(imageUrl)
       }
     }
     
-    const hasImage = !!imageUrl
+    const hasImage = !!imageDataUrl
 
     const imageResponse = new ImageResponse(
       (
@@ -78,10 +77,10 @@ export async function GET(
           }}
         >
           {/* Background image with overlay */}
-          {hasImage && imageUrl && (
+          {hasImage && imageDataUrl && (
             <>
               <img
-                src={imageUrl}
+                src={imageDataUrl}
                 alt=""
                 style={{
                   position: 'absolute',
