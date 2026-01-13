@@ -3,8 +3,8 @@ title: "Telemetry: the backbone of modern observability"
 date: "2025-11-18"
 category: Engineering
 excerpt: "A look at how telemetry works in distributed systems and why OpenTelemetry has become the standard for collecting observability signals."
-image: /images/blog/telescope_656x400.png
-thumbnail: /images/blog/telescope_124x78.png
+image: /images/blog/telescope_656x400.jpg
+thumbnail: /images/blog/telescope_124x78.jpg
 author: "Bernardo Trindade de Abreu"
 tags: ["opentelemetry", "observability", "distributed-tracing", "monitoring", "telemetry"]
 ---
