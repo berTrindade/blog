@@ -3,6 +3,9 @@ import { getBlogPost } from '@/lib/blog-utils'
 
 export const runtime = 'nodejs'
 
+// Cache for 1 week, revalidate every day
+export const revalidate = 86400
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ slug: string }> }
@@ -16,7 +19,7 @@ export async function GET(
       return new Response('Post not found', { status: 404 })
     }
 
-    return new ImageResponse(
+    const imageResponse = new ImageResponse(
       (
         <div
           style={{
@@ -137,8 +140,13 @@ export async function GET(
       {
         width: 1200,
         height: 630,
+        headers: {
+          'Cache-Control': 'public, max-age=604800, s-maxage=604800, stale-while-revalidate=86400',
+        },
       }
     )
+
+    return imageResponse
   } catch {
     return new Response('Error generating image', { status: 500 })
   }
