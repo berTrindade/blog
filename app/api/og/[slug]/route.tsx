@@ -1,10 +1,38 @@
 import { ImageResponse } from 'next/og'
 import { getBlogPost } from '@/lib/blog-utils'
+import { readFile } from 'node:fs/promises'
+import { join } from 'node:path'
 
 export const runtime = 'nodejs'
 
 // Cache for 1 week, revalidate every day
 export const revalidate = 86400
+
+async function getImageAsDataUrl(imagePath: string): Promise<string | null> {
+  try {
+    // Remove leading slash and construct full path
+    const relativePath = imagePath.startsWith('/') ? imagePath.slice(1) : imagePath
+    const fullPath = join(process.cwd(), 'public', relativePath)
+    
+    const imageBuffer = await readFile(fullPath)
+    const base64 = imageBuffer.toString('base64')
+    
+    // Determine mime type from extension
+    const ext = imagePath.split('.').pop()?.toLowerCase()
+    const mimeTypes: Record<string, string> = {
+      'png': 'image/png',
+      'jpg': 'image/jpeg',
+      'jpeg': 'image/jpeg',
+      'gif': 'image/gif',
+      'webp': 'image/webp',
+    }
+    const mimeType = mimeTypes[ext || ''] || 'image/png'
+    
+    return `data:${mimeType};base64,${base64}`
+  } catch {
+    return null
+  }
+}
 
 export async function GET(
   request: Request,
@@ -19,14 +47,16 @@ export async function GET(
       return new Response('Post not found', { status: 404 })
     }
 
-    // Get base URL for local images
-    const url = new URL(request.url)
-    const baseUrl = `${url.protocol}//${url.host}`
-    
-    // Convert relative image paths to absolute URLs
-    let imageUrl = post.meta.image
-    if (imageUrl && imageUrl.startsWith('/')) {
-      imageUrl = `${baseUrl}${imageUrl}`
+    // Get image URL - either as data URL for local images or keep external URLs
+    let imageUrl: string | null = null
+    if (post.meta.image) {
+      if (post.meta.image.startsWith('http://') || post.meta.image.startsWith('https://')) {
+        // External image - use as-is
+        imageUrl = post.meta.image
+      } else if (post.meta.image.startsWith('/')) {
+        // Local image - convert to data URL
+        imageUrl = await getImageAsDataUrl(post.meta.image)
+      }
     }
     
     const hasImage = !!imageUrl
@@ -47,8 +77,8 @@ export async function GET(
             overflow: 'hidden',
           }}
         >
-          {/* Background image with overlay (only for external images) */}
-          {hasImage && (
+          {/* Background image with overlay */}
+          {hasImage && imageUrl && (
             <>
               <img
                 src={imageUrl}
