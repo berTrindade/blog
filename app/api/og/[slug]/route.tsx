@@ -6,6 +6,24 @@ export const runtime = 'nodejs'
 // Cache for 1 week, revalidate every day
 export const revalidate = 86400
 
+// Pre-fetch image and convert to base64 data URL
+async function fetchImageAsBase64(url: string): Promise<string | null> {
+  try {
+    const response = await fetch(url, {
+      next: { revalidate: 86400 } // Cache for 1 day
+    })
+    if (!response.ok) return null
+    
+    const buffer = await response.arrayBuffer()
+    const base64 = Buffer.from(buffer).toString('base64')
+    const contentType = response.headers.get('content-type') || 'image/jpeg'
+    
+    return `data:${contentType};base64,${base64}`
+  } catch {
+    return null
+  }
+}
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ slug: string }> }
@@ -23,22 +41,27 @@ export async function GET(
     const url = new URL(request.url)
     const baseUrl = `${url.protocol}//${url.host}`
     
-    // Get image URL - convert local paths to absolute URLs
-    let imageUrl: string | null = null
+    // Fetch featured image as base64 (works for both external and local images)
+    let backgroundImage: string | null = null
     
     if (post.meta.image) {
-      if (post.meta.image.startsWith('http://') || post.meta.image.startsWith('https://')) {
-        imageUrl = post.meta.image
-      } else if (post.meta.image.startsWith('/')) {
-        // For local images, use the production URL if available
+      let imageUrl = post.meta.image
+      
+      // Convert local paths to absolute URLs
+      if (imageUrl.startsWith('/')) {
         const prodUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL 
           ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
           : baseUrl
-        imageUrl = `${prodUrl}${post.meta.image}`
+        imageUrl = `${prodUrl}${imageUrl}`
+      }
+      
+      // Fetch and convert to base64
+      if (imageUrl.startsWith('http')) {
+        backgroundImage = await fetchImageAsBase64(imageUrl)
       }
     }
     
-    const hasImage = !!imageUrl
+    const hasImage = !!backgroundImage
 
     const imageResponse = new ImageResponse(
       (
@@ -57,11 +80,11 @@ export async function GET(
           }}
         >
           {/* Background image with overlay */}
-          {hasImage && imageUrl && (
+          {hasImage && backgroundImage && (
             <>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={imageUrl}
+                src={backgroundImage}
                 alt=""
                 width={1200}
                 height={630}
