@@ -9,17 +9,30 @@ export const revalidate = 86400
 // Pre-fetch image and convert to base64 data URL
 async function fetchImageAsBase64(url: string): Promise<string | null> {
   try {
+    // Use simple fetch without Next.js cache options for compatibility
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 8000) // 8s timeout
+    
     const response = await fetch(url, {
-      next: { revalidate: 86400 } // Cache for 1 day
+      signal: controller.signal,
+      headers: {
+        'Accept': 'image/*',
+      },
     })
-    if (!response.ok) return null
+    clearTimeout(timeoutId)
+    
+    if (!response.ok) {
+      console.error(`Failed to fetch image: ${response.status} ${response.statusText}`)
+      return null
+    }
     
     const buffer = await response.arrayBuffer()
     const base64 = Buffer.from(buffer).toString('base64')
     const contentType = response.headers.get('content-type') || 'image/jpeg'
     
     return `data:${contentType};base64,${base64}`
-  } catch {
+  } catch (error) {
+    console.error('Error fetching image:', error)
     return null
   }
 }
