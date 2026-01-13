@@ -8,40 +8,17 @@ export const runtime = 'nodejs'
 // Cache for 1 week, revalidate every day
 export const revalidate = 86400
 
-// Load image following Vercel's recommended approach:
-// - fs.readFile for local images
-// - fetch for remote images
-async function loadImage(imageUrl: string): Promise<string | null> {
+// Load local image using fs.readFile (Vercel recommended for local resources)
+async function loadLocalImage(imagePath: string): Promise<string | null> {
   try {
-    if (imageUrl.startsWith('/')) {
-      // Local image - use fs.readFile (Vercel recommended)
-      const imagePath = join(process.cwd(), 'public', imageUrl)
-      const imageData = await readFile(imagePath)
-      const base64 = imageData.toString('base64')
-      const ext = imageUrl.split('.').pop()?.toLowerCase() || 'png'
-      const mimeType = ext === 'jpg' ? 'image/jpeg' : `image/${ext}`
-      return `data:${mimeType};base64,${base64}`
-    } else if (imageUrl.startsWith('http')) {
-      // Remote image - use fetch (Vercel recommended)
-      // Request larger size from Unsplash if applicable
-      let fetchUrl = imageUrl
-      if (fetchUrl.includes('unsplash.com')) {
-        fetchUrl = fetchUrl.replace(/w=\d+/, 'w=1200').replace(/h=\d+/, 'h=630')
-      }
-      
-      const response = await fetch(fetchUrl)
-      if (!response.ok) {
-        console.error(`Failed to fetch image: ${response.status}`)
-        return null
-      }
-      const buffer = await response.arrayBuffer()
-      const base64 = Buffer.from(buffer).toString('base64')
-      const contentType = response.headers.get('content-type') || 'image/jpeg'
-      return `data:${contentType};base64,${base64}`
-    }
-    return null
+    const fullPath = join(process.cwd(), 'public', imagePath)
+    const imageData = await readFile(fullPath)
+    const base64 = imageData.toString('base64')
+    const ext = imagePath.split('.').pop()?.toLowerCase() || 'png'
+    const mimeType = ext === 'jpg' ? 'image/jpeg' : `image/${ext}`
+    return `data:${mimeType};base64,${base64}`
   } catch (error) {
-    console.error('Error loading image:', error)
+    console.error('Error loading local image:', error)
     return null
   }
 }
@@ -59,13 +36,25 @@ export async function GET(
       return new Response('Post not found', { status: 404 })
     }
 
-    // Load featured image as base64 data URL
-    let backgroundImage: string | null = null
+    // Determine image source
+    let imageSrc: string | null = null
+    
     if (post.meta.image) {
-      backgroundImage = await loadImage(post.meta.image)
+      if (post.meta.image.startsWith('/')) {
+        // Local image - use fs.readFile and convert to base64
+        imageSrc = await loadLocalImage(post.meta.image)
+      } else if (post.meta.image.startsWith('http')) {
+        // External image - pass URL directly (Vercel docs approach)
+        // Request larger size from Unsplash
+        let url = post.meta.image
+        if (url.includes('unsplash.com')) {
+          url = url.replace(/w=\d+/, 'w=1200').replace(/h=\d+/, 'h=630')
+        }
+        imageSrc = url
+      }
     }
     
-    const hasImage = !!backgroundImage
+    const hasImage = !!imageSrc
 
     return new ImageResponse(
       (
@@ -84,12 +73,14 @@ export async function GET(
           }}
         >
           {/* Background image with overlay */}
-          {hasImage && backgroundImage && (
+          {hasImage && imageSrc && (
             <>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={backgroundImage}
+                src={imageSrc}
                 alt=""
+                width="1200"
+                height="630"
                 style={{
                   position: 'absolute',
                   top: 0,
