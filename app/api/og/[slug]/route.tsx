@@ -19,6 +19,8 @@ export async function GET(
       return new Response('Post not found', { status: 404 })
     }
 
+    const hasImage = !!post.meta.image
+
     const imageResponse = new ImageResponse(
       (
         <div
@@ -29,16 +31,59 @@ export async function GET(
             flexDirection: 'column',
             justifyContent: 'space-between',
             padding: '60px 80px',
-            background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%)',
             fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+            position: 'relative',
           }}
         >
+          {/* Background - either image or gradient */}
+          {hasImage ? (
+            <>
+              {/* Featured image as background */}
+              <img
+                src={post.meta.image}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                }}
+              />
+              {/* Dark overlay for text readability */}
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  background: 'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 40%, rgba(0,0,0,0.8) 100%)',
+                }}
+              />
+            </>
+          ) : (
+            /* Fallback gradient background */
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%)',
+              }}
+            />
+          )}
+
           {/* Header */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
               gap: '12px',
+              position: 'relative',
+              zIndex: 1,
             }}
           >
             <div
@@ -56,7 +101,7 @@ export async function GET(
             </div>
             <span
               style={{
-                color: '#a1a1aa',
+                color: 'rgba(255,255,255,0.9)',
                 fontSize: '24px',
                 fontWeight: 500,
               }}
@@ -70,32 +115,36 @@ export async function GET(
             style={{
               display: 'flex',
               flexDirection: 'column',
-              gap: '24px',
+              gap: '20px',
+              position: 'relative',
+              zIndex: 1,
             }}
           >
             <h1
               style={{
-                fontSize: post.meta.title.length > 50 ? '52px' : '64px',
+                fontSize: post.meta.title.length > 50 ? '48px' : '56px',
                 fontWeight: 700,
-                color: '#fafafa',
-                lineHeight: 1.1,
+                color: '#ffffff',
+                lineHeight: 1.15,
                 margin: 0,
                 maxWidth: '900px',
+                textShadow: '0 2px 20px rgba(0,0,0,0.5)',
               }}
             >
               {post.meta.title}
             </h1>
             <p
               style={{
-                fontSize: '28px',
-                color: '#a1a1aa',
+                fontSize: '24px',
+                color: 'rgba(255,255,255,0.85)',
                 lineHeight: 1.4,
                 margin: 0,
                 maxWidth: '800px',
+                textShadow: '0 1px 10px rgba(0,0,0,0.5)',
               }}
             >
-              {post.meta.excerpt.length > 120 
-                ? post.meta.excerpt.slice(0, 120) + '...' 
+              {post.meta.excerpt.length > 100 
+                ? post.meta.excerpt.slice(0, 100) + '...' 
                 : post.meta.excerpt}
             </p>
           </div>
@@ -106,16 +155,18 @@ export async function GET(
               display: 'flex',
               alignItems: 'center',
               gap: '16px',
+              position: 'relative',
+              zIndex: 1,
             }}
           >
             {post.meta.category && (
               <span
                 style={{
-                  color: '#3b82f6',
-                  fontSize: '20px',
+                  color: '#ffffff',
+                  fontSize: '18px',
                   fontWeight: 600,
                   padding: '8px 16px',
-                  background: 'rgba(59, 130, 246, 0.1)',
+                  background: 'rgba(59, 130, 246, 0.8)',
                   borderRadius: '8px',
                 }}
               >
@@ -124,8 +175,8 @@ export async function GET(
             )}
             <span
               style={{
-                color: '#71717a',
-                fontSize: '20px',
+                color: 'rgba(255,255,255,0.7)',
+                fontSize: '18px',
               }}
             >
               {new Date(post.meta.date).toLocaleDateString('en-US', {
