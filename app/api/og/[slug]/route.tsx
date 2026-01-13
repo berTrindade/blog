@@ -6,37 +6,6 @@ export const runtime = 'nodejs'
 // Cache for 1 week, revalidate every day
 export const revalidate = 86400
 
-// Pre-fetch image and convert to base64 data URL
-async function fetchImageAsBase64(url: string): Promise<string | null> {
-  try {
-    // Use simple fetch without Next.js cache options for compatibility
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), 8000) // 8s timeout
-    
-    const response = await fetch(url, {
-      signal: controller.signal,
-      headers: {
-        'Accept': 'image/*',
-      },
-    })
-    clearTimeout(timeoutId)
-    
-    if (!response.ok) {
-      console.error(`Failed to fetch image: ${response.status} ${response.statusText}`)
-      return null
-    }
-    
-    const buffer = await response.arrayBuffer()
-    const base64 = Buffer.from(buffer).toString('base64')
-    const contentType = response.headers.get('content-type') || 'image/jpeg'
-    
-    return `data:${contentType};base64,${base64}`
-  } catch (error) {
-    console.error('Error fetching image:', error)
-    return null
-  }
-}
-
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ slug: string }> }
@@ -54,12 +23,11 @@ export async function GET(
     const url = new URL(request.url)
     const baseUrl = `${url.protocol}//${url.host}`
     
-    // Fetch featured image as base64 (works for both external and local images)
-    let backgroundImage: string | null = null
+    // Build the image URL (if exists)
+    let imageUrl: string | null = null
     
     if (post.meta.image) {
-      let imageUrl = post.meta.image
-      console.log(`[OG] Post image URL: ${imageUrl}`)
+      imageUrl = post.meta.image
       
       // Convert local paths to absolute URLs
       if (imageUrl.startsWith('/')) {
@@ -67,20 +35,15 @@ export async function GET(
           ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
           : baseUrl
         imageUrl = `${prodUrl}${imageUrl}`
-        console.log(`[OG] Converted to absolute URL: ${imageUrl}`)
       }
       
-      // Fetch and convert to base64
-      if (imageUrl.startsWith('http')) {
-        console.log(`[OG] Fetching image...`)
-        backgroundImage = await fetchImageAsBase64(imageUrl)
-        console.log(`[OG] Fetch result: ${backgroundImage ? 'SUCCESS' : 'FAILED'}`)
+      // Request larger size from Unsplash if applicable
+      if (imageUrl.includes('unsplash.com')) {
+        imageUrl = imageUrl.replace(/w=\d+/, 'w=1200').replace(/h=\d+/, 'h=630')
       }
-    } else {
-      console.log(`[OG] No image for post: ${slug}`)
     }
     
-    const hasImage = !!backgroundImage
+    const hasImage = !!imageUrl
 
     const imageResponse = new ImageResponse(
       (
@@ -99,11 +62,11 @@ export async function GET(
           }}
         >
           {/* Background image with overlay */}
-          {hasImage && backgroundImage && (
+          {hasImage && imageUrl && (
             <>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={backgroundImage}
+                src={imageUrl}
                 alt=""
                 width={1200}
                 height={630}
@@ -252,7 +215,8 @@ export async function GET(
     )
 
     return imageResponse
-  } catch {
+  } catch (e) {
+    console.error('Error generating OG image:', e)
     return new Response('Error generating image', { status: 500 })
   }
 }
