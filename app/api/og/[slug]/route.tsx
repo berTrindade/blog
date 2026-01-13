@@ -1,7 +1,10 @@
 import { ImageResponse } from 'next/og'
 import { getBlogPost } from '@/lib/blog-utils'
 
-export const runtime = 'edge'
+export const runtime = 'nodejs'
+
+// Cache for 1 week, revalidate every day
+export const revalidate = 86400
 
 export async function GET(
   request: Request,
