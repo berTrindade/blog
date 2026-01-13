@@ -34,13 +34,14 @@ export async function GET(
             justifyContent: 'space-between',
             padding: '60px 80px',
             fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+            background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%)',
             position: 'relative',
+            overflow: 'hidden',
           }}
         >
-          {/* Background - either image or gradient */}
-          {hasImage ? (
+          {/* Background image with overlay (only for external images) */}
+          {hasImage && (
             <>
-              {/* Featured image as background */}
               <img
                 src={imageUrl}
                 alt=""
@@ -61,22 +62,10 @@ export async function GET(
                   left: 0,
                   width: '100%',
                   height: '100%',
-                  background: 'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 40%, rgba(0,0,0,0.8) 100%)',
+                  background: 'linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.75) 100%)',
                 }}
               />
             </>
-          ) : (
-            /* Fallback gradient background */
-            <div
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%)',
-              }}
-            />
           )}
 
           {/* Header */}
@@ -86,7 +75,7 @@ export async function GET(
               alignItems: 'center',
               gap: '12px',
               position: 'relative',
-              zIndex: 1,
+              zIndex: 10,
             }}
           >
             <div
@@ -120,7 +109,7 @@ export async function GET(
               flexDirection: 'column',
               gap: '20px',
               position: 'relative',
-              zIndex: 1,
+              zIndex: 10,
             }}
           >
             <h1
@@ -131,7 +120,7 @@ export async function GET(
                 lineHeight: 1.15,
                 margin: 0,
                 maxWidth: '900px',
-                textShadow: '0 2px 20px rgba(0,0,0,0.5)',
+                textShadow: hasImage ? '0 2px 20px rgba(0,0,0,0.8)' : 'none',
               }}
             >
               {post.meta.title}
@@ -143,7 +132,7 @@ export async function GET(
                 lineHeight: 1.4,
                 margin: 0,
                 maxWidth: '800px',
-                textShadow: '0 1px 10px rgba(0,0,0,0.5)',
+                textShadow: hasImage ? '0 1px 10px rgba(0,0,0,0.8)' : 'none',
               }}
             >
               {post.meta.excerpt.length > 100 
@@ -159,7 +148,7 @@ export async function GET(
               alignItems: 'center',
               gap: '16px',
               position: 'relative',
-              zIndex: 1,
+              zIndex: 10,
             }}
           >
             {post.meta.category && (
@@ -169,7 +158,7 @@ export async function GET(
                   fontSize: '18px',
                   fontWeight: 600,
                   padding: '8px 16px',
-                  background: 'rgba(59, 130, 246, 0.8)',
+                  background: 'rgba(59, 130, 246, 0.9)',
                   borderRadius: '8px',
                 }}
               >
