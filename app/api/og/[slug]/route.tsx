@@ -1,24 +1,28 @@
 import { ImageResponse } from 'next/og'
 import { getBlogPost } from '@/lib/blog-utils'
-import { readFile } from 'node:fs/promises'
-import { join } from 'node:path'
 
 export const runtime = 'nodejs'
 
 // Cache for 1 week, revalidate every day
 export const revalidate = 86400
 
-// Load local image using fs.readFile (Vercel recommended for local resources)
-async function loadLocalImage(imagePath: string): Promise<string | null> {
+// Fetch image at runtime and convert to base64 data URL
+// This avoids the 500KB bundle limit (Vercel recommended)
+async function fetchImageAtRuntime(imageUrl: string): Promise<string | null> {
   try {
-    const fullPath = join(process.cwd(), 'public', imagePath)
-    const imageData = await readFile(fullPath)
-    const base64 = imageData.toString('base64')
-    const ext = imagePath.split('.').pop()?.toLowerCase() || 'png'
-    const mimeType = ext === 'jpg' ? 'image/jpeg' : `image/${ext}`
-    return `data:${mimeType};base64,${base64}`
+    const response = await fetch(imageUrl)
+    if (!response.ok) {
+      console.error(`Failed to fetch image: ${response.status} ${response.statusText}`)
+      return null
+    }
+    
+    const buffer = await response.arrayBuffer()
+    const base64 = Buffer.from(buffer).toString('base64')
+    const contentType = response.headers.get('content-type') || 'image/jpeg'
+    
+    return `data:${contentType};base64,${base64}`
   } catch (error) {
-    console.error('Error loading local image:', error)
+    console.error('Error fetching image at runtime:', error)
     return null
   }
 }
@@ -36,22 +40,28 @@ export async function GET(
       return new Response('Post not found', { status: 404 })
     }
 
-    // Determine image source
+    // Get base URL for converting local paths to HTTP URLs
+    const url = new URL(request.url)
+    const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL 
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : `${url.protocol}//${url.host}`
+
+    // Fetch image at runtime (avoids 500KB bundle limit - Vercel recommended)
     let imageSrc: string | null = null
     
     if (post.meta.image) {
-      if (post.meta.image.startsWith('/')) {
-        // Local image - use fs.readFile and convert to base64
-        imageSrc = await loadLocalImage(post.meta.image)
-      } else if (post.meta.image.startsWith('http')) {
-        // External image - pass URL directly (Vercel docs approach)
-        // Request larger size from Unsplash
-        let url = post.meta.image
-        if (url.includes('unsplash.com')) {
-          url = url.replace(/w=\d+/, 'w=1200').replace(/h=\d+/, 'h=630')
-        }
-        imageSrc = url
+      // Convert local path to HTTP URL, or use external URL directly
+      let imageUrl = post.meta.image.startsWith('/') 
+        ? `${baseUrl}${post.meta.image}` 
+        : post.meta.image
+      
+      // Request larger size from Unsplash
+      if (imageUrl.includes('unsplash.com')) {
+        imageUrl = imageUrl.replace(/w=\d+/, 'w=1200').replace(/h=\d+/, 'h=630')
       }
+      
+      // Fetch and convert to base64 at runtime
+      imageSrc = await fetchImageAtRuntime(imageUrl)
     }
     
     const hasImage = !!imageSrc
