@@ -1,10 +1,50 @@
 import { ImageResponse } from 'next/og'
 import { getBlogPost } from '@/lib/blog-utils'
+import { readFile } from 'node:fs/promises'
+import { join } from 'node:path'
 
 export const runtime = 'nodejs'
 
 // Cache for 1 week, revalidate every day
 export const revalidate = 86400
+
+// Load image following Vercel's recommended approach:
+// - fs.readFile for local images
+// - fetch for remote images
+async function loadImage(imageUrl: string): Promise<string | null> {
+  try {
+    if (imageUrl.startsWith('/')) {
+      // Local image - use fs.readFile (Vercel recommended)
+      const imagePath = join(process.cwd(), 'public', imageUrl)
+      const imageData = await readFile(imagePath)
+      const base64 = imageData.toString('base64')
+      const ext = imageUrl.split('.').pop()?.toLowerCase() || 'png'
+      const mimeType = ext === 'jpg' ? 'image/jpeg' : `image/${ext}`
+      return `data:${mimeType};base64,${base64}`
+    } else if (imageUrl.startsWith('http')) {
+      // Remote image - use fetch (Vercel recommended)
+      // Request larger size from Unsplash if applicable
+      let fetchUrl = imageUrl
+      if (fetchUrl.includes('unsplash.com')) {
+        fetchUrl = fetchUrl.replace(/w=\d+/, 'w=1200').replace(/h=\d+/, 'h=630')
+      }
+      
+      const response = await fetch(fetchUrl)
+      if (!response.ok) {
+        console.error(`Failed to fetch image: ${response.status}`)
+        return null
+      }
+      const buffer = await response.arrayBuffer()
+      const base64 = Buffer.from(buffer).toString('base64')
+      const contentType = response.headers.get('content-type') || 'image/jpeg'
+      return `data:${contentType};base64,${base64}`
+    }
+    return null
+  } catch (error) {
+    console.error('Error loading image:', error)
+    return null
+  }
+}
 
 export async function GET(
   request: Request,
@@ -19,31 +59,13 @@ export async function GET(
       return new Response('Post not found', { status: 404 })
     }
 
-    // Get base URL for local images
-    const url = new URL(request.url)
-    const baseUrl = `${url.protocol}//${url.host}`
-    
-    // Build the image URL (if exists)
-    let imageUrl: string | null = null
-    
+    // Load featured image as base64 data URL
+    let backgroundImage: string | null = null
     if (post.meta.image) {
-      imageUrl = post.meta.image
-      
-      // Convert local paths to absolute URLs
-      if (imageUrl.startsWith('/')) {
-        const prodUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL 
-          ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-          : baseUrl
-        imageUrl = `${prodUrl}${imageUrl}`
-      }
-      
-      // Request larger size from Unsplash if applicable
-      if (imageUrl.includes('unsplash.com')) {
-        imageUrl = imageUrl.replace(/w=\d+/, 'w=1200').replace(/h=\d+/, 'h=630')
-      }
+      backgroundImage = await loadImage(post.meta.image)
     }
     
-    const hasImage = !!imageUrl
+    const hasImage = !!backgroundImage
 
     return new ImageResponse(
       (
@@ -62,11 +84,11 @@ export async function GET(
           }}
         >
           {/* Background image with overlay */}
-          {hasImage && imageUrl && (
+          {hasImage && backgroundImage && (
             <>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={imageUrl}
+                src={backgroundImage}
                 alt=""
                 style={{
                   position: 'absolute',
