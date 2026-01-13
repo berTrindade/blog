@@ -6,26 +6,6 @@ export const runtime = 'nodejs'
 // Cache for 1 week, revalidate every day
 export const revalidate = 86400
 
-async function fetchImageAsDataUrl(imageUrl: string): Promise<string | null> {
-  try {
-    const response = await fetch(imageUrl, { 
-      cache: 'force-cache',
-      // Short timeout to not block OG generation
-      signal: AbortSignal.timeout(3000)
-    })
-    
-    if (!response.ok) return null
-    
-    const arrayBuffer = await response.arrayBuffer()
-    const base64 = Buffer.from(arrayBuffer).toString('base64')
-    const contentType = response.headers.get('content-type') || 'image/png'
-    
-    return `data:${contentType};base64,${base64}`
-  } catch {
-    return null
-  }
-}
-
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ slug: string }> }
@@ -45,20 +25,20 @@ export async function GET(
     
     // Get image URL - convert local paths to absolute URLs
     let imageUrl: string | null = null
-    let imageDataUrl: string | null = null
     
     if (post.meta.image) {
       if (post.meta.image.startsWith('http://') || post.meta.image.startsWith('https://')) {
-        // External image - try to fetch it
-        imageDataUrl = await fetchImageAsDataUrl(post.meta.image)
+        imageUrl = post.meta.image
       } else if (post.meta.image.startsWith('/')) {
-        // Local image - construct full URL and fetch
-        imageUrl = `${baseUrl}${post.meta.image}`
-        imageDataUrl = await fetchImageAsDataUrl(imageUrl)
+        // For local images, use the production URL if available
+        const prodUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL 
+          ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+          : baseUrl
+        imageUrl = `${prodUrl}${post.meta.image}`
       }
     }
     
-    const hasImage = !!imageDataUrl
+    const hasImage = !!imageUrl
 
     const imageResponse = new ImageResponse(
       (
@@ -77,11 +57,14 @@ export async function GET(
           }}
         >
           {/* Background image with overlay */}
-          {hasImage && imageDataUrl && (
+          {hasImage && imageUrl && (
             <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={imageDataUrl}
+                src={imageUrl}
                 alt=""
+                width={1200}
+                height={630}
                 style={{
                   position: 'absolute',
                   top: 0,
