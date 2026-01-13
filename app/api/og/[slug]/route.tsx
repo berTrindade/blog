@@ -59,6 +59,7 @@ export async function GET(
     
     if (post.meta.image) {
       let imageUrl = post.meta.image
+      console.log(`[OG] Post image URL: ${imageUrl}`)
       
       // Convert local paths to absolute URLs
       if (imageUrl.startsWith('/')) {
@@ -66,12 +67,17 @@ export async function GET(
           ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
           : baseUrl
         imageUrl = `${prodUrl}${imageUrl}`
+        console.log(`[OG] Converted to absolute URL: ${imageUrl}`)
       }
       
       // Fetch and convert to base64
       if (imageUrl.startsWith('http')) {
+        console.log(`[OG] Fetching image...`)
         backgroundImage = await fetchImageAsBase64(imageUrl)
+        console.log(`[OG] Fetch result: ${backgroundImage ? 'SUCCESS' : 'FAILED'}`)
       }
+    } else {
+      console.log(`[OG] No image for post: ${slug}`)
     }
     
     const hasImage = !!backgroundImage
