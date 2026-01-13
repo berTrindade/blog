@@ -4,15 +4,21 @@ import { Analytics } from "@vercel/analytics/next"
 import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css"
 
+const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL 
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  : process.env.VERCEL_URL 
+    ? `https://${process.env.VERCEL_URL}` 
+    : "http://localhost:3000"
+
 export const metadata: Metadata = {
   title: "Bernardo Trindade de Abreu - Senior Full Stack Engineer",
   description: "Senior Full Stack Engineer specializing in React, Node.js, Python, AI, and Cloud technologies at ustwo",
   generator: "v0.app",
-  metadataBase: new URL("https://blog-c30ge148o-bertrindades-projects.vercel.app"),
+  metadataBase: new URL(siteUrl),
   openGraph: {
     title: "Bernardo Trindade de Abreu - Senior Full Stack Engineer",
     description: "Senior Full Stack Engineer specializing in React, Node.js, Python, AI, and Cloud technologies at ustwo",
-    url: "https://blog-c30ge148o-bertrindades-projects.vercel.app",
+    url: siteUrl,
     siteName: "Bernardo Trindade de Abreu",
     locale: "en_US",
     type: "website",
