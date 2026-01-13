@@ -19,9 +19,17 @@ export async function GET(
       return new Response('Post not found', { status: 404 })
     }
 
-    // Only use external images (http/https) - local images cause circular fetch issues
-    const imageUrl = post.meta.image
-    const hasImage = !!imageUrl && (imageUrl.startsWith('http://') || imageUrl.startsWith('https://'))
+    // Get base URL for local images
+    const url = new URL(request.url)
+    const baseUrl = `${url.protocol}//${url.host}`
+    
+    // Convert relative image paths to absolute URLs
+    let imageUrl = post.meta.image
+    if (imageUrl && imageUrl.startsWith('/')) {
+      imageUrl = `${baseUrl}${imageUrl}`
+    }
+    
+    const hasImage = !!imageUrl
 
     const imageResponse = new ImageResponse(
       (
