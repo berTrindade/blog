@@ -56,19 +56,49 @@ export async function GET(
             justifyContent: 'space-between',
             padding: '60px 80px',
             fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-            backgroundImage: hasImage 
-              ? `linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.75) 100%), url(${imageUrl})`
-              : 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
+            background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%)',
+            position: 'relative',
+            overflow: 'hidden',
           }}
         >
+          {/* Background image with overlay */}
+          {hasImage && imageUrl && (
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={imageUrl}
+                alt=""
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                }}
+              />
+              {/* Dark overlay for text readability */}
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  background: 'linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.75) 100%)',
+                }}
+              />
+            </>
+          )}
+
           {/* Header */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
               gap: '12px',
+              position: 'relative',
+              zIndex: 10,
             }}
           >
             <div
@@ -101,6 +131,8 @@ export async function GET(
               display: 'flex',
               flexDirection: 'column',
               gap: '20px',
+              position: 'relative',
+              zIndex: 10,
             }}
           >
             <h1
@@ -138,6 +170,8 @@ export async function GET(
               display: 'flex',
               alignItems: 'center',
               gap: '16px',
+              position: 'relative',
+              zIndex: 10,
             }}
           >
             {post.meta.category && (
