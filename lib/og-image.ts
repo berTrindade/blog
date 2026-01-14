@@ -1,6 +1,7 @@
 /**
  * OG Image Generation Utilities
  * Based on: https://vercel.com/docs/og-image-generation
+ * Style inspired by: Node.js blog
  */
 
 // Define supported page types
@@ -10,7 +11,7 @@ export interface OgImageParams {
   type?: PageType
   title: string
   subtitle?: string
-  image?: string // filename relative to public folder (e.g., "images/blog/photo.jpg")
+  tags?: string[]
 }
 
 /**
@@ -22,7 +23,7 @@ export function getOgImageUrl({
   type = 'homepage',
   title,
   subtitle,
-  image,
+  tags,
 }: OgImageParams): string {
   const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
     ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
@@ -39,10 +40,8 @@ export function getOgImageUrl({
     params.append('subtitle', subtitle.trim())
   }
 
-  if (image?.trim()) {
-    // Remove leading slash if present
-    const cleanImage = image.startsWith('/') ? image.slice(1) : image
-    params.append('image', cleanImage)
+  if (tags && tags.length > 0) {
+    params.append('tags', tags.join(','))
   }
 
   return `${baseUrl}/api/og?${params.toString()}`

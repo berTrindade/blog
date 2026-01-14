@@ -5,7 +5,7 @@ import { MDXContent } from "@/components/mdx-content"
 import { TableOfContents } from "@/components/table-of-contents"
 import { Navigation } from "@/components/navigation"
 import Link from "next/link"
-import Image from "next/image"
+import { ArticleCover } from "@/components/article-cover"
 
 export async function generateStaticParams() {
   const posts = await getAllBlogPosts()
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       type: 'blogArticle',
       title: truncateText(post.meta.title, 60),
       subtitle: truncateText(post.meta.excerpt, 120),
-      image: post.meta.image, // Pass the local image path
+      tags: post.meta.tags,
     },
   })
 }
@@ -91,18 +91,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           {formattedDate} · {readingTime}min
         </div>
 
-        {/* Featured Image */}
-        {post.meta.image && (
-          <div className="relative w-full h-[400px] mb-12 rounded-2xl overflow-hidden border border-black/6 bg-[#f6f8fa] dark:border-white/5 dark:bg-[#0F0F0F]">
-            <Image 
-              src={post.meta.image} 
-              alt={post.meta.title}
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
-        )}
+        {/* Hero Cover */}
+        <div className="w-full mb-12 rounded-2xl overflow-hidden border border-black/6 dark:border-white/5">
+          <ArticleCover title={post.meta.title} tags={post.meta.tags} size="hero" />
+        </div>
 
         {/* Article Content */}
         <MDXContent source={post.markdown} />
@@ -115,9 +107,18 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               href="https://x.com/btrindadeabreu" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-blue-600 dark:text-blue-400 hover:underline"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gray-300 dark:bg-gray-200 text-gray-1200 font-medium text-sm transition-colors duration-200 hover:bg-gray-400 dark:hover:bg-gray-300 no-underline"
             >
-              X
+              <svg 
+                width="14" 
+                height="14" 
+                viewBox="0 0 24 24" 
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+              </svg>
+              @btrindadeabreu
             </a>
             {' '}if you have any questions or feedback.
           </p>

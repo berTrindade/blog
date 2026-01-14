@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import Image from "next/image"
+import { ArticleCover } from "@/components/article-cover"
+import { Navigation } from "@/components/navigation"
 import type { BlogPost } from "@/lib/blog-utils"
 
 export default function WritingPage() {
@@ -31,34 +32,35 @@ export default function WritingPage() {
 
   return (
     <div className="root layout-root">
-      <main className="mx-auto max-w-3xl px-4">
-        {/* Back button */}
-        <div className="mb-16">
-          <Link 
-            className="group flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-gray-300 dark:bg-gray-200 transition-colors duration-300 ease-out hover:bg-gray-400 dark:hover:bg-gray-300 active:scale-[0.97] will-change-transform" 
-            href="/"
-            aria-label="Home"
+      {/* Header with back link and navigation */}
+      <header className="mb-16 flex items-center justify-between gap-4">
+        <Link 
+          className="group flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-gray-300 dark:bg-gray-200 transition-colors duration-300 ease-out hover:bg-gray-400 dark:hover:bg-gray-300 active:scale-[0.97] will-change-transform" 
+          href="/"
+          aria-label="Home"
+        >
+          <svg 
+            aria-label="Arrow back icon" 
+            className="size-[18px] stroke-gray-1000 transition-colors duration-300 ease-out group-hover:stroke-gray-1200 dark:stroke-gray-1000 dark:group-hover:stroke-gray-1200" 
+            fill="none" 
+            strokeLinecap="round" 
+            strokeLinejoin="round" 
+            strokeWidth="2.25" 
+            viewBox="0 0 24 24" 
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <svg 
-              aria-label="Arrow back icon" 
-              className="size-[18px] stroke-gray-1000 transition-colors duration-300 ease-out group-hover:stroke-gray-1200 dark:stroke-gray-1000 dark:group-hover:stroke-gray-1200" 
-              fill="none" 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              strokeWidth="2" 
-              viewBox="0 0 24 24" 
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M19 12H5M12 19l-7-7 7-7" />
-            </svg>
-          </Link>
-        </div>
+            <path d="M19 12H5m6-6l-6 6 6 6" />
+          </svg>
+        </Link>
+        <Navigation showShare />
+      </header>
 
+      <main>
         {/* Main content */}
         <div className="min-h-[600px]">
           <div className="mb-12">
             <h1 className="text-4xl font-bold text-black dark:text-white mb-2">Writing</h1>
-            <p className="text-gray-500 dark:text-gray-400">Thoughts, ideas, and explorations.</p>
+            <p className="text-gray-900 dark:text-gray-900">Thoughts, ideas, and explorations.</p>
           </div>
 
           {/* Category filter pills */}
@@ -145,8 +147,6 @@ export default function WritingPage() {
 }
 
 function ArticleListItem({ post }: { post: BlogPost }) {
-  const previewImage = post.meta.thumbnail ?? post.meta.image
-
   // Calculate reading time
   const wordCount = post.meta.excerpt.split(/\s+/).length * 10
   const readingTime = Math.max(1, Math.ceil(wordCount / 200))
@@ -161,17 +161,9 @@ function ArticleListItem({ post }: { post: BlogPost }) {
       href={`/blog/${post.slug}`}
       className="group -mx-3 flex items-center gap-4 rounded-xl py-3 pr-4 pl-3 no-underline hover:bg-gray-200 dark:hover:bg-gray-300"
     >
-      {previewImage && (
-        <div className="relative aspect-158/100 h-20 shrink-0 overflow-hidden rounded-lg border border-black/6 bg-[#f6f8fa] dark:border-white/5 dark:bg-[#0F0F0F]">
-          <Image 
-            src={previewImage} 
-            alt={post.meta.title}
-            fill
-            className="object-cover"
-            sizes="126px"
-          />
-        </div>
-      )}
+      <div className="relative h-20 w-32 shrink-0 overflow-hidden rounded-lg border border-black/6 dark:border-white/5">
+        <ArticleCover title={post.meta.title} tags={post.meta.tags} size="thumbnail" />
+      </div>
       <div className="flex h-20 w-full min-w-0 flex-col items-start justify-center gap-0.5">
         <span className="w-full truncate font-medium text-black dark:text-white">
           {post.meta.title}

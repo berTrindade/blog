@@ -116,6 +116,7 @@
 
 html {
   scroll-padding-top: 32px;
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -133,11 +134,29 @@ pre {
   margin: 32px 0;
   overflow: auto;
   border-radius: 12px;
-  padding: 15px; /* Extra top padding for copy button */
+  padding: 15px;
   border: 1px solid rgba(0, 0, 0, 0.06);
   background-color: #f6f8fa;
   font-size: 13px;
-  line-height: 1.5;
+  line-height: 1.7;
+}
+
+/* Code block wrapper with language header */
+.code-block-wrapper {
+  margin: 32px 0;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.code-block-wrapper pre {
+  margin: 0;
+  border: none;
+  border-radius: 0;
+}
+
+.dark .code-block-wrapper {
+  border-color: rgba(255, 255, 255, 0.05);
 }
 
 .dark {
@@ -195,23 +214,24 @@ pre {
 }
 
 /* Shiki dual theme support */
-.shiki,
+.shiki {
+  color: #24292e;
+  background-color: transparent !important;
+}
+
 .shiki span {
+  color: var(--shiki-light, inherit);
   background-color: transparent !important;
 }
 
-.dark .shiki,
+.dark .shiki {
+  color: #e1e4e8;
+  background-color: transparent !important;
+}
+
 .dark .shiki span {
-  color: var(--shiki-dark) !important;
+  color: var(--shiki-dark, inherit);
   background-color: transparent !important;
-}
-
-.dark {
-    .shiki,
-    .shiki span {
-      color: var(--shiki-dark) !important;
-      background-color: transparent !important;
-    }
 }
 
 pre code {

@@ -1,6 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { getAllMusic } from "@/lib/media-utils"
+import { Navigation } from "@/components/navigation"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -31,33 +32,34 @@ export default function MusicPage() {
 
   return (
     <div className="root layout-root">
-      <main className="mx-auto max-w-2xl px-6 py-16">
-        {/* Header with back link */}
-        <header className="mb-12 flex items-center justify-between gap-4">
-          <Link 
-            className="group flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-gray-300 dark:bg-gray-200 transition-colors duration-300 ease-out hover:bg-gray-400 dark:hover:bg-gray-300 active:scale-[0.97] will-change-transform" 
-            href="/"
-            aria-label="Home"
+      {/* Header with back link and navigation */}
+      <header className="mb-16 flex items-center justify-between gap-4">
+        <Link 
+          className="group flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-gray-300 dark:bg-gray-200 transition-colors duration-300 ease-out hover:bg-gray-400 dark:hover:bg-gray-300 active:scale-[0.97] will-change-transform" 
+          href="/"
+          aria-label="Home"
+        >
+          <svg 
+            aria-label="Arrow back icon" 
+            className="size-[18px] stroke-gray-1000 transition-colors duration-300 ease-out group-hover:stroke-gray-1200 dark:stroke-gray-1000 dark:group-hover:stroke-gray-1200" 
+            fill="none" 
+            height="24" 
+            role="graphics-symbol" 
+            viewBox="0 0 24 24" 
+            width="24" 
+            xmlns="http://www.w3.org/2000/svg"
+            strokeWidth="2.25"
           >
-            <svg 
-              aria-label="Arrow back icon" 
-              className="size-[18px] stroke-gray-1000 transition-colors duration-300 ease-out group-hover:stroke-gray-1200 dark:stroke-gray-1000 dark:group-hover:stroke-gray-1200" 
-              fill="none" 
-              height="24" 
-              role="graphics-symbol" 
-              viewBox="0 0 24 24" 
-              width="24" 
-              xmlns="http://www.w3.org/2000/svg"
-              strokeWidth="2.25"
-            >
-              <path d="M19 12H5m6-6l-6 6 6 6" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </Link>
-        </header>
+            <path d="M19 12H5m6-6l-6 6 6 6" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </Link>
+        <Navigation showShare />
+      </header>
 
+      <main>
         <div className="mb-12">
           <h1 className="text-4xl font-bold text-black dark:text-white mb-2">Music</h1>
-          <p className="text-gray-600 dark:text-gray-400">My top tracks from Spotify.</p>
+          <p className="text-gray-900 dark:text-gray-900">My top tracks from Spotify.</p>
         </div>
 
         <section className="mb-16">

@@ -68,11 +68,6 @@ export function TableOfContents() {
         }
 
         setActiveId(currentHeading)
-        
-        // Update URL hash on natural scroll
-        if (currentHeading && window.location.hash !== `#${currentHeading}`) {
-          window.history.replaceState(null, '', `#${currentHeading}`)
-        }
 
         // If we're at the bottom of the page, select the last heading
         const windowHeight = window.innerHeight
@@ -81,9 +76,6 @@ export function TableOfContents() {
           if (headingData.length > 0) {
             const lastHeading = headingData[headingData.length - 1].id
             setActiveId(lastHeading)
-            if (window.location.hash !== `#${lastHeading}`) {
-              window.history.replaceState(null, '', `#${lastHeading}`)
-            }
           }
         }
       }, 100)

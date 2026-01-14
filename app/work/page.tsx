@@ -48,7 +48,7 @@ export default function WorkPage() {
   return (
     <div className="root layout-root">
       {/* Header with navigation */}
-      <header className="mb-32 flex items-center justify-between">
+      <header className="mb-16 flex items-center justify-between gap-4">
         <Link 
           className="group flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-gray-300 dark:bg-gray-200 transition-colors duration-300 ease-out hover:bg-gray-400 dark:hover:bg-gray-300 active:scale-[0.97] will-change-transform" 
           href="/"
@@ -68,7 +68,7 @@ export default function WorkPage() {
             <path d="M19 12H5m6-6l-6 6 6 6" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </Link>
-        <Navigation />
+        <Navigation showShare />
       </header>
 
       {/* Experiments/Articles section */}

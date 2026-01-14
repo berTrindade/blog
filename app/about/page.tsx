@@ -28,15 +28,28 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className="root layout-root">
-      {/* Bernardo's header style with navigation */}
-      <header className="mb-32 flex items-start justify-between">
-        {/* <div className="flex flex-col items-start">
-          <Link className="text-medium inline-block font-medium no-underline dark:text-white" href="/">
-            Bernardo Trindade de Abreu
-          </Link>
-          <span className="text-medium font-medium leading-none text-gray-1100">Senior Full Stack Engineer</span>
-        </div> */}
-        <Navigation />
+      {/* Header with back link and navigation */}
+      <header className="mb-16 flex items-center justify-between gap-4">
+        <Link 
+          className="group flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-gray-300 dark:bg-gray-200 transition-colors duration-300 ease-out hover:bg-gray-400 dark:hover:bg-gray-300 active:scale-[0.97] will-change-transform" 
+          href="/"
+          aria-label="Home"
+        >
+          <svg 
+            aria-label="Arrow back icon" 
+            className="size-[18px] stroke-gray-1000 transition-colors duration-300 ease-out group-hover:stroke-gray-1200 dark:stroke-gray-1000 dark:group-hover:stroke-gray-1200" 
+            fill="none" 
+            height="24" 
+            role="graphics-symbol" 
+            viewBox="0 0 24 24" 
+            width="24" 
+            xmlns="http://www.w3.org/2000/svg"
+            strokeWidth="2.25"
+          >
+            <path d="M19 12H5m6-6l-6 6 6 6" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </Link>
+        <Navigation showShare />
       </header>
 
       <div className="article">

@@ -7,6 +7,27 @@ export const runtime = 'edge'
 // Define supported page types
 type PageType = 'homepage' | 'blog' | 'blogArticle' | 'about' | 'projects' | 'work' | 'writing'
 
+// Color palette
+const GLOW_COLORS = [
+  '#10b981', // Green
+  '#3b82f6', // Blue
+  '#8b5cf6', // Purple
+  '#f97316', // Orange
+  '#06b6d4', // Cyan
+  '#ec4899', // Pink
+  '#eab308', // Yellow
+  '#14b8a6', // Teal
+]
+
+// Generate consistent color based on title
+function getColorFromTitle(title: string): string {
+  let hash = 0
+  for (let i = 0; i < title.length; i++) {
+    hash = title.charCodeAt(i) + ((hash << 5) - hash)
+  }
+  return GLOW_COLORS[Math.abs(hash) % GLOW_COLORS.length]
+}
+
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = req.nextUrl
@@ -15,164 +36,20 @@ export async function GET(req: NextRequest) {
     const type = (searchParams.get('type') as PageType) || 'homepage'
     const title = searchParams.get('title') || 'Bernardo Trindade'
     const subtitle = searchParams.get('subtitle') || ''
-    const backgroundImage = searchParams.get('image') || ''
 
-    // Build background image URL if provided
-    const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
-      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-      : process.env.VERCEL_URL
-        ? `https://${process.env.VERCEL_URL}`
-        : 'http://localhost:3000'
+    // Get glow color based on title for articles, or type for other pages
+    const glowColor = type === 'blogArticle' 
+      ? getColorFromTitle(title)
+      : {
+          homepage: '#3b82f6',
+          blog: '#8b5cf6',
+          blogArticle: '#f97316',
+          about: '#10b981',
+          projects: '#ec4899',
+          work: '#06b6d4',
+          writing: '#eab308',
+        }[type] || '#3b82f6'
 
-    const imageUrl = backgroundImage ? `${baseUrl}/${backgroundImage}` : null
-
-    // Fetch background image as base64 if provided
-    let imageData: string | null = null
-    if (imageUrl) {
-      try {
-        const imageResponse = await fetch(imageUrl)
-        if (imageResponse.ok) {
-          const buffer = await imageResponse.arrayBuffer()
-          const base64 = Buffer.from(buffer).toString('base64')
-          const contentType = imageResponse.headers.get('content-type') || 'image/jpeg'
-          imageData = `data:${contentType};base64,${base64}`
-        }
-      } catch (e) {
-        console.error('Failed to fetch background image:', e)
-      }
-    }
-
-    const hasBackground = !!imageData
-
-    return new ImageResponse(
-      (
-        <div
-          style={{
-            height: '100%',
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            padding: 60,
-            fontFamily: 'system-ui, -apple-system, sans-serif',
-            background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%)',
-            position: 'relative',
-          }}
-        >
-          {/* Background image layer */}
-          {hasBackground && (
-            <img
-              src={imageData!}
-              alt=""
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-              }}
-            />
-          )}
-
-          {/* Dark overlay for text readability */}
-          {hasBackground && (
-            <div
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                background: 'linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.7) 100%)',
-              }}
-            />
-          )}
-
-          {/* Header with logo */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 12,
-              zIndex: 1,
-            }}
-          >
-            <div
-              style={{
-                width: 48,
-                height: 48,
-                borderRadius: '50%',
-                background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'white',
-                fontSize: 24,
-                fontWeight: 700,
-              }}
-            >
-              B
-            </div>
-            <span style={{ color: '#e4e4e7', fontSize: 24, fontWeight: 500 }}>
-              bernardo.dev
-            </span>
-          </div>
-
-          {/* Main content */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16, zIndex: 1 }}>
-            <h1
-              style={{
-                fontSize: title.length > 50 ? 48 : 56,
-                fontWeight: 700,
-                color: 'white',
-                lineHeight: 1.1,
-                margin: 0,
-                textShadow: hasBackground ? '0 2px 10px rgba(0,0,0,0.5)' : 'none',
-              }}
-            >
-              {title}
-            </h1>
-            {subtitle && (
-              <p
-                style={{
-                  fontSize: 24,
-                  color: '#d4d4d8',
-                  lineHeight: 1.4,
-                  margin: 0,
-                  textShadow: hasBackground ? '0 1px 5px rgba(0,0,0,0.5)' : 'none',
-                }}
-              >
-                {subtitle.length > 120 ? `${subtitle.slice(0, 120)}...` : subtitle}
-              </p>
-            )}
-          </div>
-
-          {/* Footer */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, zIndex: 1 }}>
-            <div
-              style={{
-                width: 8,
-                height: 8,
-                borderRadius: '50%',
-                background: '#10b981',
-              }}
-            />
-            <span style={{ fontSize: 18, color: '#a1a1aa' }}>
-              {type === 'blogArticle' ? 'Blog Article' : type.charAt(0).toUpperCase() + type.slice(1)}
-            </span>
-          </div>
-        </div>
-      ),
-      {
-        width: 1200,
-        height: 630,
-      }
-    )
-  } catch (error) {
-    console.error('Error generating OG image:', error)
-
-    // Return fallback image on error
     return new ImageResponse(
       (
         <div
@@ -183,13 +60,117 @@ export async function GET(req: NextRequest) {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)',
+            fontFamily: 'system-ui, -apple-system, sans-serif',
+            position: 'relative',
+            overflow: 'hidden',
+            background: '#0d1117',
+          }}
+        >
+          {/* Hexagonal pattern overlay */}
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='%23ffffff' stroke-opacity='0.03' stroke-width='1'/%3E%3C/svg%3E")`,
+              backgroundSize: '60px 60px',
+            }}
+          />
+
+          {/* Radial glow effect */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: 500,
+              height: 500,
+              background: `radial-gradient(circle, ${glowColor}40 0%, ${glowColor}20 25%, ${glowColor}08 50%, transparent 70%)`,
+              filter: 'blur(20px)',
+            }}
+          />
+
+          {/* Secondary glow */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: 300,
+              height: 300,
+              background: `radial-gradient(circle, ${glowColor}60 0%, transparent 60%)`,
+              filter: 'blur(40px)',
+            }}
+          />
+
+          {/* Content */}
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 20,
+              zIndex: 1,
+              maxWidth: 900,
+              padding: '0 60px',
+            }}
+          >
+            <h1
+              style={{
+                fontSize: title.length > 60 ? 40 : title.length > 40 ? 48 : 56,
+                fontWeight: 600,
+                color: 'white',
+                lineHeight: 1.2,
+                margin: 0,
+                textAlign: 'center',
+              }}
+            >
+              {title}
+            </h1>
+
+            {subtitle && (
+              <p
+                style={{
+                  fontSize: 24,
+                  color: '#8b949e',
+                  lineHeight: 1.4,
+                  margin: 0,
+                  textAlign: 'center',
+                  maxWidth: 700,
+                }}
+              >
+                {subtitle.length > 100 ? `${subtitle.slice(0, 100)}...` : subtitle}
+              </p>
+            )}
+          </div>
+        </div>
+      ),
+      { width: 1200, height: 630 }
+    )
+  } catch (error) {
+    console.error('Error generating OG image:', error)
+
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            height: '100%',
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: '#0d1117',
             color: 'white',
             fontSize: 48,
             fontWeight: 'bold',
           }}
         >
-          bernardo.dev
+          Bernardo Trindade
         </div>
       ),
       { width: 1200, height: 630 }

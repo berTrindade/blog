@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
+import { ArticleCover } from "@/components/article-cover"
 import { getAllProjects } from "@/lib/projects-utils"
 import { getAllFilms, getAllBooks, getAllMusic } from "@/lib/media-utils"
 import { Navigation } from "@/components/navigation"
@@ -331,8 +332,6 @@ export default function HomePage() {
 }
 
 function ArticleListItem({ post }: { post: BlogPost }) {
-  const previewImage = post.meta.thumbnail ?? post.meta.image
-
   // Calculate reading time
   const wordCount = post.meta.excerpt.split(/\s+/).length * 10 // Rough estimate based on excerpt
   const readingTime = Math.max(1, Math.ceil(wordCount / 200))
@@ -347,17 +346,9 @@ function ArticleListItem({ post }: { post: BlogPost }) {
       href={`/blog/${post.slug}`}
       className="group -mx-3 flex items-center gap-4 rounded-xl py-3 pr-4 pl-3 no-underline hover:bg-gray-200 dark:hover:bg-gray-300"
     >
-      {previewImage && (
-        <div className="relative aspect-158/100 h-20 shrink-0 overflow-hidden rounded-lg border border-black/6 bg-[#f6f8fa] dark:border-white/5 dark:bg-[#0F0F0F]">
-          <Image 
-            src={previewImage} 
-            alt={post.meta.title}
-            fill
-            className="object-cover"
-            sizes="126px"
-          />
-        </div>
-      )}
+      <div className="relative h-20 w-32 shrink-0 overflow-hidden rounded-lg border border-black/6 dark:border-white/5">
+        <ArticleCover title={post.meta.title} tags={post.meta.tags} size="thumbnail" />
+      </div>
       <div className="flex h-20 w-full min-w-0 flex-col items-start justify-center gap-0.5">
         <span className="w-full truncate font-medium text-black dark:text-white">
           {post.meta.title}

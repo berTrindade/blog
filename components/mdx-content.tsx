@@ -46,29 +46,48 @@ const components = {
   p: (props: any) => <p className="mb-[26px] opacity-[0.9]" {...props} />,
   a: (props: any) => <a className="underline inline-block min-h-[24px] py-1" {...props} />,
   code: (props: any) => {
+    // Helper to extract text from React elements recursively
+    const extractText = (node: any): string => {
+      if (typeof node === 'string') return node
+      if (typeof node === 'number') return String(node)
+      if (!node) return ''
+      if (Array.isArray(node)) return node.map(extractText).join('')
+      if (typeof node === 'object' && node.props?.children) {
+        return extractText(node.props.children)
+      }
+      return ''
+    }
+    
     // Inline code (not in pre block)
     if (!props.className) {
       return <code {...props} />
     }
     // Mermaid diagrams
     if (props.className === 'language-mermaid') {
-      // Extract the actual chart text from children
-      const chartText = typeof props.children === 'string' 
-        ? props.children 
-        : String(props.children)
+      const chartText = extractText(props.children)
       return <Mermaid chart={chartText} />
     }
     return <code {...props} />
   },
   pre: (props: any) => {
+    // Helper to extract text from React elements recursively
+    const extractText = (node: any): string => {
+      if (typeof node === 'string') return node
+      if (typeof node === 'number') return String(node)
+      if (!node) return ''
+      if (Array.isArray(node)) return node.map(extractText).join('')
+      if (typeof node === 'object' && node.props?.children) {
+        return extractText(node.props.children)
+      }
+      return ''
+    }
+    
     // Check if this is a mermaid code block
     const child = props.children
     
     // Check direct child
     if (child && child.props && child.props.className === 'language-mermaid') {
-      const chartText = typeof child.props.children === 'string'
-        ? child.props.children
-        : String(child.props.children)
+      const chartText = extractText(child.props.children)
       return <Mermaid chart={chartText} />
     }
     
@@ -76,8 +95,8 @@ const components = {
     if (props.className?.includes('mermaid') || 
         props['data-language'] === 'mermaid' ||
         (typeof child === 'object' && child?.props?.['data-language'] === 'mermaid')) {
-      const code = typeof child === 'string' ? child : child?.props?.children || ''
-      return <Mermaid chart={String(code)} />
+      const chartText = extractText(child)
+      return <Mermaid chart={chartText} />
     }
     
     return <CodeBlock {...props} />
@@ -131,10 +150,21 @@ export async function MDXContent({ source }: MDXContentProps) {
                   transformers: [
                     {
                       name: 'mermaid-skip',
-                      preprocess(code, options) {
+                      preprocess(code: string, options: { lang?: string }) {
                         // Don't process mermaid blocks at all
                         if (options.lang === 'mermaid') {
                           return undefined
+                        }
+                      }
+                    },
+                    {
+                      name: 'add-language-attribute',
+                      pre(node: { properties: Record<string, unknown> }) {
+                        // Add data-language attribute to pre element
+                        // @ts-expect-error - this.options exists at runtime
+                        const lang = this.options?.lang
+                        if (lang) {
+                          node.properties['data-language'] = lang
                         }
                       }
                     }
