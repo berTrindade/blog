@@ -4,6 +4,7 @@ import { generateOgMetadata, truncateText } from "@/lib/og-image"
 import { MDXContent } from "@/components/mdx-content"
 import { TableOfContents } from "@/components/table-of-contents"
 import { Navigation } from "@/components/navigation"
+import { Newsletter } from "@/components/newsletter"
 import Link from "next/link"
 import { ArticleCover } from "@/components/article-cover"
 
@@ -122,6 +123,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             </a>
             {' '}if you have any questions or feedback.
           </p>
+        </div>
+
+        {/* Newsletter */}
+        <div className="mt-12 pt-8 border-t border-gray-300 dark:border-gray-600">
+          <Newsletter />
         </div>
 
         {/* Previous/Next Navigation */}

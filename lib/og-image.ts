@@ -5,7 +5,7 @@
  */
 
 // Define supported page types
-export type PageType = 'homepage' | 'blog' | 'blogArticle' | 'about' | 'projects' | 'work' | 'writing'
+export type PageType = 'homepage' | 'blog' | 'blogArticle' | 'about' | 'work' | 'writing'
 
 export interface OgImageParams {
   type?: PageType

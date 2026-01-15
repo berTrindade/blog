@@ -40,7 +40,7 @@ export function AuthDemo() {
         >
           ✅ Solution
         </button>
-      </div>
+          </div>
 
       {/* Content - min-height prevents layout shift */}
       <div className="min-h-[340px]">
@@ -63,7 +63,7 @@ function Dashboard({ user }) {
             </CodeBox>
             <p className="text-sm text-gray-1100 dark:text-gray-1100">
               The UI hides premium features, but there's no backend validation...
-            </p>
+                </p>
           </div>
         )}
 
@@ -83,8 +83,8 @@ fetch('/api/premium-data', {
               <li>Make direct requests with curl/Postman</li>
               <li>Access resources without paying</li>
               <li>Bypass any frontend validation</li>
-            </ul>
-          </div>
+                </ul>
+              </div>
         )}
 
         {activeTab === 'solution' && (
@@ -105,7 +105,7 @@ app.get('/api/premium-data', async (req, res) => {
             </CodeBox>
             <p className="text-sm text-gray-1100 dark:text-gray-1100 italic">
               💡 Mantra: Frontend hides (UX), Backend blocks (security)
-            </p>
+              </p>
           </div>
         )}
       </div>

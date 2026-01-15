@@ -30,7 +30,7 @@ export function SecretsDemo() {
         >
           ✅ Solution
         </button>
-      </div>
+          </div>
 
       {/* Content - min-height prevents layout shift */}
       <div className="min-h-[480px]">
@@ -60,7 +60,7 @@ async function generateText() {
                 <li>Search for "sk-" or "api_key"</li>
                 <li>All env vars with NEXT_PUBLIC_ are in the bundle</li>
                 <li>Attacker uses your API key = you pay their bill</li>
-              </ol>
+                </ol>
             </div>
           </div>
         )}
@@ -105,7 +105,7 @@ async function generateText(prompt) {
               <li>You control rate limiting</li>
               <li>Validates user authentication</li>
               <li>Can add logging and monitoring</li>
-            </ul>
+                </ul>
           </div>
         )}
       </div>

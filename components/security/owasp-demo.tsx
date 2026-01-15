@@ -177,7 +177,7 @@ export function OWASPDemo() {
 
       {/* Content - min-height prevents layout shift */}
       <div className="min-h-[520px]">
-        <div className="space-y-4">
+          <div className="space-y-4">
           {/* Title & Description */}
           <div>
             <h4 className="text-base font-medium text-gray-1100 dark:text-gray-1100 mb-1">
@@ -203,11 +203,11 @@ export function OWASPDemo() {
             <p className="text-sm font-medium text-gray-1100 dark:text-gray-1100 mb-2">Checklist:</p>
             <ul className="text-sm text-gray-1100 dark:text-gray-1100 space-y-1 list-none ml-2">
               {current.checklist.map((item, i) => (
-                <li key={i}>✓ {item}</li>
-              ))}
-            </ul>
+                  <li key={i}>✓ {item}</li>
+                ))}
+              </ul>
+            </div>
           </div>
-        </div>
       </div>
     </div>
   )

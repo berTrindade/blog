@@ -32,6 +32,13 @@ interface Music {
   type: 'album' | 'track' | 'playlist'
 }
 
+interface Artist {
+  id: string
+  name: string
+  image: string
+  spotifyUrl?: string
+}
+
 export function getAllFilms(): Film[] {
   return [
     {
@@ -171,4 +178,22 @@ export function getAllMusic(): Music[] {
       spotifyUrl: 'https://open.spotify.com/track/2xm9ihELo6xwrRKrBbPql9'
     },
   ]
+}
+
+export function getAllArtists(): Artist[] {
+  const music = getAllMusic()
+  const uniqueArtists = new Map<string, Artist>()
+  
+  music.forEach((track, index) => {
+    if (!uniqueArtists.has(track.artist)) {
+      uniqueArtists.set(track.artist, {
+        id: String(uniqueArtists.size + 1),
+        name: track.artist,
+        image: track.image, // Use album art as artist image
+        spotifyUrl: track.spotifyUrl
+      })
+    }
+  })
+  
+  return Array.from(uniqueArtists.values())
 }

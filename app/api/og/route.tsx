@@ -5,7 +5,7 @@ import { NextRequest } from 'next/server'
 export const runtime = 'edge'
 
 // Define supported page types
-type PageType = 'homepage' | 'blog' | 'blogArticle' | 'about' | 'projects' | 'work' | 'writing'
+type PageType = 'homepage' | 'blog' | 'blogArticle' | 'about' | 'work' | 'writing'
 
 // Color palette
 const GLOW_COLORS = [
@@ -45,7 +45,6 @@ export async function GET(req: NextRequest) {
           blog: '#8b5cf6',
           blogArticle: '#f97316',
           about: '#10b981',
-          projects: '#ec4899',
           work: '#06b6d4',
           writing: '#eab308',
         }[type] || '#3b82f6'

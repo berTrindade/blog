@@ -40,7 +40,7 @@ export function XSSDemo() {
         >
           💡 Checklist
         </button>
-      </div>
+          </div>
 
       {/* Content - min-height prevents layout shift */}
       <div className="min-h-[380px]">
@@ -61,7 +61,7 @@ const maliciousComment = '<img src=x onerror="alert(\\'XSS\\')"/>'
             </CodeBox>
             <p className="text-sm text-gray-1100 dark:text-gray-1100">
               The browser executes any JavaScript in the HTML, including malicious scripts that can steal cookies, tokens, or perform actions on behalf of the user.
-            </p>
+              </p>
           </div>
         )}
 
@@ -85,7 +85,7 @@ function CommentHTML({ html }) {
             </CodeBox>
             <p className="text-sm text-gray-1100 dark:text-gray-1100">
               DOMPurify removes malicious scripts but keeps safe formatting. React also automatically escapes values in {`{}`}.
-            </p>
+              </p>
           </div>
         )}
 
@@ -97,7 +97,7 @@ function CommentHTML({ html }) {
               <li>Sanitize HTML with DOMPurify when necessary</li>
               <li>Configure Content Security Policy (CSP)</li>
             </ul>
-          </div>
+      </div>
         )}
       </div>
     </div>

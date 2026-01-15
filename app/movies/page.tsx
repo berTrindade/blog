@@ -65,7 +65,7 @@ export default function MoviesPage() {
 
         <section className="mb-16">
           <h2 className="text-xl font-semibold text-black dark:text-white mb-6">All Movies</h2>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {films.map((film, index) => (
               <a
                 key={film.id}
