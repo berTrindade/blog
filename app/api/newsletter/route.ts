@@ -59,11 +59,14 @@ export async function POST(request: NextRequest) {
 }
 
 function getWelcomeEmailHtml(email: string): string {
-  const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : process.env.VERCEL_URL
+  const siteUrl = process.env.SITE_URL
+    || (process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : null)
+    || (process.env.VERCEL_URL
       ? `https://${process.env.VERCEL_URL}`
-      : "http://localhost:3000"
+      : null)
+    || "http://localhost:3000"
 
   return `
 <!DOCTYPE html>

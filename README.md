@@ -32,6 +32,17 @@ pnpm dev
 pnpm build
 ```
 
+## Environment Variables
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `SITE_URL` | Production site URL (e.g., `https://btrinda.de`) | Yes |
+| `NEXT_PUBLIC_SITE_URL` | Public site URL for RSS feed | Yes |
+| `RESEND_API_KEY` | Resend API key for newsletter | Yes |
+| `RESEND_AUDIENCE_ID` | Resend audience ID | Yes |
+| `RESEND_FROM_EMAIL` | Sender email address | No |
+| `NEWSLETTER_ADMIN_KEY` | Admin key for broadcast endpoint | Yes |
+
 ## License
 
 All rights reserved © 2026 Bernardo Trindade de Abreu
