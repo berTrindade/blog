@@ -1,28 +1,53 @@
 'use client'
 
 import { useState } from 'react'
+import { CodeBox } from './code-box'
 
 export function AuthDemo() {
-  const [demo, setDemo] = useState<'initial' | 'user' | 'bypass'>('initial')
+  const [activeTab, setActiveTab] = useState<'problem' | 'attack' | 'solution'>('problem')
 
   return (
-    <div className="my-8 space-y-4">
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
-        {demo === 'initial' && (
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Frontend não controla acesso</h3>
-            <p className="text-sm text-slate-300">
-              Veja como validações frontend são facilmente contornadas.
-            </p>
-          </div>
-        )}
+    <div className="my-8">
+      {/* Tabs */}
+      <div className="flex gap-1 mb-4 flex-wrap">
+        <button
+          onClick={() => setActiveTab('problem')}
+          className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors text-gray-1100 dark:text-gray-1100 ${
+            activeTab === 'problem'
+              ? 'bg-gray-300 dark:bg-gray-200'
+              : 'hover:bg-gray-300/50 dark:hover:bg-gray-200/50'
+          }`}
+        >
+          ⚠️ Problem
+        </button>
+        <button
+          onClick={() => setActiveTab('attack')}
+          className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors text-gray-1100 dark:text-gray-1100 ${
+            activeTab === 'attack'
+              ? 'bg-gray-300 dark:bg-gray-200'
+              : 'hover:bg-gray-300/50 dark:hover:bg-gray-200/50'
+          }`}
+        >
+          ❌ Attack
+        </button>
+        <button
+          onClick={() => setActiveTab('solution')}
+          className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors text-gray-1100 dark:text-gray-1100 ${
+            activeTab === 'solution'
+              ? 'bg-gray-300 dark:bg-gray-200'
+              : 'hover:bg-gray-300/50 dark:hover:bg-gray-200/50'
+          }`}
+        >
+          ✅ Solution
+        </button>
+      </div>
 
-        {demo === 'user' && (
+      {/* Content - min-height prevents layout shift */}
+      <div className="min-h-[340px]">
+        {activeTab === 'problem' && (
           <div className="space-y-4">
-            <div className="rounded-lg bg-slate-800/50 border border-slate-700 p-4">
-              <h4 className="font-semibold mb-3">Usuário Normal</h4>
-              <pre className="text-xs overflow-x-auto bg-black/50 p-3 rounded mb-3">
-{`// Frontend esconde recursos premium
+            <CodeBox title="Frontend-only Access Control" language="jsx">
+{`// Frontend hides premium resources
 function Dashboard({ user }) {
   return (
     <div>
@@ -34,44 +59,38 @@ function Dashboard({ user }) {
   )
 }
 
-// Resultado: Acesso negado (UI esconde)`}</pre>
-              <div className="bg-slate-900/50 p-3 rounded">
-                <p className="text-sm text-slate-400">
-                  Status atual: Premium Features - Acesso negado
-                </p>
-              </div>
-            </div>
+// Result: Access denied (UI hides it)`}
+            </CodeBox>
+            <p className="text-sm text-gray-1100 dark:text-gray-1100">
+              The UI hides premium features, but there's no backend validation...
+            </p>
           </div>
         )}
 
-        {demo === 'bypass' && (
+        {activeTab === 'attack' && (
           <div className="space-y-4">
-            <div className="rounded-lg bg-amber-950/30 border border-amber-900 p-4">
-              <h4 className="font-semibold text-amber-400 mb-3">Bypass via DevTools</h4>
-              <pre className="text-xs overflow-x-auto bg-black/50 p-3 rounded mb-3">
-{`// No console do navegador:
+            <CodeBox title="Browser Console" language="javascript">
+{`// Change variable in console:
 user.isPremium = true
 
-// Ou fazer request direto:
+// Or make direct request:
 fetch('/api/premium-data', {
   headers: { 'Authorization': 'Bearer token' }
-})
+})`}
+            </CodeBox>
+            <ul className="text-sm text-gray-1100 dark:text-gray-1100 space-y-1 list-disc list-inside ml-2">
+              <li>Change variables in the console</li>
+              <li>Make direct requests with curl/Postman</li>
+              <li>Access resources without paying</li>
+              <li>Bypass any frontend validation</li>
+            </ul>
+          </div>
+        )}
 
-// Se o backend não validar, o acesso é liberado!`}</pre>
-              <div className="bg-red-950/50 p-3 rounded mb-3">
-                <p className="text-sm text-red-300">
-                  <strong>Atacante conseguiu:</strong>
-                </p>
-                <ul className="text-xs text-slate-300 space-y-1 ml-4 mt-2">
-                  <li>Mudar variável no console</li>
-                  <li>Fazer requests diretas com curl/Postman</li>
-                  <li>Acessar recursos sem pagar</li>
-                </ul>
-              </div>
-              <div className="bg-emerald-950/30 border border-emerald-900 p-3 rounded">
-                <h5 className="text-sm font-semibold text-emerald-400 mb-2">Solução: Validar no Backend</h5>
-                <pre className="text-xs overflow-x-auto bg-black/50 p-2 rounded">
-{`// Backend verifica SEMPRE
+        {activeTab === 'solution' && (
+          <div className="space-y-4">
+            <CodeBox title="Backend Validation" language="javascript">
+{`// Backend ALWAYS verifies
 app.get('/api/premium-data', async (req, res) => {
   const user = await getUserFromToken(req)
   
@@ -82,38 +101,12 @@ app.get('/api/premium-data', async (req, res) => {
   }
   
   return res.json(premiumData)
-})`}</pre>
-              </div>
-            </div>
-            <div className="rounded-lg bg-sky-900/20 border border-sky-800 p-4">
-              <p className="text-sm text-sky-300">
-                <strong>Mantra:</strong> Frontend esconde (UX), Backend bloqueia (segurança)
-              </p>
-            </div>
+})`}
+            </CodeBox>
+            <p className="text-sm text-gray-1100 dark:text-gray-1100 italic">
+              💡 Mantra: Frontend hides (UX), Backend blocks (security)
+            </p>
           </div>
-        )}
-      </div>
-
-      <div className="flex flex-wrap gap-3">
-        <button
-          onClick={() => setDemo('user')}
-          className="inline-flex items-center gap-2 rounded-full bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-100 hover:bg-slate-600 transition-colors"
-        >
-          Tentar como usuário
-        </button>
-        <button
-          onClick={() => setDemo('bypass')}
-          className="inline-flex items-center gap-2 rounded-full bg-amber-500 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-amber-400 transition-colors"
-        >
-          Bypass no DevTools
-        </button>
-        {demo !== 'initial' && (
-          <button
-            onClick={() => setDemo('initial')}
-            className="inline-flex items-center gap-2 rounded-full bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-100 hover:bg-slate-600 transition-colors"
-          >
-            Resetar
-          </button>
         )}
       </div>
     </div>

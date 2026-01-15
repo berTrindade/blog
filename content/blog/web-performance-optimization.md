@@ -22,7 +22,6 @@ Images are often the largest assets:
 
 ```tsx
 import Image from 'next/image';
-
 <Image
   src="/photo.jpg"
   width={800}
@@ -39,7 +38,6 @@ Split your code to reduce initial bundle size:
 
 ```typescript
 const HeavyComponent = lazy(() => import('./HeavyComponent'));
-
 <Suspense fallback={<Loading />}>
   <HeavyComponent />
 </Suspense>

@@ -242,6 +242,11 @@ pre code {
   background-color: transparent !important;
 }
 
+/* Ensure empty lines in code blocks take up vertical space */
+pre code span.line:empty::before {
+  content: ' ';
+}
+
 .dark {
     pre code {
       background-color: transparent !important;
@@ -916,19 +921,21 @@ sup a[data-footnote-ref]:hover {
 /* Desktop: move to margin */
 @media (min-width: 1024px) {
   .sidenote {
-    display: block;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
     float: left;
     clear: left;
     margin-left: -280px;
     width: 240px;
     margin-top: 0;
     margin-bottom: 1rem;
-    font-size: 0.75rem;
-    line-height: 1.4;
+    font-size: 0.7rem;
+    line-height: 1.5;
     position: relative;
     padding-right: 1rem;
     border-right: 2px solid rgba(0, 0, 0, 0.1);
-    text-align: right;
+    text-align: left;
   }
 
   .dark .sidenote {
@@ -936,14 +943,23 @@ sup a[data-footnote-ref]:hover {
   }
 
   .sidenote-number {
-    display: block;
-    font-size: 0.7rem;
-    margin-bottom: 0.25rem;
+    flex-shrink: 0;
+    min-width: 0.75rem;
+    font-size: 0.65rem;
+    text-align: left;
     color: rgba(0, 0, 0, 0.4);
+    position: relative;
+    top: -0.15em;
   }
 
   .dark .sidenote-number {
     color: rgba(255, 255, 255, 0.4);
+  }
+
+  .sidenote a {
+    display: inline;
+    min-height: unset;
+    padding: 0;
   }
 }
 

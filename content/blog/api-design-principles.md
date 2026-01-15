@@ -12,7 +12,7 @@ Designing a good API is crucial for building maintainable applications. Let's ex
 
 Your API should be organized around resources:
 
-```
+```text
 GET    /api/users          # List users
 GET    /api/users/:id      # Get user
 POST   /api/users          # Create user
@@ -34,7 +34,7 @@ Use the right HTTP method for the right action:
 
 Return meaningful HTTP status codes:
 
-```typescript
+```text
 200 OK              // Successful GET, PUT, PATCH
 201 Created         // Successful POST
 204 No Content      // Successful DELETE
@@ -48,7 +48,7 @@ Return meaningful HTTP status codes:
 
 Always version your API:
 
-```
+```text
 /api/v1/users
 /api/v2/users
 ```
@@ -57,7 +57,7 @@ Always version your API:
 
 Support pagination for list endpoints:
 
-```
+```text
 GET /api/users?page=2&limit=20&sort=createdAt&order=desc
 ```
 

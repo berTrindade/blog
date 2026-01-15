@@ -1,23 +1,28 @@
 'use client'
 
 import { useState } from 'react'
+import { CodeBox } from './code-box'
 
 type OWASPCategory = 'A01' | 'A03' | 'A05' | 'A06' | 'A07'
 
-const categories = {
+const categories: Record<OWASPCategory, {
+  title: string
+  description: string
+  vulnerable: string
+  secure: string
+  checklist: string[]
+}> = {
   'A01': {
-    title: 'A01 - Broken Access Control',
-    color: '#ff6b6b',
-    description: 'Usuários acessam recursos que não deveriam.',
-    example: `// Vulnerável
+    title: 'Broken Access Control',
+    description: 'Users access resources they shouldn\'t have access to.',
+    vulnerable: `// Frontend hides admin panel
 if (user.isAdmin) {
   return <AdminPanel />
 }
 
-// Atacante muda no console:
+// Attacker changes in console:
 user.isAdmin = true`,
-    solution: `// Seguro
-// Backend verifica SEMPRE
+    secure: `// Backend ALWAYS verifies
 app.get('/api/admin', (req, res) => {
   const user = getUserFromToken(req)
   if (!user.isAdmin) {
@@ -26,48 +31,46 @@ app.get('/api/admin', (req, res) => {
   return res.json(adminData)
 })`,
     checklist: [
-      'Validar permissões no backend',
-      'Nunca confiar em flags do frontend',
-      'Implementar RBAC (Role-Based Access Control)',
-      'Logar tentativas de acesso não autorizado',
-      'Usar tokens JWT com claims de role'
+      'Validate permissions on backend',
+      'Never trust frontend flags',
+      'Implement RBAC (Role-Based Access Control)',
+      'Log unauthorized access attempts',
+      'Use JWT tokens with role claims'
     ]
   },
   'A03': {
-    title: 'A03 - Injection (XSS)',
-    color: '#ee5a6f',
-    description: 'Código malicioso é executado no browser.',
-    example: `// Vulnerável
+    title: 'Injection (XSS)',
+    description: 'Malicious code executes in the browser.',
+    vulnerable: `// Dangerous!
 <div dangerouslySetInnerHTML={{ __html: userComment }} />
 
-// Se userComment = '<img src=x onerror="alert(1)"/>'
-// O script executa!`,
-    solution: `// Seguro
+// If userComment = '<img src=x onerror="alert(1)"/>'
+// The script executes!`,
+    secure: `// Safe with DOMPurify
 import DOMPurify from 'dompurify'
 
 const clean = DOMPurify.sanitize(userComment)
 <div dangerouslySetInnerHTML={{ __html: clean }} />
 
-// Ou melhor ainda:
-<p>{userComment}</p> // React escapa automaticamente`,
+// Or better:
+<p>{userComment}</p> // React escapes automatically`,
     checklist: [
-      'Usar DOMPurify para sanitizar HTML',
-      'Evitar dangerouslySetInnerHTML quando possível',
-      'Configurar Content Security Policy (CSP)',
-      'Validar e sanitizar inputs no backend também',
-      'Usar HttpOnly cookies para tokens'
+      'Use DOMPurify to sanitize HTML',
+      'Avoid dangerouslySetInnerHTML when possible',
+      'Configure Content Security Policy (CSP)',
+      'Validate and sanitize inputs on backend too',
+      'Use HttpOnly cookies for tokens'
     ]
   },
   'A05': {
-    title: 'A05 - Security Misconfiguration',
-    color: '#f59e0b',
-    description: 'Configurações inseguras expõem a aplicação.',
-    example: `// Vulnerável
-// Sem headers de segurança
-// Sem CSP
-// CORS aberto para todos
-// Source maps em produção`,
-    solution: `// Seguro (next.config.js)
+    title: 'Security Misconfiguration',
+    description: 'Insecure configurations expose the application.',
+    vulnerable: `// Vulnerable
+// No security headers
+// No CSP
+// CORS open to all
+// Source maps in production`,
+    secure: `// next.config.js
 module.exports = {
   async headers() {
     return [{
@@ -75,7 +78,7 @@ module.exports = {
       headers: [
         { key: 'X-Frame-Options', value: 'DENY' },
         { key: 'X-Content-Type-Options', value: 'nosniff' },
-        { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+        { key: 'Referrer-Policy', value: 'strict-origin' },
         { key: 'Content-Security-Policy', value: "default-src 'self'" }
       ]
     }]
@@ -83,179 +86,128 @@ module.exports = {
   productionBrowserSourceMaps: false
 }`,
     checklist: [
-      'Configurar security headers',
-      'Implementar CSP estrito',
-      'Desabilitar source maps em produção',
-      'CORS restritivo (não usar *)',
-      'Rate limiting em APIs'
+      'Configure security headers',
+      'Implement strict CSP',
+      'Disable source maps in production',
+      'Restrictive CORS (don\'t use *)',
+      'Rate limiting on APIs'
     ]
   },
   'A06': {
-    title: 'A06 - Vulnerable and Outdated Components',
-    color: '#ec4899',
-    description: 'Dependências com vulnerabilidades conhecidas.',
-    example: `// Vulnerável
-// package.json com dependências desatualizadas
+    title: 'Vulnerable Components',
+    description: 'Dependencies with known vulnerabilities.',
+    vulnerable: `// Vulnerable package.json
 "dependencies": {
-  "react": "16.8.0",  // versão de 2019!
-  "axios": "0.18.0"   // vulnerabilidades conhecidas
+  "react": "16.8.0",  // version from 2019!
+  "axios": "0.18.0"   // known vulnerabilities
 }`,
-    solution: `// Seguro
-// Manter atualizado
+    secure: `// Keep dependencies updated
 npm audit
 npm audit fix
 npm update
 
-// Usar Dependabot/Renovate
-// CI falha se vulnerabilidades críticas`,
+// Use Dependabot/Renovate
+// CI fails on critical vulnerabilities`,
     checklist: [
-      'Executar npm audit regularmente',
-      'Configurar Dependabot ou Renovate',
-      'Revisar dependências antes de instalar',
-      'Manter versões atualizadas',
-      'CI/CD bloqueia deploys com vulnerabilidades'
+      'Run npm audit regularly',
+      'Configure Dependabot or Renovate',
+      'Review dependencies before installing',
+      'Keep versions updated',
+      'CI/CD blocks deploys with vulnerabilities'
     ]
   },
   'A07': {
-    title: 'A07 - Identification and Authentication Failures',
-    color: '#8b5cf6',
-    description: 'Falhas na autenticação e gestão de sessão.',
-    example: `// Vulnerável
-// Senha sem hash
-// Sem rate limiting no login
-// Tokens em localStorage
-// Sem expiração de sessão`,
-    solution: `// Seguro
-// Backend com bcrypt
+    title: 'Authentication Failures',
+    description: 'Failures in authentication and session management.',
+    vulnerable: `// Vulnerable
+// Password without hash
+// No rate limiting on login
+// Tokens in localStorage
+// No session expiration`,
+    secure: `// Backend with bcrypt
 const hash = await bcrypt.hash(password, 10)
 
 // HttpOnly cookies
-res.cookie('token', jwt, { httpOnly: true, secure: true })
+res.cookie('token', jwt, { 
+  httpOnly: true, 
+  secure: true 
+})
 
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 5 // 5 tentativas por 15min
+  max: 5 // 5 attempts per 15min
 })
 app.use('/api/login', limiter)`,
     checklist: [
-      'Hash senhas com bcrypt (min 10 rounds)',
-      'HttpOnly cookies para tokens',
-      'Rate limiting em login/register',
-      'Require senha forte (min 8 chars)',
-      'Implementar MFA quando possível',
-      'Expiração de sessão',
-      'Log de tentativas de login'
+      'Hash passwords with bcrypt (min 10 rounds)',
+      'HttpOnly cookies for tokens',
+      'Rate limiting on login/register',
+      'Require strong password (min 8 chars)',
+      'Implement MFA when possible',
+      'Session expiration',
+      'Log login attempts'
     ]
   }
 }
 
 export function OWASPDemo() {
-  const [activeCategory, setActiveCategory] = useState<OWASPCategory | null>(null)
+  const [activeTab, setActiveTab] = useState<OWASPCategory>('A01')
+
+  const current = categories[activeTab]
 
   return (
-    <div className="my-8 space-y-4">
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
-        {!activeCategory && (
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold">OWASP Top 10 - Guia Prático Frontend</h3>
-            <p className="text-sm text-slate-300">
-              Use o OWASP como checklist de conversa com o backend, não apenas teoria.
-            </p>
-            <div className="bg-slate-800/30 p-4 rounded-lg">
-              <p className="text-sm font-semibold mb-2">Clique nas categorias para explorar:</p>
-              <ul className="text-xs text-slate-300 space-y-1 ml-4 columns-2">
-                <li><strong>A01</strong> - Broken Access Control</li>
-                <li><strong>A03</strong> - Injection (XSS)</li>
-                <li><strong>A05</strong> - Security Misconfiguration</li>
-                <li><strong>A06</strong> - Vulnerable Components</li>
-                <li><strong>A07</strong> - Authentication Failures</li>
-              </ul>
-            </div>
-          </div>
-        )}
-
-        {activeCategory && (
-          <div className="space-y-4">
-            <div className="rounded-lg border p-4" style={{ 
-              backgroundColor: `${categories[activeCategory].color}10`, 
-              borderColor: categories[activeCategory].color 
-            }}>
-              <h4 className="font-semibold mb-2" style={{ color: categories[activeCategory].color }}>
-                {categories[activeCategory].title}
-              </h4>
-              <p className="text-sm text-slate-300">
-                {categories[activeCategory].description}
-              </p>
-            </div>
-
-            <div className="rounded-lg bg-red-950/30 border border-red-900 p-4">
-              <h5 className="text-sm font-semibold text-red-400 mb-2">Código Vulnerável:</h5>
-              <pre className="text-xs overflow-x-auto bg-black/50 p-3 rounded">
-                {categories[activeCategory].example}
-              </pre>
-            </div>
-
-            <div className="rounded-lg bg-emerald-950/30 border border-emerald-900 p-4">
-              <h5 className="text-sm font-semibold text-emerald-400 mb-2">Código Seguro:</h5>
-              <pre className="text-xs overflow-x-auto bg-black/50 p-3 rounded">
-                {categories[activeCategory].solution}
-              </pre>
-            </div>
-
-            <div className="rounded-lg bg-slate-800/50 border border-slate-700 p-4">
-              <h5 className="text-sm font-semibold mb-2" style={{ color: categories[activeCategory].color }}>
-                Checklist:
-              </h5>
-              <ul className="text-xs text-slate-300 space-y-1 ml-4">
-                {categories[activeCategory].checklist.map((item, i) => (
-                  <li key={i}>✓ {item}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        )}
+    <div className="my-8">
+      {/* Tabs */}
+      <div className="flex gap-1 mb-4 flex-wrap">
+        {(Object.keys(categories) as OWASPCategory[]).map((key) => (
+          <button
+            key={key}
+            onClick={() => setActiveTab(key)}
+            className={`px-3 py-2 text-xs font-medium rounded-lg transition-colors text-gray-1100 dark:text-gray-1100 ${
+              activeTab === key
+                ? 'bg-gray-300 dark:bg-gray-200'
+                : 'hover:bg-gray-300/50 dark:hover:bg-gray-200/50'
+            }`}
+          >
+            {key}
+          </button>
+        ))}
       </div>
 
-      <div className="flex flex-wrap gap-3">
-        <button
-          onClick={() => setActiveCategory('A01')}
-          className="inline-flex items-center gap-2 rounded-full bg-slate-700 px-4 py-2 text-xs font-semibold text-slate-100 hover:bg-slate-600 transition-colors"
-        >
-          A01 - Access Control
-        </button>
-        <button
-          onClick={() => setActiveCategory('A03')}
-          className="inline-flex items-center gap-2 rounded-full bg-slate-700 px-4 py-2 text-xs font-semibold text-slate-100 hover:bg-slate-600 transition-colors"
-        >
-          A03 - Injection/XSS
-        </button>
-        <button
-          onClick={() => setActiveCategory('A05')}
-          className="inline-flex items-center gap-2 rounded-full bg-slate-700 px-4 py-2 text-xs font-semibold text-slate-100 hover:bg-slate-600 transition-colors"
-        >
-          A05 - Misconfiguration
-        </button>
-        <button
-          onClick={() => setActiveCategory('A06')}
-          className="inline-flex items-center gap-2 rounded-full bg-slate-700 px-4 py-2 text-xs font-semibold text-slate-100 hover:bg-slate-600 transition-colors"
-        >
-          A06 - Vulnerable Components
-        </button>
-        <button
-          onClick={() => setActiveCategory('A07')}
-          className="inline-flex items-center gap-2 rounded-full bg-slate-700 px-4 py-2 text-xs font-semibold text-slate-100 hover:bg-slate-600 transition-colors"
-        >
-          A07 - Auth Failures
-        </button>
-        {activeCategory && (
-          <button
-            onClick={() => setActiveCategory(null)}
-            className="inline-flex items-center gap-2 rounded-full bg-slate-700 px-4 py-2 text-xs font-semibold text-slate-100 hover:bg-slate-600 transition-colors"
-          >
-            Resetar
-          </button>
-        )}
+      {/* Content - min-height prevents layout shift */}
+      <div className="min-h-[520px]">
+        <div className="space-y-4">
+          {/* Title & Description */}
+          <div>
+            <h4 className="text-base font-medium text-gray-1100 dark:text-gray-1100 mb-1">
+              {activeTab} - {current.title}
+            </h4>
+            <p className="text-sm text-gray-1100 dark:text-gray-1100">
+              {current.description}
+            </p>
+          </div>
+
+          {/* Vulnerable Code */}
+          <CodeBox title="❌ Vulnerable" language="javascript">
+            {current.vulnerable}
+          </CodeBox>
+
+          {/* Secure Code */}
+          <CodeBox title="✅ Secure" language="javascript">
+            {current.secure}
+          </CodeBox>
+
+          {/* Checklist */}
+          <div>
+            <p className="text-sm font-medium text-gray-1100 dark:text-gray-1100 mb-2">Checklist:</p>
+            <ul className="text-sm text-gray-1100 dark:text-gray-1100 space-y-1 list-none ml-2">
+              {current.checklist.map((item, i) => (
+                <li key={i}>✓ {item}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   )

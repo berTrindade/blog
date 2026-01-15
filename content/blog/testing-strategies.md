@@ -22,13 +22,11 @@ Write fast, focused unit tests:
 
 ```typescript
 import { describe, it, expect } from 'vitest';
-
 describe('calculateTotal', () => {
   it('should sum all items', () => {
     const items = [10, 20, 30];
     expect(calculateTotal(items)).toBe(60);
   });
-
   it('should return 0 for empty array', () => {
     expect(calculateTotal([])).toBe(0);
   });

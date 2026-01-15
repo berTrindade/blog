@@ -1,76 +1,79 @@
 'use client'
 
 import { useState } from 'react'
+import { CodeBox } from './code-box'
 
 export function XSSDemo() {
-  const [demoState, setDemoState] = useState<'initial' | 'vulnerable' | 'safe'>('initial')
-
-  const showVulnerable = () => {
-    setDemoState('vulnerable')
-  }
-
-  const showSafe = () => {
-    setDemoState('safe')
-  }
-
-  const reset = () => {
-    setDemoState('initial')
-  }
+  const [activeTab, setActiveTab] = useState<'vulnerable' | 'secure' | 'checklist'>('vulnerable')
 
   return (
-    <div className="my-8 space-y-4">
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
-        {demoState === 'initial' && (
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Demonstração Interativa</h3>
-            <p className="text-sm text-slate-300">
-              Veja a diferença entre código vulnerável e código seguro.
-            </p>
-            <ul className="space-y-2 text-sm text-slate-300">
-              <li>Como XSS funciona na prática</li>
-              <li>Como prevenir com sanitização</li>
-              <li>Usando DOMPurify para HTML seguro</li>
-            </ul>
-          </div>
-        )}
+    <div className="my-8">
+      {/* Tabs */}
+      <div className="flex gap-1 mb-4 flex-wrap">
+        <button
+          onClick={() => setActiveTab('vulnerable')}
+          className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors text-gray-1100 dark:text-gray-1100 ${
+            activeTab === 'vulnerable'
+              ? 'bg-gray-300 dark:bg-gray-200'
+              : 'hover:bg-gray-300/50 dark:hover:bg-gray-200/50'
+          }`}
+        >
+          ❌ Vulnerable
+        </button>
+        <button
+          onClick={() => setActiveTab('secure')}
+          className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors text-gray-1100 dark:text-gray-1100 ${
+            activeTab === 'secure'
+              ? 'bg-gray-300 dark:bg-gray-200'
+              : 'hover:bg-gray-300/50 dark:hover:bg-gray-200/50'
+          }`}
+        >
+          ✅ Secure
+        </button>
+        <button
+          onClick={() => setActiveTab('checklist')}
+          className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors text-gray-1100 dark:text-gray-1100 ${
+            activeTab === 'checklist'
+              ? 'bg-gray-300 dark:bg-gray-200'
+              : 'hover:bg-gray-300/50 dark:hover:bg-gray-200/50'
+          }`}
+        >
+          💡 Checklist
+        </button>
+      </div>
 
-        {demoState === 'vulnerable' && (
+      {/* Content - min-height prevents layout shift */}
+      <div className="min-h-[380px]">
+        {activeTab === 'vulnerable' && (
           <div className="space-y-4">
-            <div className="rounded-lg bg-red-950/30 border border-red-900 p-4">
-              <h4 className="font-semibold text-red-400 mb-2">Código Vulnerável</h4>
-              <pre className="text-xs overflow-x-auto bg-black/50 p-3 rounded">
-{`// ❌ NUNCA faça isso!
+            <CodeBox title="Dangerous Pattern" language="jsx">
+{`// NEVER do this!
 function Comment({ html }) {
   return (
     <div dangerouslySetInnerHTML={{ __html: html }} />
   )
 }
 
-// Se o usuário enviar:
+// If user sends:
 const maliciousComment = '<img src=x onerror="alert(\\'XSS\\')"/>'
 
-// O script será executado!`}</pre>
-            </div>
-            <div className="rounded-lg bg-red-900/20 border border-red-800 p-4">
-              <p className="text-sm text-red-300">
-                <strong>Problema:</strong> O navegador executa qualquer JavaScript que estiver no HTML,
-                incluindo scripts maliciosos que podem roubar cookies, tokens, ou realizar ações em nome do usuário.
-              </p>
-            </div>
+// The script will execute!`}
+            </CodeBox>
+            <p className="text-sm text-gray-1100 dark:text-gray-1100">
+              The browser executes any JavaScript in the HTML, including malicious scripts that can steal cookies, tokens, or perform actions on behalf of the user.
+            </p>
           </div>
         )}
 
-        {demoState === 'safe' && (
+        {activeTab === 'secure' && (
           <div className="space-y-4">
-            <div className="rounded-lg bg-emerald-950/30 border border-emerald-900 p-4">
-              <h4 className="font-semibold text-emerald-400 mb-2">Código Seguro</h4>
-              <pre className="text-xs overflow-x-auto bg-black/50 p-3 rounded">
-{`// ✅ Forma 1: Usar texto puro
+            <CodeBox title="Safe Patterns" language="jsx">
+{`// Option 1: Use plain text (React escapes automatically)
 function Comment({ text }) {
   return <p>{text}</p>
 }
 
-// ✅ Forma 2: Se PRECISA de HTML, use DOMPurify
+// Option 2: If you NEED HTML, use DOMPurify
 import DOMPurify from 'dompurify'
 
 function CommentHTML({ html }) {
@@ -78,38 +81,23 @@ function CommentHTML({ html }) {
   return <div dangerouslySetInnerHTML={{ __html: sanitized }} />
 }
 
-// Scripts maliciosos são removidos!`}</pre>
-            </div>
-            <div className="rounded-lg bg-emerald-900/20 border border-emerald-800 p-4">
-              <p className="text-sm text-emerald-300">
-                <strong>Solução:</strong> DOMPurify remove scripts maliciosos mas mantém formatação segura (bold, italic, links).
-                React também escapa automaticamente valores em {`{}`}, tornando-os seguros por padrão.
-              </p>
-            </div>
+// Malicious scripts are removed!`}
+            </CodeBox>
+            <p className="text-sm text-gray-1100 dark:text-gray-1100">
+              DOMPurify removes malicious scripts but keeps safe formatting. React also automatically escapes values in {`{}`}.
+            </p>
           </div>
         )}
-      </div>
 
-      <div className="flex flex-wrap gap-3">
-        <button
-          onClick={showVulnerable}
-          className="inline-flex items-center gap-2 rounded-full bg-rose-500 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-rose-400 transition-colors"
-        >
-          Código vulnerável
-        </button>
-        <button
-          onClick={showSafe}
-          className="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-400 transition-colors"
-        >
-          Código seguro
-        </button>
-        {demoState !== 'initial' && (
-          <button
-            onClick={reset}
-            className="inline-flex items-center gap-2 rounded-full bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-100 hover:bg-slate-600 transition-colors"
-          >
-            Resetar
-          </button>
+        {activeTab === 'checklist' && (
+          <div className="space-y-4">
+            <ul className="text-sm text-gray-1100 dark:text-gray-1100 space-y-2 list-disc list-inside ml-2">
+              <li>Never use <code className="bg-gray-300 dark:bg-gray-200 px-1.5 py-0.5 rounded text-xs font-mono">dangerouslySetInnerHTML</code> without sanitization</li>
+              <li>Use <code className="bg-gray-300 dark:bg-gray-200 px-1.5 py-0.5 rounded text-xs font-mono">textContent</code> instead of <code className="bg-gray-300 dark:bg-gray-200 px-1.5 py-0.5 rounded text-xs font-mono">innerHTML</code></li>
+              <li>Sanitize HTML with DOMPurify when necessary</li>
+              <li>Configure Content Security Policy (CSP)</li>
+            </ul>
+          </div>
         )}
       </div>
     </div>

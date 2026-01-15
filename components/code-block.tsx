@@ -85,14 +85,12 @@ export function CodeBlock({ children, className, ...props }: CodeBlockProps) {
   const [mermaidCode, setMermaidCode] = useState('')
 
   useEffect(() => {
-    if (preRef.current) {
-      const text = preRef.current.textContent || ''
-      const lines = text.split('\n')
-      // Count lines, removing trailing empty line if present
-      const count = lines[lines.length - 1] === '' ? lines.length - 1 : lines.length
-      setLineCount(Math.max(count, 1))
+    const countLines = () => {
+      if (!preRef.current) return
       
-      // Check for mermaid content
+      const text = preRef.current.textContent || ''
+      
+      // Check for mermaid content first
       const trimmedText = text.trim()
       const mermaidPatterns = ['graph ', 'graph\n', 'flowchart ', 'sequenceDiagram', 'classDiagram', 'stateDiagram', 'erDiagram', 'journey', 'gantt', 'pie ', 'pie\n', 'mindmap', 'timeline', 'subgraph']
       const isMermaidContent = mermaidPatterns.some(pattern => trimmedText.startsWith(pattern))
@@ -100,8 +98,43 @@ export function CodeBlock({ children, className, ...props }: CodeBlockProps) {
       if (isMermaidContent) {
         setDetectedMermaid(true)
         setMermaidCode(trimmedText)
+        return
       }
+      
+      // Count lines from Shiki's rendered structure
+      // Shiki wraps each line in <span class="line"> elements
+      const codeElement = preRef.current.querySelector('code')
+      if (codeElement) {
+        const lineElements = codeElement.querySelectorAll('span.line')
+        if (lineElements.length > 0) {
+          // Count actual line elements (including empty lines in middle)
+          let count = lineElements.length
+          
+          // Remove trailing empty lines only
+          // Check if the last line element is empty
+          const lastLine = lineElements[lineElements.length - 1]
+          if (lastLine && lastLine.textContent?.trim() === '') {
+            count = count - 1
+          }
+          
+          setLineCount(Math.max(count, 1))
+          return
+        }
+      }
+      
+      // Fallback: if no Shiki structure, use textContent split
+      const lines = text.split('\n')
+      const count = lines[lines.length - 1] === '' ? lines.length - 1 : lines.length
+      setLineCount(Math.max(count, 1))
     }
+    
+    // Try immediately
+    countLines()
+    
+    // Also try after a short delay in case Shiki renders asynchronously
+    const timeoutId = setTimeout(countLines, 0)
+    
+    return () => clearTimeout(timeoutId)
   }, [children])
 
   // If it's a mermaid diagram, render Mermaid component instead

@@ -6,7 +6,7 @@ excerpt: "Master the 12 principles of animation."
 image: https://images.unsplash.com/photo-1509228468518-180dd4864904?w=800&h=400&fit=crop
 ---
 
-Animation on the web has evolved from simple transitions to sophisticated, meaningful interactions. Motion.dev makes it easy to implement animation principles that guide users and create delightful experiences.[^1]
+Animation on the web has evolved from simple transitions to sophisticated, meaningful interactions. Motion.dev makes it easy to implement animation principles that guide users and create delightful experiences.<Footnote id="fn-1">Motion.dev is a production-ready animation library trusted by companies like Framer and Figma. It combines the performance of native browser animations with the flexibility of JavaScript.</Footnote>
 
 ## Why Animation Matters
 
@@ -38,7 +38,7 @@ The key is using spring physics rather than linear transitions. This creates nat
 
 ## The Rule of 300ms
 
-Keep most UI animations under 300ms. Anything longer starts to feel slow and gets in the user's way.[^2]
+Keep most UI animations under 300ms. Anything longer starts to feel slow and gets in the user's way.<Footnote id="fn-2">According to research on perceived performance, animations under 300ms feel instant to users. Anything longer starts to register as "waiting" which degrades the user experience.</Footnote>
 
 ```tsx
 <motion.button
@@ -126,12 +126,6 @@ function App() {
   )
 }
 ```
-
-[^1]: Motion.dev is a production-ready animation library trusted by companies like Framer and Figma. It combines the performance of native browser animations with the flexibility of JavaScript.
-
-[^2]: According to research on perceived performance, animations under 300ms feel instant to users. Anything longer starts to register as "waiting" which degrades the user experience.
-
-[^3]: Motion's FLIP (First, Last, Invert, Play) technique allows it to animate between completely different layouts smoothly, something that's impossible with CSS alone.
 
 ## Resources
 

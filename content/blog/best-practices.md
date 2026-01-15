@@ -8,7 +8,7 @@ image: https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=400&
 
 ## Code Organization
 
-Keep your code organized and maintainable. Proper code organization is one of the most important factors in building scalable applications that can grow over time.[^1] When your codebase is well-structured, it becomes easier for team members to navigate, reduces cognitive load, and makes refactoring much less painful.
+Keep your code organized and maintainable. Proper code organization is one of the most important factors in building scalable applications that can grow over time.<Footnote id="fn-1">The book [Clean Code](https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882) by Robert C. Martin is essential reading for understanding code organization principles.</Footnote> When your codebase is well-structured, it becomes easier for team members to navigate, reduces cognitive load, and makes refactoring much less painful.
 
 A well-organized codebase follows consistent patterns and conventions that make it predictable. When developers can quickly find what they're looking for and understand how different pieces fit together, productivity increases significantly. Here are some key principles to follow:
 
@@ -30,7 +30,7 @@ import { useState, useEffect } from 'react'
 
 ## Performance Tips
 
-Optimize your code for better performance. Performance optimization is crucial for creating applications that feel fast and responsive.[^2] While premature optimization can be counterproductive, understanding and applying these fundamental principles from the start will save you from major refactoring work later.
+Optimize your code for better performance. Performance optimization is crucial for creating applications that feel fast and responsive.<Footnote id="fn-2">Google's research shows that [53% of mobile users abandon sites](https://www.thinkwithgoogle.com/marketing-strategies/app-and-mobile/mobile-page-speed-new-industry-benchmarks/) that take longer than 3 seconds to load.</Footnote> While premature optimization can be counterproductive, understanding and applying these fundamental principles from the start will save you from major refactoring work later.
 
 Small performance improvements add up over time, and users definitely notice the difference between a snappy application and a sluggish one. Here are some essential patterns that will help you write more efficient code:
 
@@ -62,10 +62,6 @@ const expensiveValue = useMemo(() => {
   return computeExpensiveValue(a, b)
 }, [a, b])
 ```
-
-[^1]: The book [Clean Code](https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882) by Robert C. Martin is essential reading for understanding code organization principles.
-
-[^2]: Google's research shows that [53% of mobile users abandon sites](https://www.thinkwithgoogle.com/marketing-strategies/app-and-mobile/mobile-page-speed-new-industry-benchmarks/) that take longer than 3 seconds to load.
 
 ## Error Handling
 

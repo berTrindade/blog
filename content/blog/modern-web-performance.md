@@ -20,11 +20,9 @@ Platforms like Vercel Edge Functions and Cloudflare Workers<Footnote id="fn-2">C
 ```typescript
 // Example: Edge function for personalized content
 export const config = { runtime: 'edge' }
-
 export default async function handler(req: Request) {
   const country = req.headers.get('x-vercel-ip-country')
   const content = await getLocalizedContent(country)
-  
   return new Response(JSON.stringify(content), {
     headers: { 'content-type': 'application/json' },
   })

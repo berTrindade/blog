@@ -158,6 +158,14 @@ export async function MDXContent({ source }: MDXContentProps) {
                       }
                     },
                     {
+                      name: 'trim-trailing-newline',
+                      preprocess(code: string) {
+                        // Fix: Remove trailing newline added by markdown-it
+                        // See: https://github.com/shikijs/shiki/pull/585
+                        return code.trimEnd()
+                      }
+                    },
+                    {
                       name: 'add-language-attribute',
                       pre(node: { properties: Record<string, unknown> }) {
                         // Add data-language attribute to pre element

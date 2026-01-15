@@ -26,7 +26,7 @@ Here's what we'll cover:
 
 ## Installation
 
-Before we can start building, we need to set up our development environment with the necessary tools and dependencies. The installation process is straightforward and should only take a few minutes. Make sure you have Node.js (version 16 or higher)[^1] and npm installed on your system before proceeding.
+Before we can start building, we need to set up our development environment with the necessary tools and dependencies. The installation process is straightforward and should only take a few minutes. Make sure you have Node.js (version 16 or higher)<Footnote id="fn-1">You can download Node.js from [nodejs.org](https://nodejs.org/). We recommend using the LTS (Long Term Support) version for stability.</Footnote> and npm installed on your system before proceeding.
 
 First, install the necessary dependencies:
 
@@ -89,14 +89,12 @@ export default {
 }
 ```
 
-[^1]: You can download Node.js from [nodejs.org](https://nodejs.org/). We recommend using the LTS (Long Term Support) version for stability.
-
 ## Next Steps
 
 Once you've set up your project, check out our **advanced guides** to learn more complex topics like:
 
 * State management patterns
-* API integration[^2]
+* API integration<Footnote id="fn-2">For API integration, consider using libraries like [Axios](https://axios-http.com/) or the native [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) with proper error handling.</Footnote>
 * Performance optimization
 * Testing strategies
 
@@ -107,5 +105,3 @@ Once you've set up your project, check out our **advanced guides** to learn more
 - [Axios](https://axios-http.com/) - Promise-based HTTP client
 - [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) - Native browser API for HTTP requests
 - [TypeScript Tutorial](https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html) - Quick TypeScript introduction
-
-[^2]: For API integration, consider using libraries like [Axios](https://axios-http.com/) or the native [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) with proper error handling.

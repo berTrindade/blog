@@ -160,12 +160,12 @@ export default function App() {
   return (
     <div className="space-y-6">
       <div>
-        <h4 className="text-lg font-semibold mb-3 text-red-400">Vulnerable Code</h4>
+        <h4 className="text-lg font-semibold mb-3 text-red-500">Vulnerable Code</h4>
         <CodePlayground files={vulnerableCode} editorHeight="500px" />
       </div>
       
       <div>
-        <h4 className="text-lg font-semibold mb-3 text-emerald-400">✅ Código Seguro com DOMPurify</h4>
+        <h4 className="text-lg font-semibold mb-3 text-green-500">✅ Código Seguro com DOMPurify</h4>
         <CodePlayground files={safeCode} editorHeight="600px" />
       </div>
     </div>

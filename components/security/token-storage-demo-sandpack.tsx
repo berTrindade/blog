@@ -328,12 +328,12 @@ export default function App() {
   return (
     <div className="space-y-6">
       <div>
-        <h4 className="text-lg font-semibold mb-3 text-red-400">❌ localStorage (Vulnerável a XSS)</h4>
+        <h4 className="text-lg font-semibold mb-3 text-red-500">❌ localStorage (Vulnerável a XSS)</h4>
         <CodePlayground files={localStorageCode} editorHeight="700px" />
       </div>
       
       <div>
-        <h4 className="text-lg font-semibold mb-3 text-emerald-400">✅ HttpOnly Cookies (Seguro)</h4>
+        <h4 className="text-lg font-semibold mb-3 text-green-500">✅ HttpOnly Cookies (Seguro)</h4>
         <CodePlayground files={cookiesCode} editorHeight="700px" />
       </div>
     </div>

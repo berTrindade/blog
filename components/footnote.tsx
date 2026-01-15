@@ -15,7 +15,7 @@ export function Footnote({ id, children }: FootnoteProps) {
       </sup>
       <span className="sidenote" id={id}>
         <span className="sidenote-number">{id.replace('fn-', '')}</span>
-        {children}
+        <span className="sidenote-content">{children}</span>
       </span>
     </>
   )
