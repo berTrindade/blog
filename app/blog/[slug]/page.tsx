@@ -34,14 +34,18 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const post = await getBlogPost(slug)
+  
+  // Fetch post and all posts in parallel for better performance
+  const [post, allPosts] = await Promise.all([
+    getBlogPost(slug),
+    getAllBlogPosts()
+  ])
 
   if (!post) {
     notFound()
   }
 
-  // Get all posts for prev/next navigation
-  const allPosts = await getAllBlogPosts()
+  // Get prev/next posts for navigation
   const currentIndex = allPosts.findIndex(p => p.slug === slug)
   const prevPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null
   const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null

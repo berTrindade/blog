@@ -22,6 +22,14 @@ const nextConfig = {
   turbopack: {
     root: process.cwd(),
   },
+  // Optimize barrel imports for faster builds and smaller bundles
+  experimental: {
+    optimizePackageImports: [
+      'lucide-react',
+      'motion',
+      '@codesandbox/sandpack-react',
+    ],
+  },
 }
 
 const withMDX = createMDX()

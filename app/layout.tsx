@@ -65,6 +65,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Prevent theme flash - runs synchronously before React hydrates */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){
+              try {
+                var theme = localStorage.getItem('theme') || 'system';
+                var resolved = theme === 'system'
+                  ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+                  : theme;
+                document.documentElement.classList.add(resolved);
+              } catch (e) {}
+            })();`,
+          }}
+        />
+      </head>
       <body className="min-h-screen bg-gray-background font-inter text-gray-1200 antialiased" suppressHydrationWarning>
         <ThemeProvider>
           {children}

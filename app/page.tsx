@@ -1,32 +1,19 @@
-"use client"
-
-import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { ArticleCover } from "@/components/article-cover"
 import { getAllFilms, getAllBooks, getAllMusic } from "@/lib/media-utils"
+import { getAllBlogPosts, type BlogPost } from "@/lib/blog-utils"
 import { Navigation } from "@/components/navigation"
 import { Newsletter } from "@/components/newsletter"
-import type { BlogPost } from "@/lib/blog-utils"
 
-export default function HomePage() {
-  const [posts, setPosts] = useState<BlogPost[]>([])
-  const [loading, setLoading] = useState(true)
-
-  const films = getAllFilms()
-  const books = getAllBooks()
-  const music = getAllMusic()
-
-  useEffect(() => {
-    setLoading(true)
-    fetch('/api/posts')
-      .then(res => res.json())
-      .then(data => {
-        setPosts(data)
-        setLoading(false)
-      })
-      .catch(() => setLoading(false))
-  }, [])
+export default async function HomePage() {
+  // Fetch all data in parallel on the server
+  const [posts, films, books, music] = await Promise.all([
+    getAllBlogPosts(),
+    Promise.resolve(getAllFilms()),
+    Promise.resolve(getAllBooks()),
+    Promise.resolve(getAllMusic()),
+  ])
 
   return (
     <div className="root layout-root">
@@ -99,7 +86,8 @@ export default function HomePage() {
             <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
               <path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/>
             </svg>
-          </a>          <a
+          </a>
+          <a
             href="https://cal.com/bertrindade"
             target="_blank"
             rel="noopener noreferrer"
@@ -126,7 +114,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Films & Books section */}
       {/* Films section */}
       <section className="mb-32">
         <div className="mb-6 flex items-center justify-between">
@@ -188,7 +175,7 @@ export default function HomePage() {
               href="/books"
               className="group flex flex-col gap-2"
             >
-              <div className="relative aspect-[2/3] w-full overflow-hidden rounded-md shadow-md transition-transform hover:scale-[1.03]">
+              <div className="relative aspect-2/3 w-full overflow-hidden rounded-md shadow-md transition-transform hover:scale-[1.03]">
                 <Image 
                   src={book.image} 
                   alt={book.title}
@@ -261,26 +248,11 @@ export default function HomePage() {
           </Link>
         </div>
 
-        {loading ? (
-          <div className="space-y-2">
-            {[1, 2, 3, 4].map(i => (
-              <div key={i} className="flex items-start gap-4 rounded-md py-3">
-                <div className="relative h-20 w-32 bg-gray-300 dark:bg-gray-200 rounded animate-pulse" />
-                <div className="flex-1 flex flex-col gap-2">
-                  <div className="h-5 w-3/4 bg-gray-300 dark:bg-gray-200 rounded animate-pulse" />
-                  <div className="h-4 w-full bg-gray-300 dark:bg-gray-200 rounded animate-pulse" />
-                  <div className="h-4 w-20 bg-gray-300 dark:bg-gray-200 rounded animate-pulse" />
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="space-y-2">
-            {posts.slice(0, 4).map(post => (
-              <ArticleListItem key={post.slug} post={post} />
-            ))}
-          </div>
-        )}
+        <div className="space-y-2">
+          {posts.slice(0, 4).map(post => (
+            <ArticleListItem key={post.slug} post={post} />
+          ))}
+        </div>
       </section>
 
       {/* Newsletter section */}
@@ -292,7 +264,7 @@ export default function HomePage() {
   )
 }
 
-function ArticleListItem({ post }: { post: BlogPost }) {
+function ArticleListItem({ post }: Readonly<{ post: BlogPost }>) {
   // Calculate reading time
   const wordCount = post.meta.excerpt.split(/\s+/).length * 10 // Rough estimate based on excerpt
   const readingTime = Math.max(1, Math.ceil(wordCount / 200))
