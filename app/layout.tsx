@@ -81,9 +81,14 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen bg-gray-background font-inter text-gray-1200 antialiased" suppressHydrationWarning>
+      <body className="min-h-screen bg-gray-background font-inter text-gray-1200 antialiased flex flex-col" suppressHydrationWarning>
         <ThemeProvider>
-          {children}
+          <div className="flex-1">
+            {children}
+          </div>
+          <footer className="py-8 text-center text-xs text-gray-1000">
+            <p>© {new Date().getFullYear()} Bernardo Trindade de Abreu. All rights reserved.</p>
+          </footer>
           <Analytics />
         </ThemeProvider>
       </body>

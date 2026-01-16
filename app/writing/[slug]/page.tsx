@@ -45,10 +45,17 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     notFound()
   }
 
-  // Get prev/next posts for navigation
+  // Get prev/next posts for navigation (circular - wraps around)
+  // Posts are sorted newest first, so:
+  // - "Previous" goes to newer article (index - 1)
+  // - "Next" goes to older article (index + 1)
   const currentIndex = allPosts.findIndex(p => p.slug === slug)
-  const prevPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null
-  const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null
+  const prevPost = currentIndex > 0 
+    ? allPosts[currentIndex - 1] 
+    : allPosts[allPosts.length - 1] // Wrap to oldest if at newest
+  const nextPost = currentIndex < allPosts.length - 1 
+    ? allPosts[currentIndex + 1] 
+    : allPosts[0] // Wrap to newest if at oldest
 
   // Calculate reading time (average 200 words per minute)
   const wordCount = post.markdown.split(/\s+/).length
@@ -135,37 +142,22 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         </div>
 
         {/* Previous/Next Navigation */}
-        {(prevPost || nextPost) && (
-          <div className="mt-16 flex flex-col gap-4 sm:flex-row sm:justify-between border-t border-gray-300 dark:border-gray-600 pt-6">
-            {prevPost ? (
-              <Link 
-                className="flex flex-col items-start text-sm no-underline hover:opacity-70 transition-opacity" 
-                href={`/writing/${prevPost.slug}`}
-              >
-                <span className="text-gray-1000">Previous</span>
-                <span className="text-black dark:text-white">{prevPost.meta.title}</span>
-              </Link>
-            ) : (
-              <div className="hidden sm:block" />
-            )}
-            {nextPost ? (
-              <Link 
-                className="flex flex-col items-start sm:items-end text-sm no-underline hover:opacity-70 transition-opacity" 
-                href={`/writing/${nextPost.slug}`}
-              >
-                <span className="text-gray-1000">Next</span>
-                <span className="text-black dark:text-white sm:text-right">{nextPost.meta.title}</span>
-              </Link>
-            ) : (
-              <div className="hidden sm:block" />
-            )}
-          </div>
-        )}
-
-        {/* Footer with copyright */}
-        <footer className="mt-16 pt-8 text-center text-xs text-gray-1000">
-          <p>© {new Date().getFullYear()} Bernardo Trindade de Abreu. All rights reserved.</p>
-        </footer>
+        <div className="mt-16 flex flex-col gap-4 sm:flex-row sm:justify-between border-t border-gray-300 dark:border-gray-600 pt-6">
+          <Link 
+            className="flex flex-col items-start text-sm no-underline hover:opacity-70 transition-opacity" 
+            href={`/writing/${prevPost.slug}`}
+          >
+            <span className="text-gray-1000">Previous</span>
+            <span className="text-black dark:text-white">{prevPost.meta.title}</span>
+          </Link>
+          <Link 
+            className="flex flex-col items-start sm:items-end text-sm no-underline hover:opacity-70 transition-opacity" 
+            href={`/writing/${nextPost.slug}`}
+          >
+            <span className="text-gray-1000">Next</span>
+            <span className="text-black dark:text-white sm:text-right">{nextPost.meta.title}</span>
+          </Link>
+        </div>
       </div>
       </main>
     </div>
