@@ -158,7 +158,7 @@ function ArticleListItem({ post }: { post: BlogPost }) {
 
   return (
     <Link 
-      href={`/blog/${post.slug}`}
+      href={`/writing/${post.slug}`}
       className="group -mx-3 flex items-center gap-4 rounded-xl py-3 pr-4 pl-3 no-underline hover:bg-gray-200 dark:hover:bg-gray-300"
     >
       <div className="relative h-20 w-32 shrink-0 overflow-hidden rounded-lg border border-black/6 dark:border-white/5">

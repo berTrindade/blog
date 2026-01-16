@@ -1,20 +1,26 @@
 'use client'
 
 import { useState } from 'react'
-import { CodeBox } from './code-box'
+import { TabbedCodeBlock } from '@/components/tabbed-code-block'
 
 type OWASPCategory = 'A01' | 'A03' | 'A05' | 'A06' | 'A07'
 
 const categories: Record<OWASPCategory, {
   title: string
   description: string
+  filename: string
   vulnerable: string
+  vulnerableHighlight?: string
   secure: string
+  secureHighlight?: string
   checklist: string[]
 }> = {
   'A01': {
     title: 'Broken Access Control',
     description: 'Users access resources they shouldn\'t have access to.',
+    filename: 'AdminPanel.jsx',
+    vulnerableHighlight: "2-3,6",
+    secureHighlight: "4-6",
     vulnerable: `// Frontend hides admin panel
 if (user.isAdmin) {
   return <AdminPanel />
@@ -41,6 +47,9 @@ app.get('/api/admin', (req, res) => {
   'A03': {
     title: 'Injection (XSS)',
     description: 'Malicious code executes in the browser.',
+    filename: 'Comment.tsx',
+    vulnerableHighlight: "2",
+    secureHighlight: "2,5-6",
     vulnerable: `// Dangerous!
 <div dangerouslySetInnerHTML={{ __html: userComment }} />
 
@@ -65,6 +74,9 @@ const clean = DOMPurify.sanitize(userComment)
   'A05': {
     title: 'Security Misconfiguration',
     description: 'Insecure configurations expose the application.',
+    filename: 'next.config.js',
+    vulnerableHighlight: "2-5",
+    secureHighlight: "7-10,14",
     vulnerable: `// Vulnerable
 // No security headers
 // No CSP
@@ -96,6 +108,9 @@ module.exports = {
   'A06': {
     title: 'Vulnerable Components',
     description: 'Dependencies with known vulnerabilities.',
+    filename: 'package.json',
+    vulnerableHighlight: "3-4",
+    secureHighlight: "2-4",
     vulnerable: `// Vulnerable package.json
 "dependencies": {
   "react": "16.8.0",  // version from 2019!
@@ -119,6 +134,9 @@ npm update
   'A07': {
     title: 'Authentication Failures',
     description: 'Failures in authentication and session management.',
+    filename: 'auth.ts',
+    vulnerableHighlight: "2-5",
+    secureHighlight: "2,5-8,11-14",
     vulnerable: `// Vulnerable
 // Password without hash
 // No rate limiting on login
@@ -158,7 +176,7 @@ export function OWASPDemo() {
 
   return (
     <div className="my-8">
-      {/* Tabs */}
+      {/* Category Tabs */}
       <div className="flex gap-1 mb-4 flex-wrap">
         {(Object.keys(categories) as OWASPCategory[]).map((key) => (
           <button
@@ -175,39 +193,48 @@ export function OWASPDemo() {
         ))}
       </div>
 
-      {/* Content - min-height prevents layout shift */}
-      <div className="min-h-[520px]">
-          <div className="space-y-4">
-          {/* Title & Description */}
-          <div>
-            <h4 className="text-base font-medium text-gray-1100 dark:text-gray-1100 mb-1">
-              {activeTab} - {current.title}
-            </h4>
-            <p className="text-sm text-gray-1100 dark:text-gray-1100">
-              {current.description}
-            </p>
-          </div>
+      {/* Content */}
+      <div className="space-y-4">
+        {/* Title & Description */}
+        <div>
+          <h4 className="text-base font-medium text-gray-1100 dark:text-gray-1100 mb-1">
+            {activeTab} - {current.title}
+          </h4>
+          <p className="text-sm text-gray-1100 dark:text-gray-1100">
+            {current.description}
+          </p>
+        </div>
 
-          {/* Vulnerable Code */}
-          <CodeBox title="❌ Vulnerable" language="javascript">
-            {current.vulnerable}
-          </CodeBox>
+        {/* Code comparison using TabbedCodeBlock */}
+        <TabbedCodeBlock
+          filename={current.filename}
+          tabs={[
+            {
+              label: "Vulnerable",
+              icon: "problem",
+              language: "javascript",
+              highlightLines: current.vulnerableHighlight,
+              code: current.vulnerable
+            },
+            {
+              label: "Secure",
+              icon: "solution",
+              language: "javascript",
+              highlightLines: current.secureHighlight,
+              code: current.secure
+            }
+          ]}
+        />
 
-          {/* Secure Code */}
-          <CodeBox title="✅ Secure" language="javascript">
-            {current.secure}
-          </CodeBox>
-
-          {/* Checklist */}
-          <div>
-            <p className="text-sm font-medium text-gray-1100 dark:text-gray-1100 mb-2">Checklist:</p>
-            <ul className="text-sm text-gray-1100 dark:text-gray-1100 space-y-1 list-none ml-2">
-              {current.checklist.map((item, i) => (
-                  <li key={i}>✓ {item}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
+        {/* Checklist */}
+        <div className="owasp-checklist">
+          <p className="text-sm font-medium text-gray-1100 dark:text-gray-1100 mb-2">Checklist:</p>
+          <ul className="text-sm text-gray-1100 dark:text-gray-1100 space-y-1">
+            {current.checklist.map((item, i) => (
+              <li key={i}>{item}</li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   )

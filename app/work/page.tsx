@@ -140,7 +140,7 @@ export default function WorkPage() {
 function ArticleListItem({ post }: { post: BlogPost }) {
   return (
     <Link 
-      href={`/blog/${post.slug}`}
+      href={`/writing/${post.slug}`}
       className="flex items-start justify-between gap-4 rounded-md py-3 no-underline hover:bg-[#F5F4F4] dark:hover:bg-gray-300 sm:-mx-3 sm:px-3"
     >
       <div className="flex-1 min-w-0">

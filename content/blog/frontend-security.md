@@ -18,6 +18,49 @@ Try inserting `<img src=x onerror="alert('XSS')" />` in the fields below and see
 
 ## How to prevent XSS
 
+<TabbedCodeBlock
+  filename="Comment.tsx"
+  tabs={[
+    {
+      label: "Problem",
+      icon: "problem",
+      language: "tsx",
+      highlightLines: "4-6",
+      code: `function Comment({ content }: { content: string }) {
+  // DANGEROUS: Renders raw HTML from user input
+  return (
+    <div 
+      dangerouslySetInnerHTML={{ __html: content }} 
+    />
+  )
+}
+
+// If content = "<img src=x onerror='alert(1)'>"
+// The script executes!`
+    },
+    {
+      label: "Solution",
+      icon: "solution",
+      language: "tsx",
+      highlightLines: "1,5",
+      code: `import DOMPurify from 'dompurify'
+
+function Comment({ content }: { content: string }) {
+  // SAFE: Sanitizes HTML before rendering
+  const clean = DOMPurify.sanitize(content)
+  
+  return (
+    <div 
+      dangerouslySetInnerHTML={{ __html: clean }} 
+    />
+  )
+}
+
+// Malicious scripts are stripped out!`
+    }
+  ]}
+/>
+
 1. Never use `dangerouslySetInnerHTML` without sanitization
 2. Use `textContent` instead of `innerHTML`
 3. Sanitize HTML with DOMPurify when necessary<Footnote id="fn-2">[DOMPurify](https://github.com/cure53/DOMPurify) is the most used library for HTML sanitization. It removes malicious scripts while maintaining safe content formatting.</Footnote>

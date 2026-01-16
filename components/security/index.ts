@@ -1,4 +1,3 @@
-export { CodeBox } from './code-box'
 export { XSSDemo } from './xss-demo'
 export { TokenStorageDemo } from './token-storage-demo'
 export { AuthDemo } from './auth-demo'

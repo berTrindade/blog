@@ -1,6 +1,7 @@
 import { MDXRemote, MDXRemoteProps } from "next-mdx-remote/rsc"
 import rehypeSlug from "rehype-slug"
 import rehypeShiki from '@shikijs/rehype'
+import { transformerMetaHighlight } from '@shikijs/transformers'
 import remarkGfm from "remark-gfm"
 import { Mermaid } from "@/components/mermaid"
 import { Heading } from "@/components/heading"
@@ -31,6 +32,7 @@ import {
 } from "@/components/code-morph"
 import { CodeMorphDemoV2 } from "@/components/code-morph-v2"
 import { ClipPathButtonDemo } from "@/components/clip-path-button"
+import { TabbedCodeBlock } from "@/components/tabbed-code-block"
 
 interface MDXContentProps {
   source: string
@@ -121,6 +123,7 @@ const components = {
   HighlightMorphDemo,
   ClipPathButtonDemo,
   Footnote,
+  TabbedCodeBlock,
 }
 
 export async function MDXContent({ source }: MDXContentProps) {
@@ -175,7 +178,9 @@ export async function MDXContent({ source }: MDXContentProps) {
                           node.properties['data-language'] = lang
                         }
                       }
-                    }
+                    },
+                    // Line highlighting: use ```ts {1,3-5} syntax in markdown
+                    transformerMetaHighlight()
                   ]
                 }
               ],

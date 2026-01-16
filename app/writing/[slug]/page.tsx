@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   })
 }
 
-export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   
   // Fetch post and all posts in parallel for better performance
@@ -68,8 +68,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       <header className="mb-16 flex items-center justify-between gap-4">
         <Link 
           className="group flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-gray-300 dark:bg-gray-200 transition-colors duration-300 ease-out hover:bg-gray-400 dark:hover:bg-gray-300 active:scale-[0.97] will-change-transform" 
-          href="/"
-          aria-label="Home"
+          href="/writing"
+          aria-label="Back to Writing"
         >
           <svg 
             aria-label="Arrow back icon" 
@@ -136,28 +136,28 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
         {/* Previous/Next Navigation */}
         {(prevPost || nextPost) && (
-          <div className="mt-16 flex justify-between border-t border-gray-300 dark:border-gray-600 pt-6">
+          <div className="mt-16 flex flex-col gap-4 sm:flex-row sm:justify-between border-t border-gray-300 dark:border-gray-600 pt-6">
             {prevPost ? (
               <Link 
-                className="flex w-[48%] md:w-auto min-w-0 shrink-0 flex-col items-start text-sm no-underline hover:opacity-70 transition-opacity" 
-                href={`/blog/${prevPost.slug}`}
+                className="flex flex-col items-start text-sm no-underline hover:opacity-70 transition-opacity" 
+                href={`/writing/${prevPost.slug}`}
               >
                 <span className="text-gray-1000">Previous</span>
-                <span className="inline-block min-w-0 max-w-full truncate text-black dark:text-white">{prevPost.meta.title}</span>
+                <span className="text-black dark:text-white">{prevPost.meta.title}</span>
               </Link>
             ) : (
-              <div />
+              <div className="hidden sm:block" />
             )}
             {nextPost ? (
               <Link 
-                className="ml-auto flex w-[48%] md:w-auto shrink-0 flex-col items-end text-sm no-underline hover:opacity-70 transition-opacity" 
-                href={`/blog/${nextPost.slug}`}
+                className="flex flex-col items-start sm:items-end text-sm no-underline hover:opacity-70 transition-opacity" 
+                href={`/writing/${nextPost.slug}`}
               >
                 <span className="text-gray-1000">Next</span>
-                <span className="inline-block min-w-0 max-w-full truncate text-black dark:text-white">{nextPost.meta.title}</span>
+                <span className="text-black dark:text-white sm:text-right">{nextPost.meta.title}</span>
               </Link>
             ) : (
-              <div />
+              <div className="hidden sm:block" />
             )}
           </div>
         )}

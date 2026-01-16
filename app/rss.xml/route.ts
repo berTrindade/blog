@@ -18,7 +18,7 @@ export async function GET() {
     feed.item({
       title: post.meta.title,
       description: post.meta.excerpt,
-      url: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/blog/${post.slug}`,
+      url: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/writing/${post.slug}`,
       date: new Date(post.meta.date),
       guid: post.slug,
       categories: [post.meta.category],

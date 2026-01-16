@@ -149,6 +149,15 @@ pre {
   overflow: hidden;
 }
 
+/* Wider playgrounds on desktop for breathing room */
+@media (min-width: 1024px) {
+  .code-playground-wide {
+    width: calc(100% + 120px);
+    margin-left: -60px;
+    margin-right: -60px;
+  }
+}
+
 .code-block-wrapper pre {
   margin: 0;
   border: none;
@@ -245,6 +254,62 @@ pre code {
 /* Ensure empty lines in code blocks take up vertical space */
 pre code span.line:empty::before {
   content: ' ';
+}
+
+/* Line highlighting - for ```ts {1,3-5} syntax */
+pre code span.line.highlighted {
+  background-color: rgba(99, 102, 241, 0.15);
+  margin: 0 -15px;
+  padding: 0 15px;
+  display: inline-block;
+  width: calc(100% + 30px);
+}
+
+.dark pre code span.line.highlighted {
+  background-color: rgba(139, 92, 246, 0.2);
+}
+
+/* Tabbed code block specific styles */
+.tabbed-code-block .shiki-wrapper {
+  overflow-x: hidden !important;
+}
+
+.tabbed-code-block .shiki-wrapper code {
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+}
+
+/* Hide scrollbar in tabbed code blocks */
+.tabbed-code-block .code-block-wrapper {
+  overflow: hidden !important;
+}
+
+.tabbed-code-block::-webkit-scrollbar,
+.tabbed-code-block *::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.tabbed-code-block,
+.tabbed-code-block * {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.tabbed-code-block .shiki-wrapper span.line.highlighted {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+  display: block !important;
+  margin-right: -16px;
+  padding-right: 16px;
+  border-left: 2px solid var(--color-gray-600);
+  padding-left: 14px;
+  margin-left: -16px;
+}
+
+.dark .tabbed-code-block .shiki-wrapper span.line.highlighted {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  border-left-color: var(--color-gray-500);
 }
 
 .dark {
@@ -429,6 +494,20 @@ select option:checked {
   color: inherit;
 }
 
+/* Override for OWASP checklist - use native bullet */
+.owasp-checklist ul {
+  list-style: disc;
+  padding-left: 20px;
+}
+
+.owasp-checklist ul > li {
+  padding-left: 0;
+}
+
+.owasp-checklist ul > li::before {
+  content: none;
+}
+
 .article a {
   text-decoration-thickness: 1px;
   transition: opacity 0.2s;
@@ -540,51 +619,123 @@ select option:checked {
     }
 }
 
+/* Sandpack file tabs - match TabbedCodeBlock design */
+.sp-tabs {
+  background: transparent !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+  padding: 0 16px !important;
+}
+
+.dark .sp-tabs {
+  border-bottom-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.sp-tabs-scrollable-container {
+  padding: 0 !important;
+}
+
 .sp-tab-button {
-  font-size: 13px;
-  padding: 8px 12px;
-  border-radius: 6px;
-  transition: background-color 0.2s;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+  background: transparent !important;
+  color: var(--color-gray-900) !important;
+  transition: color 0.2s !important;
+  position: relative !important;
 }
 
 .sp-tab-button:hover {
-  background-color: #f1f0ef;
+  background: transparent !important;
+  color: var(--color-gray-1100) !important;
 }
 
-.dark {
-    .sp-tab-button:hover {
-      background-color: #222221;
-    }
+.dark .sp-tab-button {
+  color: var(--color-gray-900) !important;
+}
+
+.dark .sp-tab-button:hover {
+  color: var(--color-gray-1100) !important;
 }
 
 .sp-tab-button[data-active="true"] {
-  background-color: #e9e9e7;
+  background: transparent !important;
+  color: var(--color-gray-1200) !important;
 }
 
-.dark {
-    .sp-tab-button[data-active="true"] {
-      background-color: #2a2a28;
-    }
+.sp-tab-button[data-active="true"]::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 2px;
+  background: var(--color-gray-1200);
+  border-radius: 9999px;
+}
+
+.dark .sp-tab-button[data-active="true"] {
+  color: var(--color-gray-1200) !important;
 }
 
 .sp-code-editor {
-  background: #fff;
+  background: #ffffff !important;
 }
 
-.dark {
-    .sp-code-editor {
-      background: #0F0F0F !important;
-    }
+.dark .sp-code-editor {
+  background: #111111 !important;
+}
+
+/* Sandpack code styling to match blog design */
+.sp-code-editor .cm-content {
+  padding: 0 12px !important;
+}
+
+.sp-code-editor .cm-gutters {
+  background: transparent !important;
+  border-right: none !important;
+}
+
+.sp-code-editor .cm-gutterElement {
+  font-size: 12px !important;
+  color: #8c959f !important;
+  padding-right: 12px !important;
+}
+
+.dark .sp-code-editor .cm-gutterElement {
+  color: #555555 !important;
+}
+
+/* Active line highlight - subtle like codeblocks */
+.sp-code-editor .cm-activeLine {
+  background: rgba(0, 0, 0, 0.04) !important;
+}
+
+.dark .sp-code-editor .cm-activeLine {
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+.sp-code-editor .cm-activeLineGutter {
+  background: transparent !important;
+}
+
+/* Hide horizontal scrollbar in Sandpack editor */
+.sp-code-editor .cm-scroller {
+  overflow-x: hidden !important;
+}
+
+.sp-code-editor .cm-content {
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
 }
 
 .sp-preview-container {
-  background: #fff;
+  background: #ffffff !important;
 }
 
-.dark {
-    .sp-preview-container {
-      background: #0F0F0F !important;
-    }
+.dark .sp-preview-container {
+  background: #111111 !important;
 }
 
 /* Custom scrollbar for code editor */
@@ -695,9 +846,6 @@ select option:checked {
     }
 }
 
-.sp-cm .cm-activeLine {
-  background-color: transparent;
-}
 
 /* ========================================
    FOOTNOTES
@@ -961,6 +1109,120 @@ sup a[data-footnote-ref]:hover {
     min-height: unset;
     padding: 0;
   }
+}
+
+/* ========================================
+   MOBILE FOOTNOTE POPOVER
+   ======================================== */
+
+/* Hide sidenote on mobile - shown via popover instead */
+@media (max-width: 1023px) {
+  .sidenote {
+    display: none !important;
+  }
+}
+
+/* Popover styles */
+.footnote-popover {
+  position: fixed;
+  z-index: 9999;
+  max-width: 280px;
+  padding: 12px 16px;
+  background: var(--color-gray-100);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -2px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(0, 0, 0, 0.02);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-gray-1100);
+  
+  /* Animation */
+  animation: footnote-popover-enter 0.15s ease-out;
+  transform-origin: top center;
+}
+
+.footnote-popover--above {
+  transform-origin: bottom center;
+}
+
+@keyframes footnote-popover-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.footnote-popover--above {
+  animation-name: footnote-popover-enter-above;
+}
+
+@keyframes footnote-popover-enter-above {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.dark .footnote-popover {
+  background: var(--color-gray-200);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.3),
+    0 2px 4px -2px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.footnote-popover-number {
+  display: inline-block;
+  font-weight: 600;
+  font-size: 0.7rem;
+  color: var(--color-gray-800);
+  margin-right: 6px;
+  min-width: 1rem;
+}
+
+.dark .footnote-popover-number {
+  color: var(--color-gray-900);
+}
+
+.footnote-popover-content {
+  color: var(--color-gray-1100);
+}
+
+.dark .footnote-popover-content {
+  color: var(--color-gray-1100);
+}
+
+.footnote-popover-content a {
+  color: var(--color-gray-1200);
+  text-decoration: underline;
+  text-decoration-color: var(--color-gray-600);
+  text-underline-offset: 2px;
+  transition: text-decoration-color 0.15s ease;
+}
+
+.footnote-popover-content a:hover {
+  text-decoration-color: var(--color-gray-900);
+}
+
+.dark .footnote-popover-content a {
+  color: var(--color-gray-1200);
+  text-decoration-color: var(--color-gray-500);
+}
+
+.dark .footnote-popover-content a:hover {
+  text-decoration-color: var(--color-gray-800);
 }
 
 /* ========================================
