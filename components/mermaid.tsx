@@ -144,8 +144,8 @@ export function Mermaid({ chart }: MermaidProps) {
   return (
     <>
       <div className="group/mermaid relative my-4">
-        {/* Cursor-style toolbar - top right, shows on hover */}
-        <div className="absolute right-3 top-3 z-10 flex items-center rounded-lg border border-gray-200 bg-white p-1 opacity-0 shadow-sm transition-opacity duration-200 group-hover/mermaid:opacity-100 dark:border-[#4a4a4a] dark:bg-[#323232] dark:shadow-none">
+        {/* Cursor-style toolbar - top right, shows on hover, hidden on mobile */}
+        <div className="absolute right-3 top-3 z-10 hidden items-center rounded-lg border border-gray-200 bg-white p-1 opacity-0 shadow-sm transition-opacity duration-200 group-hover/mermaid:opacity-100 dark:border-[#4a4a4a] dark:bg-[#323232] dark:shadow-none lg:flex">
           {/* Expand - two diagonal arrows pointing outward */}
           <button
             onClick={(e) => { e.stopPropagation(); setIsZoomed(true) }}
