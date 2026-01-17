@@ -25,7 +25,8 @@ export function TableOfContents() {
     const headingData: Heading[] = Array.from(headingElements)
       .filter((heading) => {
         // Exclude headings inside the footnotes section
-        return !heading.closest('.footnotes')
+        // Exclude Newsletter section (not article content)
+        return !heading.closest('.footnotes') && heading.textContent !== 'Newsletter'
       })
       .map((heading) => {
         return {
