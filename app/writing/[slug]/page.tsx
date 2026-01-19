@@ -142,20 +142,20 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         </div>
 
         {/* Previous/Next Navigation */}
-        <div className="mt-16 flex flex-col gap-4 sm:flex-row sm:justify-between border-t border-gray-300 dark:border-gray-600 pt-6">
+        <div className="mt-16 flex flex-row justify-between gap-4 border-t border-gray-300 dark:border-gray-600 pt-6">
           <Link 
-            className="flex flex-col items-start text-sm no-underline hover:opacity-70 transition-opacity" 
+            className="flex w-1/2 flex-col items-start text-sm no-underline hover:opacity-70 transition-opacity" 
             href={`/writing/${prevPost.slug}`}
           >
             <span className="text-gray-1000">Previous</span>
-            <span className="text-black dark:text-white">{prevPost.meta.title}</span>
+            <span className="text-black dark:text-white line-clamp-2">{prevPost.meta.title}</span>
           </Link>
           <Link 
-            className="flex flex-col items-start sm:items-end text-sm no-underline hover:opacity-70 transition-opacity" 
+            className="flex w-1/2 flex-col items-end text-sm no-underline hover:opacity-70 transition-opacity" 
             href={`/writing/${nextPost.slug}`}
           >
             <span className="text-gray-1000">Next</span>
-            <span className="text-black dark:text-white sm:text-right">{nextPost.meta.title}</span>
+            <span className="text-black dark:text-white text-right line-clamp-2">{nextPost.meta.title}</span>
           </Link>
         </div>
       </div>
