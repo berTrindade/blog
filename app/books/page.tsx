@@ -103,7 +103,7 @@ export default function BooksPage() {
 
         {/* Books grid */}
         <section className="mb-16">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-4">
             {filteredBooks.map((book) => (
               <div
                 key={book.id}
