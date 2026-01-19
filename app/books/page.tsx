@@ -104,7 +104,7 @@ export default function BooksPage() {
         {/* Books grid */}
         <section className="mb-16">
           <div className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-4">
-            {filteredBooks.map((book) => (
+            {filteredBooks.map((book, index) => (
               <div
                 key={book.id}
                 className="group flex flex-col gap-2"
@@ -115,7 +115,7 @@ export default function BooksPage() {
                     href={book.amazonUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="relative aspect-[2/3] w-full overflow-hidden rounded-md shadow-md transition-transform hover:scale-[1.03] cursor-pointer"
+                    className="relative aspect-[2/3] w-full overflow-hidden rounded-md shadow-md transition-transform hover:scale-[1.03] cursor-pointer bg-gray-200 dark:bg-gray-800 animate-pulse"
                   >
                     <Image 
                       src={book.image} 
@@ -123,16 +123,18 @@ export default function BooksPage() {
                       fill
                       className="object-cover"
                       sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
+                      priority={index < 4}
                     />
                   </a>
                 ) : (
-                  <div className="relative aspect-[2/3] w-full overflow-hidden rounded-md shadow-md transition-transform hover:scale-[1.03]">
+                  <div className="relative aspect-[2/3] w-full overflow-hidden rounded-md shadow-md transition-transform hover:scale-[1.03] bg-gray-200 dark:bg-gray-800 animate-pulse">
                     <Image 
                       src={book.image} 
                       alt={book.title}
                       fill
                       className="object-cover"
                       sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
+                      priority={index < 4}
                     />
                   </div>
                 )}
