@@ -110,15 +110,32 @@ export default function BooksPage() {
                 className="group flex flex-col gap-2"
               >
                 {/* Book cover */}
-                <div className="relative aspect-[2/3] w-full overflow-hidden rounded-md shadow-md transition-transform hover:scale-[1.03]">
-                  <Image 
-                    src={book.image} 
-                    alt={book.title}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
-                  />
-                </div>
+                {book.amazonUrl ? (
+                  <a
+                    href={book.amazonUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="relative aspect-[2/3] w-full overflow-hidden rounded-md shadow-md transition-transform hover:scale-[1.03] cursor-pointer"
+                  >
+                    <Image 
+                      src={book.image} 
+                      alt={book.title}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
+                    />
+                  </a>
+                ) : (
+                  <div className="relative aspect-[2/3] w-full overflow-hidden rounded-md shadow-md transition-transform hover:scale-[1.03]">
+                    <Image 
+                      src={book.image} 
+                      alt={book.title}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
+                    />
+                  </div>
+                )}
                 
                 {/* Book info */}
                 <div className="flex flex-col gap-1">

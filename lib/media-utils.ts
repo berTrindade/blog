@@ -20,6 +20,7 @@ interface Book {
   review?: string
   finishedDate?: string
   category: 'Currently reading' | 'Completed' | 'Planning to read'
+  amazonUrl?: string
 }
 
 interface Music {
@@ -104,7 +105,8 @@ export function getAllBooks(): Book[] {
       image: 'https://m.media-amazon.com/images/I/71f1jieYHNL._SL1500_.jpg',
       rating: 5,
       finishedDate: '2024-12-01',
-      category: 'Currently reading'
+      category: 'Currently reading',
+      amazonUrl: 'https://www.amazon.com/dp/0135957052'
     },
     {
       id: '2',
@@ -114,7 +116,8 @@ export function getAllBooks(): Book[] {
       image: 'https://m.media-amazon.com/images/I/71JpZHEGvWL._UF1000,1000_QL80_.jpg',
       rating: 5,
       finishedDate: '2024-10-15',
-      category: 'Currently reading'
+      category: 'Currently reading',
+      amazonUrl: 'https://www.amazon.com/dp/0132350882'
     },
     {
       id: '3',
@@ -124,7 +127,8 @@ export function getAllBooks(): Book[] {
       image: 'https://m.media-amazon.com/images/I/81F90H7hnML._SL1500_.jpg',
       rating: 4,
       finishedDate: '2024-08-20',
-      category: 'Completed'
+      category: 'Completed',
+      amazonUrl: 'https://www.amazon.com/dp/0735211299'
     },
     {
       id: '4',
@@ -134,7 +138,80 @@ export function getAllBooks(): Book[] {
       image: 'https://m.media-amazon.com/images/I/81TqReGLPSL._SY522_.jpg',
       rating: 5,
       finishedDate: '2024-11-10',
-      category: 'Completed'
+      category: 'Completed',
+      amazonUrl: 'https://www.amazon.com/dp/8535909842'
+    },
+    {
+      id: '5',
+      title: 'Designing Data-Intensive Applications',
+      author: 'Martin Kleppmann',
+      year: 2017,
+      image: 'https://covers.openlibrary.org/b/isbn/9781449373320-L.jpg',
+      category: 'Planning to read',
+      amazonUrl: 'https://www.amazon.com/dp/1449373321'
+    },
+    {
+      id: '6',
+      title: 'The Mythical Man-Month',
+      author: 'Frederick P. Brooks Jr.',
+      year: 1975,
+      image: 'https://covers.openlibrary.org/b/isbn/9780201835953-L.jpg',
+      category: 'Planning to read',
+      amazonUrl: 'https://www.amazon.com/dp/0201835959'
+    },
+    {
+      id: '7',
+      title: 'Refactoring',
+      author: 'Martin Fowler',
+      year: 1999,
+      image: 'https://covers.openlibrary.org/b/isbn/9780134757599-L.jpg',
+      category: 'Planning to read',
+      amazonUrl: 'https://www.amazon.com/dp/0134757599'
+    },
+    {
+      id: '8',
+      title: 'Software Architecture: The Hard Parts',
+      author: 'Neal Ford, Mark Richards',
+      year: 2021,
+      image: 'https://covers.openlibrary.org/b/isbn/9781492086895-L.jpg',
+      category: 'Planning to read',
+      amazonUrl: 'https://www.amazon.com/dp/1492086894'
+    },
+    {
+      id: '9',
+      title: 'Working Effectively with Legacy Code',
+      author: 'Michael Feathers',
+      year: 2004,
+      image: 'https://covers.openlibrary.org/b/isbn/9780131177055-L.jpg',
+      category: 'Planning to read',
+      amazonUrl: 'https://www.amazon.com/dp/0131177052'
+    },
+    {
+      id: '10',
+      title: 'Database Internals',
+      author: 'Alex Petrov',
+      year: 2019,
+      image: 'https://covers.openlibrary.org/b/isbn/9781492040347-L.jpg',
+      category: 'Planning to read',
+      amazonUrl: 'https://www.amazon.com/dp/1492040347'
+    },
+    {
+      id: '11',
+      title: 'A Philosophy of Software Design',
+      author: 'John Ousterhout',
+      year: 2018,
+      image: 'https://covers.openlibrary.org/b/isbn/9781732102200-L.jpg',
+      category: 'Planning to read',
+      amazonUrl: 'https://www.amazon.com/dp/1732102201'
+    },
+    {
+      id: '12',
+      title: 'Why Programs Fail',
+      author: 'Andreas Zeller',
+      year: 2009,
+      image: 'https://covers.openlibrary.org/b/isbn/9780123745156-L.jpg',
+      category: 'Planning to read',
+      amazonUrl: 'https://www.amazon.com/dp/0123745152'
     },
   ]
 }

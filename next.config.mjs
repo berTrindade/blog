@@ -17,6 +17,14 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'source.unsplash.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'm.media-amazon.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'covers.openlibrary.org',
+      },
     ],
   },
   turbopack: {
