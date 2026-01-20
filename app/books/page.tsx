@@ -115,7 +115,7 @@ export default function BooksPage() {
                     href={book.amazonUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="relative aspect-[2/3] w-full overflow-hidden rounded-md shadow-md transition-transform hover:scale-[1.03] cursor-pointer bg-gray-200 dark:bg-gray-800 animate-pulse"
+                    className="relative aspect-[2/3] w-full overflow-hidden rounded-md shadow-md transition-transform hover:scale-[1.03] cursor-pointer bg-gray-200 dark:bg-gray-800"
                   >
                     <Image 
                       src={book.image} 
@@ -127,7 +127,7 @@ export default function BooksPage() {
                     />
                   </a>
                 ) : (
-                  <div className="relative aspect-[2/3] w-full overflow-hidden rounded-md shadow-md transition-transform hover:scale-[1.03] bg-gray-200 dark:bg-gray-800 animate-pulse">
+                  <div className="relative aspect-[2/3] w-full overflow-hidden rounded-md shadow-md transition-transform hover:scale-[1.03] bg-gray-200 dark:bg-gray-800">
                     <Image 
                       src={book.image} 
                       alt={book.title}
