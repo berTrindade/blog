@@ -87,9 +87,9 @@ export default function BooksPage() {
             Will Read
           </button>
           <button
-            onClick={() => setSelectedBookCategory('Read')}
+            onClick={() => setSelectedBookCategory('Completed')}
             className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-colors ${
-              selectedBookCategory === 'Read'
+              selectedBookCategory === 'Completed'
                 ? 'bg-black dark:bg-white text-white dark:text-black'
                 : 'bg-gray-200 dark:bg-[#1A1A1A] text-black dark:text-white hover:bg-gray-300 dark:hover:bg-[#262626]'
             }`}
