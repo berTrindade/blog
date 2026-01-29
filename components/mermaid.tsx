@@ -1,9 +1,52 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import mermaid from 'mermaid'
+import { renderMermaid } from 'beautiful-mermaid'
 import { motion, AnimatePresence } from 'motion/react'
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
+
+/** Minimal theme (bg/fg only): lib derives the rest. Matches your diagram style. */
+const DIAGRAM_THEME = {
+  light: { bg: '#ffffff', fg: '#171717' },
+  dark: { bg: '#1a1a1a', fg: '#e5e5e5' },
+} as const
+
+/** Match beautiful-mermaid subgraph header (e.g. "OpenTelemetry Collector"): same box + text style. */
+const GROUP_HEADER_FONT_SIZE = 12
+const GROUP_HEADER_FONT_WEIGHT = 600
+
+/** Style Receivers, Processors, Exporters nodes like the subgraph header: dark grey box, light border, muted text (same as "OpenTelemetry Collector"). */
+function styleCollectorHeaders(doc: Document): void {
+  const headerPrefixes = ['Receivers:', 'Processors:', 'Exporters:']
+  const headerExact = ['receivers', 'processors', 'exporters'] // case-insensitive
+  function isCollectorHeader(content: string): boolean {
+    const t = content.trim()
+    return headerPrefixes.some((p) => t.startsWith(p)) || headerExact.includes(t.toLowerCase())
+  }
+  doc.querySelectorAll('text').forEach((textEl) => {
+    const content = (textEl.textContent ?? '').trim()
+    if (!isCollectorHeader(content)) return
+
+    // Same text style as subgraph header
+    textEl.setAttribute('font-weight', String(GROUP_HEADER_FONT_WEIGHT))
+    textEl.setAttribute('font-size', String(GROUP_HEADER_FONT_SIZE))
+    textEl.setAttribute('fill', 'var(--_text-sec)')
+
+    // Find the node’s box (rect in same group) and style it like the header bar
+    let g: Element | null = textEl.parentElement
+    while (g) {
+      if (g.tagName?.toLowerCase() === 'g') {
+        const rect = Array.from(g.children).find((c) => c.tagName?.toLowerCase() === 'rect') as SVGRectElement | undefined
+        if (rect) {
+          rect.setAttribute('fill', 'var(--_group-hdr)')
+          rect.setAttribute('stroke', 'var(--_node-stroke)')
+          break
+        }
+      }
+      g = g.parentElement
+    }
+  })
+}
 
 interface MermaidProps {
   chart: string
@@ -63,78 +106,46 @@ export function Mermaid({ chart }: MermaidProps) {
   }, [isZoomed])
 
   useEffect(() => {
-    mermaid.initialize({
-      startOnLoad: false,
-      theme: isDark ? 'dark' : 'neutral',
-      securityLevel: 'loose',
-    })
-
     const renderDiagram = async () => {
       if (!chart) return
-      
-      const id = `mermaid-${Math.random().toString(36).substr(2, 9)}`
-      
-      const cleanChart = typeof chart === 'string' 
-        ? chart.trim() 
-        : String(chart).trim()
-      
+
+      let code = typeof chart === 'string' ? chart.trim() : String(chart).trim()
+      code = code.replaceAll(/<br\s*\/?>/gi, '\n').replaceAll(/["']/g, '')
+      const theme = isDark ? DIAGRAM_THEME.dark : DIAGRAM_THEME.light
+
       try {
-        let { svg } = await mermaid.render(id, cleanChart)
-        
-        // Remove background-color from edge label spans using string replacement
-        // This handles the foreignObject HTML content that DOM queries can't reach
-        svg = svg.replace(/background-color:\s*[^;"\s]+[;]?/gi, '')
-        svg = svg.replace(/background:\s*[^;"\s]+[;]?/gi, '')
-        
-        // Make SVG responsive
+        const svg = await renderMermaid(code, theme)
+
         const parser = new DOMParser()
         const doc = parser.parseFromString(svg, 'image/svg+xml')
-        const svgElement = doc.documentElement
-        
-        const width = svgElement.getAttribute('width')
-        const height = svgElement.getAttribute('height')
-        
-        if (width && height) {
-          const numWidth = parseFloat(width)
-          const numHeight = parseFloat(height)
-          if (!svgElement.getAttribute('viewBox')) {
-            svgElement.setAttribute('viewBox', `0 0 ${numWidth} ${numHeight}`)
-          }
-          svgElement.setAttribute('width', '100%')
-          svgElement.setAttribute('height', 'auto')
-          svgElement.style.maxWidth = '100%'
-          svgElement.style.display = 'block'
-          svgElement.style.margin = '0 auto'
+        const el = doc.documentElement
+        const w = el.getAttribute('width')
+        const h = el.getAttribute('height')
+        if (w && h) {
+          const nw = Number.parseFloat(w)
+          const nh = Number.parseFloat(h)
+          const pad = 48
+          const viewBoxW = nw + 2 * pad
+          el.setAttribute('viewBox', `0 0 ${viewBoxW} ${nh}`)
+          const wrap = doc.createElementNS('http://www.w3.org/2000/svg', 'g')
+          wrap.setAttribute('transform', `translate(${pad}, 0)`)
+          while (el.firstChild) wrap.appendChild(el.firstChild)
+          el.appendChild(wrap)
+          el.setAttribute('width', '100%')
+          el.setAttribute('height', 'auto')
+          el.style.maxWidth = '100%'
+          el.style.display = 'block'
+          el.style.margin = '0 auto'
         }
-        
-        // Make edge label backgrounds semi-transparent
-        const edgeLabelBackgrounds = svgElement.querySelectorAll('.edgeLabel rect, .edgeLabel polygon, .labelBkg, g.edgeLabel > rect, g[class*="edgeLabel"] rect')
-        edgeLabelBackgrounds.forEach((el) => {
-          el.setAttribute('fill', isDark ? '#1e1e1e' : '#ffffff')
-          el.setAttribute('fill-opacity', '0.15')
-          el.setAttribute('stroke', 'none')
-        })
-        
-        // Make arrow lines lighter/more transparent
-        const edgePaths = svgElement.querySelectorAll('.edgePath path, .flowchart-link')
-        edgePaths.forEach((el) => {
-          el.setAttribute('stroke-opacity', '0.25')
-        })
-        
-        // Also make arrowhead markers more transparent
-        const markers = svgElement.querySelectorAll('marker path, marker polygon')
-        markers.forEach((el) => {
-          el.setAttribute('fill-opacity', '0.25')
-          el.setAttribute('stroke-opacity', '0.25')
-        })
-        
-        
-        const serializer = new XMLSerializer()
-        setSvg(serializer.serializeToString(doc.documentElement))
+
+        styleCollectorHeaders(doc)
+        setSvg(new XMLSerializer().serializeToString(el))
       } catch (error: unknown) {
         console.error('Mermaid rendering error:', error)
         const message = error instanceof Error ? error.message : 'Unknown error'
-        setSvg(`<pre class="text-red-500 p-4">Error rendering diagram: ${message}</pre>`)
+        setSvg(
+          `<pre class="text-red-500 p-4">Error rendering diagram: ${message}</pre>`
+        )
       }
     }
 

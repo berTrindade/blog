@@ -160,6 +160,11 @@ Teams deploy collectors in several ways: as [agents](https://opentelemetry.io/do
 
 ```mermaid
 graph TB
+    apps --> collector
+    receivers --> processors
+    processors --> exporters
+    exporters --> backends
+
     subgraph apps["Applications"]
         app1[Service A]
         app2[Service B]
@@ -167,12 +172,20 @@ graph TB
     end
 
     subgraph collector["OpenTelemetry Collector"]
-        receivers["Receivers: OTLP, Jaeger, Zipkin"]
-        processors["Processors: Filter, Batch, Sample"]
-        exporters["Exporters: Multi-backend"]
-
-        receivers --> processors
-        processors --> exporters
+        subgraph receivers["Receivers"]
+            otlp[OTLP]
+            jaeger[Jaeger]
+            zipkin[Zipkin]
+        end
+        subgraph processors["Processors"]
+            filter[Filter]
+            batch[Batch]
+            sample[Sample]
+        end
+        subgraph exporters["Exporters"]
+            multibackend[Multi-backend]
+            exp_out[" "]
+        end
     end
 
     subgraph backends["Observability Platforms"]
@@ -183,15 +196,8 @@ graph TB
         backend5[New Relic]
     end
 
-    app1 --> receivers
-    app2 --> receivers
-    app3 --> receivers
-
-    exporters --> backend1
-    exporters --> backend2
-    exporters --> backend3
-    exporters --> backend4
-    exporters --> backend5
+    apps --> collector
+    exp_out --> backends
 ```
 
 <figcaption>*OpenTelemetry Collector receiving telemetry data from applications and exporting to multiple observability backends*</figcaption>
