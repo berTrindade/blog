@@ -4,6 +4,7 @@ date: "2024-12-13"
 category: Engineering
 excerpt: "Protect your apps from common vulnerabilities."
 image: https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=800&h=400&fit=crop
+tags: ["security", "frontend", "xss", "owasp", "authentication"]
 ---
 
 Frontend is not secure by default. Everything that runs on the client can be inspected, modified, and used against you.<Footnote id="fn-1">JavaScript code in the browser can be inspected through DevTools, modified at runtime, and even decompiled. Therefore, never trust validations or critical logic executed only on the frontend.</Footnote> This interactive guide shows the main security concerns in frontend development.

@@ -18,6 +18,7 @@ import {
 
 interface ArticleCoverProps {
   title: string
+  tags?: string[]
   size?: 'thumbnail' | 'hero'
   className?: string
 }
@@ -62,21 +63,32 @@ function getIconForTitle(title: string): LucideIcon {
   return FileText // Default
 }
 
-// Generate consistent color based on title
-function getColorFromTitle(title: string): string {
+// Generate consistent color based on title and tags
+function getColorFromTitle(title: string, tags?: string[]): string {
   let hash = 0
+  
+  // Hash the title
   for (let i = 0; i < title.length; i++) {
     hash = title.charCodeAt(i) + ((hash << 5) - hash)
   }
+  
+  // Also hash tags if available to ensure better color distribution
+  if (tags && tags.length > 0) {
+    const tagsString = tags.join(',')
+    for (let i = 0; i < tagsString.length; i++) {
+      hash = tagsString.charCodeAt(i) + ((hash << 5) - hash)
+    }
+  }
+  
   return GLOW_COLORS[Math.abs(hash) % GLOW_COLORS.length]
 }
 
 /**
  * Article cover with glow effect and topic icon
  */
-export function ArticleCover({ title, size = 'thumbnail', className = '' }: ArticleCoverProps) {
+export function ArticleCover({ title, tags, size = 'thumbnail', className = '' }: ArticleCoverProps) {
   const isHero = size === 'hero'
-  const glowColor = getColorFromTitle(title)
+  const glowColor = getColorFromTitle(title, tags)
   const Icon = getIconForTitle(title)
 
   return (
