@@ -98,8 +98,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       <main>
       <div className="article" data-main-content>
         {/* Article Header */}
-        <h1 className="mb-2 font-semibold text-white">{post.meta.title}</h1>
-        <div className="mb-8 text-sm text-white opacity-70">
+        <h1 className="mb-2 font-semibold text-gray-1200 dark:text-white">{post.meta.title}</h1>
+        <div className="mb-8 text-sm text-gray-1000 dark:text-white opacity-70">
           {formattedDate} · {readingTime}min
         </div>
 
@@ -113,13 +113,13 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
         {/* Thank you section */}
         <div className="pt-12">
-          <p className="text-white opacity-70 mb-4">
+          <p className="text-gray-1000 dark:text-white opacity-70 mb-4">
             Thank you for reading! I hope you found this useful. Feel free to reach out to me on{' '}
             <a 
               href="https://x.com/btrindadeabreu" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/10 text-white font-medium text-sm transition-colors duration-200 hover:bg-white/20 no-underline"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gray-200 dark:bg-white/10 text-gray-1200 dark:text-white font-medium text-sm transition-colors duration-200 hover:bg-gray-300 dark:hover:bg-white/20 no-underline"
             >
               <svg 
                 width="14" 
@@ -147,15 +147,15 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             className="flex w-1/2 flex-col items-start text-sm no-underline hover:opacity-70 transition-opacity" 
             href={`/writing/${prevPost.slug}`}
           >
-            <span className="text-white opacity-70">Previous</span>
-            <span className="text-white line-clamp-2">{prevPost.meta.title}</span>
+            <span className="text-gray-1000 dark:text-white opacity-70">Previous</span>
+            <span className="text-gray-1200 dark:text-white line-clamp-2">{prevPost.meta.title}</span>
           </Link>
           <Link 
             className="flex w-1/2 flex-col items-end text-sm no-underline hover:opacity-70 transition-opacity" 
             href={`/writing/${nextPost.slug}`}
           >
-            <span className="text-white opacity-70">Next</span>
-            <span className="text-white text-right line-clamp-2">{nextPost.meta.title}</span>
+            <span className="text-gray-1000 dark:text-white opacity-70">Next</span>
+            <span className="text-gray-1200 dark:text-white text-right line-clamp-2">{nextPost.meta.title}</span>
           </Link>
         </div>
       </div>

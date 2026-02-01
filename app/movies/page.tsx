@@ -59,12 +59,12 @@ export default function MoviesPage() {
       <main>
 
         <div className="mb-12">
-          <h1 className="text-4xl font-bold text-white mb-2">Movies</h1>
-          <p className="text-white opacity-70">Films I've watched recently.</p>
+          <h1 className="text-4xl font-bold text-gray-1200 dark:text-white mb-2">Movies</h1>
+          <p className="text-gray-1000 dark:text-white opacity-70">Films I've watched recently.</p>
         </div>
 
         <section className="mb-16">
-          <h2 className="text-xl font-semibold text-white mb-6">All Movies</h2>
+          <h2 className="text-xl font-semibold text-gray-1200 dark:text-white mb-6">All Movies</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {films.map((film, index) => (
               <a
@@ -85,10 +85,10 @@ export default function MoviesPage() {
                   />
                 </div>
                 <div className="flex flex-col">
-                  <span className="truncate font-medium text-sm text-white">
+                  <span className="truncate font-medium text-sm text-gray-1200 dark:text-white">
                     {film.title}
                   </span>
-                  <span className="text-xs text-white opacity-70">
+                  <span className="text-xs text-gray-1000 dark:text-white opacity-70">
                     {film.year}
                   </span>
                 </div>

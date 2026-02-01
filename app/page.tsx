@@ -25,22 +25,22 @@ export default async function HomePage() {
       <main>
       {/* Introduction section */}
       <section className="mb-32">
-        <p className="text-2xl font-medium leading-relaxed text-white mb-6">
+        <p className="text-2xl font-medium leading-relaxed text-gray-1200 dark:text-white mb-6">
           I'm Bernardo,
         </p>
-        <p className="text-base leading-relaxed text-white">
+        <p className="text-base leading-relaxed text-gray-1200 dark:text-white">
           I'm a software engineer building fast, intentional, and effortless tools. Currently at <strong>ustwo</strong>, where I craft scalable applications with React, Node.js, Python, and AWS. I love integrating AI-driven features using LLMs and RAG techniques to create exceptional user experiences.
         </p>
-        <p className="mt-4 text-base leading-relaxed text-white">
+        <p className="mt-4 text-base leading-relaxed text-gray-1200 dark:text-white">
           Previously at <strong>Meta</strong>, where I built enterprise platforms and innovative solutions used by millions of people.
         </p>
-        <p className="mt-4 text-base leading-relaxed text-white">
+        <p className="mt-4 text-base leading-relaxed text-gray-1200 dark:text-white">
           If you value polish, speed, and attention to detail, we'll get along great.{" "}
           <a
             href="https://cal.com/bertrindade"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-semibold text-white hover:opacity-70 transition-opacity no-underline"
+            className="font-semibold text-gray-1200 dark:text-white hover:opacity-70 transition-opacity no-underline"
           >
             Let's talk
           </a>
@@ -50,10 +50,10 @@ export default async function HomePage() {
       {/* Films section */}
       <section className="mb-32">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-lg font-medium leading-none text-white">Movies</h2>
+          <h2 className="text-lg font-medium leading-none text-gray-1200 dark:text-white">Movies</h2>
           <Link 
             href="/movies"
-            className="text-sm text-white hover:opacity-70 transition-opacity"
+            className="text-sm text-gray-1200 dark:text-white hover:opacity-70 transition-opacity"
           >
             View all →
           </Link>
@@ -77,10 +77,10 @@ export default async function HomePage() {
                 />
               </div>
               <div className="flex flex-col">
-                <span className="truncate font-medium text-sm text-white">
+                <span className="truncate font-medium text-sm text-gray-1200 dark:text-white">
                   {film.title}
                 </span>
-                <span className="text-xs text-white opacity-70">
+                <span className="text-xs text-gray-1000 dark:text-white opacity-70">
                   {film.year}
                 </span>
               </div>
@@ -92,10 +92,10 @@ export default async function HomePage() {
       {/* Books section */}
       <section className="mb-32">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-lg font-medium leading-none text-white">Books</h2>
+          <h2 className="text-lg font-medium leading-none text-gray-1200 dark:text-white">Books</h2>
           <Link 
             href="/books"
-            className="text-sm text-white hover:opacity-70 transition-opacity"
+            className="text-sm text-gray-1200 dark:text-white hover:opacity-70 transition-opacity"
           >
             View all →
           </Link>
@@ -118,10 +118,10 @@ export default async function HomePage() {
                 />
               </div>
               <div className="flex flex-col gap-1">
-                <span className="font-semibold text-sm leading-tight text-white line-clamp-2">
+                <span className="font-semibold text-sm leading-tight text-gray-1200 dark:text-white line-clamp-2">
                   {book.title}
                 </span>
-                <span className="text-sm text-white opacity-70">
+                <span className="text-sm text-gray-1000 dark:text-white opacity-70">
                   {book.author}
                 </span>
               </div>
@@ -133,10 +133,10 @@ export default async function HomePage() {
       {/* Music section */}
       <section className="mb-32">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-lg font-medium leading-none text-white">Music</h2>
+          <h2 className="text-lg font-medium leading-none text-gray-1200 dark:text-white">Music</h2>
           <Link 
             href="/music"
-            className="text-sm text-white hover:opacity-70 transition-opacity"
+            className="text-sm text-gray-1200 dark:text-white hover:opacity-70 transition-opacity"
           >
             View all →
           </Link>
@@ -160,10 +160,10 @@ export default async function HomePage() {
                 />
               </div>
               <div className="flex flex-col">
-                <span className="truncate font-medium text-sm text-white">
+                <span className="truncate font-medium text-sm text-gray-1200 dark:text-white">
                   {item.title}
                 </span>
-                <span className="text-xs text-white opacity-70">
+                <span className="text-xs text-gray-1000 dark:text-white opacity-70">
                   {item.artist} · {item.year}
                 </span>
               </div>
@@ -175,8 +175,8 @@ export default async function HomePage() {
       {/* Writing section */}
       <section className="mb-32">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-lg font-medium leading-none text-white">Writing</h2>
-          <Link href="/writing" className="text-sm text-white hover:opacity-70 transition-opacity">
+          <h2 className="text-lg font-medium leading-none text-gray-1200 dark:text-white">Writing</h2>
+          <Link href="/writing" className="text-sm text-gray-1200 dark:text-white hover:opacity-70 transition-opacity">
             View all →
           </Link>
         </div>
@@ -216,13 +216,13 @@ function ArticleListItem({ post }: Readonly<{ post: BlogPost }>) {
         <ArticleCover title={post.meta.title} tags={post.meta.tags} size="thumbnail" />
       </div>
       <div className="flex h-20 w-full min-w-0 flex-col items-start justify-center gap-0.5">
-        <span className="w-full truncate font-medium text-white">
+        <span className="w-full truncate font-medium text-gray-1200 dark:text-white">
           {post.meta.title}
         </span>
-        <p className="text-sm text-white opacity-70 line-clamp-1 mb-0.5">
+        <p className="text-sm text-gray-1000 dark:text-white opacity-70 line-clamp-1 mb-0.5">
           {shortExcerpt}
         </p>
-        <span className="shrink-0 whitespace-nowrap text-sm text-white opacity-70">
+        <span className="shrink-0 whitespace-nowrap text-sm text-gray-1000 dark:text-white opacity-70">
           {new Date(post.meta.date).toLocaleDateString('en-US', { 
             year: 'numeric', 
             month: 'long' 

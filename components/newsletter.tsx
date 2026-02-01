@@ -61,7 +61,7 @@ export function Newsletter() {
 
   return (
     <div className="newsletter-container">
-      <h2 className="mb-6 text-lg font-medium leading-none dark:text-white">Newsletter</h2>
+      <h2 className="mb-6 text-lg font-medium leading-none text-gray-1200 dark:text-white">Newsletter</h2>
       <p className="mb-4 text-base leading-relaxed opacity-90">
         Get updates on new posts. No spam, unsubscribe at any time.
       </p>
