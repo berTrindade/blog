@@ -23,7 +23,7 @@ export function ThemeToggle() {
   if (!mounted) {
     return (
       <button
-        className="group flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 transition-colors duration-200 ease-out hover:bg-gray-300 dark:hover:bg-gray-600"
+        className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-transparent transition-opacity duration-200 ease-out hover:opacity-70"
         aria-label="Toggle theme"
         disabled
       >
@@ -35,7 +35,7 @@ export function ThemeToggle() {
   return (
     <button
       onClick={handleClick}
-      className="group flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 transition-colors duration-200 ease-out hover:bg-gray-300 dark:hover:bg-gray-600"
+      className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-transparent transition-opacity duration-200 ease-out hover:opacity-70"
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
     >
       <AnimatePresence mode="wait">

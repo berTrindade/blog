@@ -91,7 +91,7 @@ export default function RootLayout({
             {children}
           </div>
           <footer className="max-w-[700px] w-full mx-auto h-16 flex items-center justify-between border-t border-gray-300 dark:border-gray-600 px-6">
-            <p className="text-gray-1200 dark:text-white text-sm">© {new Date().getFullYear()}</p>
+            <p className="text-gray-1200 dark:text-white text-sm">© {new Date().getFullYear()} Bernardo Trindade de Abreu</p>
             <div className="flex items-center gap-4">
               <ThemeToggle />
               <ul className="flex items-center gap-4">
