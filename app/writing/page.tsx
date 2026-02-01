@@ -59,8 +59,8 @@ export default function WritingPage() {
         {/* Main content */}
         <div className="min-h-[600px]">
           <div className="mb-12">
-            <h1 className="text-4xl font-bold text-black dark:text-white mb-2">Writing</h1>
-            <p className="text-gray-900 dark:text-gray-900">Thoughts, ideas, and explorations.</p>
+            <h1 className="text-4xl font-bold text-white mb-2">Writing</h1>
+            <p className="text-white opacity-70">Thoughts, ideas, and explorations.</p>
           </div>
 
           {/* Category filter pills */}
@@ -138,7 +138,7 @@ export default function WritingPage() {
             )}
 
             {filteredPosts.length === 0 && !loading && (
-              <p className="text-center text-gray-1000 py-12">No articles found in this category.</p>
+              <p className="text-center text-white opacity-70 py-12">No articles found in this category.</p>
             )}
           </div>
       </main>
@@ -165,13 +165,13 @@ function ArticleListItem({ post }: { post: BlogPost }) {
         <ArticleCover title={post.meta.title} tags={post.meta.tags} size="thumbnail" />
       </div>
       <div className="flex h-20 w-full min-w-0 flex-col items-start justify-center gap-0.5">
-        <span className="w-full truncate font-medium text-black dark:text-white">
+        <span className="w-full truncate font-medium text-white">
           {post.meta.title}
         </span>
-        <p className="text-sm text-gray-1000 line-clamp-1 mb-0.5">
+        <p className="text-sm text-white opacity-70 line-clamp-1 mb-0.5">
           {shortExcerpt}
         </p>
-        <span className="shrink-0 whitespace-nowrap text-sm text-gray-900">
+        <span className="shrink-0 whitespace-nowrap text-sm text-white opacity-70">
           {new Date(post.meta.date).toLocaleDateString('en-US', { 
             year: 'numeric', 
             month: 'short', 

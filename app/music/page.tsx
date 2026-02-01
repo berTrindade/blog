@@ -39,8 +39,8 @@ export default function MusicPage() {
 
       <main>
         <div className="mb-12">
-          <h1 className="text-4xl font-bold text-black dark:text-white mb-2">Music</h1>
-          <p className="text-gray-900 dark:text-gray-900">My listening stats from Spotify.</p>
+          <h1 className="text-4xl font-bold text-white mb-2">Music</h1>
+          <p className="text-white opacity-70">My listening stats from Spotify.</p>
         </div>
 
         {/* Tab pills */}
@@ -84,7 +84,7 @@ export default function MusicPage() {
                   rel="noopener noreferrer"
                   className="group flex items-center gap-4 py-2 -mx-3 px-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-200 transition-colors"
                 >
-                  <span className="w-5 text-sm text-gray-900 dark:text-gray-900 tabular-nums text-right">
+                  <span className="w-5 text-sm text-white opacity-70 tabular-nums text-right">
                     {index + 1}
                   </span>
                   <div className="relative size-10 shrink-0 overflow-hidden rounded-full bg-gray-300 dark:bg-gray-300">
@@ -96,7 +96,7 @@ export default function MusicPage() {
                       sizes="40px"
                     />
                   </div>
-                  <span className="font-medium text-sm text-black dark:text-white">
+                  <span className="font-medium text-sm text-white">
                     {artist.name}
                   </span>
                 </a>
@@ -114,7 +114,7 @@ export default function MusicPage() {
                   rel="noopener noreferrer"
                   className="group flex items-center gap-4 py-2 -mx-3 px-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-200 transition-colors"
                 >
-                  <span className="w-5 text-sm text-gray-900 dark:text-gray-900 tabular-nums text-right">
+                  <span className="w-5 text-sm text-white opacity-70 tabular-nums text-right">
                     {index + 1}
                   </span>
                   <div className="relative size-10 shrink-0 overflow-hidden rounded-lg bg-gray-300 dark:bg-gray-300">
@@ -127,10 +127,10 @@ export default function MusicPage() {
                     />
                   </div>
                   <div className="flex flex-col min-w-0">
-                    <span className="font-medium text-sm text-black dark:text-white truncate">
+                    <span className="font-medium text-sm text-white truncate">
                       {item.title}
                     </span>
-                    <span className="text-xs text-gray-1000 truncate">
+                    <span className="text-xs text-white opacity-70 truncate">
                       {item.artist}
                     </span>
                   </div>

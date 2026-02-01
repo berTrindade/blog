@@ -44,8 +44,8 @@ export default function BooksPage() {
 
       <main>
         <div className="mb-12">
-          <h1 className="text-4xl font-bold text-black dark:text-white mb-2">Books</h1>
-          <p className="text-gray-900 dark:text-gray-900">My own little library.</p>
+          <h1 className="text-4xl font-bold text-white mb-2">Books</h1>
+          <p className="text-white opacity-70">My own little library.</p>
         </div>
 
         {/* Category filter pills */}
@@ -141,12 +141,12 @@ export default function BooksPage() {
                 
                 {/* Book info */}
                 <div className="flex flex-col gap-1">
-                  <span className="font-semibold text-sm leading-tight text-black dark:text-white line-clamp-2">
-                    {book.title}
-                  </span>
-                  <span className="text-sm text-gray-1000">
-                    {book.author}
-                  </span>
+                  <span className="font-semibold text-sm leading-tight text-white line-clamp-2">
+                  {book.title}
+                </span>
+                <span className="text-sm text-white opacity-70">
+                  {book.author}
+                </span>
                 </div>
               </div>
             ))}

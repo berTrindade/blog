@@ -77,12 +77,13 @@
   --font-berkeley-mono: "BerkeleyMono", "BerkeleyMono Fallback", system-ui, arial;
   --font-source-serif: "Source Serif 4", "Source Serif 4 Fallback";
   --font-inter: "interVariable", "interVariable Fallback", system-ui, arial;
+  --font-geist-sans: "Geist Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 /* Light mode (default) */
 :root {
   color-scheme: light dark;
-  --color-gray-background: lab(98.956% 0 0);
+  --color-gray-background: 240 10% 3.9%;
   --color-gray-100: lab(98.956% 0 0);
   --color-gray-200: lab(96.752% 0 0);
   --color-gray-300: lab(94.78% 0 0);
@@ -99,7 +100,7 @@
 
 /* Dark mode - triggered by .dark class OR system preference (when no explicit class) */
 .dark {
-    --color-gray-background: lab(5.09437% 0 0);
+    --color-gray-background: 240 10% 3.9%;
     --color-gray-100: lab(5.09437% 0 0);
     --color-gray-200: lab(8.708% 0 0);
     --color-gray-300: lab(13.232% 0 0);
@@ -120,14 +121,29 @@ html {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: var(--font-geist-sans, "Geist Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #FCFCFC !important;
+  background-color: hsl(240 10% 3.9%) !important;
 }
 
 .dark body {
-  background-color: #111111 !important;
+  background-color: hsl(240 10% 3.9%) !important;
+}
+
+/* Grain texture overlay - matches reference blog implementation */
+.grain-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  background-image: url('/grain.jpg');
+  background-repeat: repeat;
+  background-size: auto;
+  opacity: 0.05;
+  pointer-events: none;
 }
 
 pre {

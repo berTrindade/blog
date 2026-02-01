@@ -73,7 +73,7 @@ export default function WorkPage() {
 
       {/* Experiments/Articles section */}
       <section className="mb-32">
-        <h1 className="mb-8 text-2xl font-medium leading-none text-black dark:text-white">
+        <h1 className="mb-8 text-2xl font-medium leading-none text-white">
           Experiments
         </h1>
 
@@ -83,7 +83,7 @@ export default function WorkPage() {
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="appearance-none rounded-lg border border-gray-400 dark:border-gray-300 bg-white dark:bg-black px-4 py-2 pr-10 text-sm text-gray-1200 focus:outline-none focus:ring-2 focus:ring-gray-600 dark:focus:ring-gray-500 cursor-pointer"
+              className="appearance-none rounded-lg border border-gray-400 dark:border-gray-300 bg-white/10 dark:bg-black/50 px-4 py-2 pr-10 text-sm text-white focus:outline-none focus:ring-2 focus:ring-gray-600 dark:focus:ring-gray-500 cursor-pointer"
             >
               {categories.map(cat => (
                 <option key={cat} value={cat}>
@@ -92,7 +92,7 @@ export default function WorkPage() {
               ))}
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-              <svg className="h-4 w-4 text-gray-1000" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="h-4 w-4 text-white opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </div>
@@ -100,7 +100,7 @@ export default function WorkPage() {
 
           <button
             onClick={() => setGroupByYear(!groupByYear)}
-            className="text-sm text-gray-1000 hover:text-gray-1200 transition-colors"
+            className="text-sm text-white hover:opacity-70 transition-opacity"
           >
             {groupByYear ? "Show all" : "Group by year"}
           </button>
@@ -111,7 +111,7 @@ export default function WorkPage() {
           <div className="space-y-16">
             {years.map(year => (
               <div key={year}>
-                <h2 className="mb-6 text-xl font-medium text-black dark:text-white">{year}</h2>
+                <h2 className="mb-6 text-xl font-medium text-white">{year}</h2>
                 <div className="space-y-2">
                   {postsByYear[Number(year)].map(post => (
                     <ArticleListItem key={post.slug} post={post} />
@@ -130,7 +130,7 @@ export default function WorkPage() {
         )}
 
         {filteredPosts.length === 0 && (
-          <p className="text-center text-gray-1000 py-12">No articles found in this category.</p>
+          <p className="text-center text-white opacity-70 py-12">No articles found in this category.</p>
         )}
       </section>
     </div>
@@ -145,20 +145,20 @@ function ArticleListItem({ post }: { post: BlogPost }) {
     >
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
-          <h2 className="font-medium text-black dark:text-white">
+          <h2 className="font-medium text-white">
             {post.meta.title}
           </h2>
           {post.meta.category && post.meta.category !== "Uncategorized" && (
-            <span className="shrink-0 rounded-full bg-gray-300 dark:bg-gray-200 px-2 py-0.5 text-xs text-gray-1200">
+            <span className="shrink-0 rounded-full bg-white/10 px-2 py-0.5 text-xs text-white">
               {post.meta.category}
             </span>
           )}
         </div>
-        <p className="text-sm text-gray-1000 line-clamp-2">
+        <p className="text-sm text-white opacity-70 line-clamp-2">
           {post.meta.excerpt}
         </p>
       </div>
-      <time className="shrink-0 text-xs text-gray-900 mt-1">
+      <time className="shrink-0 text-xs text-white opacity-70 mt-1">
         {new Date(post.meta.date).toLocaleDateString('en-US', { 
           year: 'numeric', 
           month: 'short', 
