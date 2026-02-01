@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Analytics } from "@vercel/analytics/next"
 import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeToggle } from "@/components/theme-toggle"
 import { GeistSans } from "geist/font/sans"
 import "./globals.css"
 
@@ -91,7 +92,9 @@ export default function RootLayout({
           </div>
           <footer className="max-w-[700px] w-full mx-auto h-16 flex items-center justify-between border-t border-gray-300 dark:border-gray-600 px-6">
             <p className="text-gray-1200 dark:text-white text-sm">© {new Date().getFullYear()}</p>
-            <ul className="flex items-center gap-4">
+            <div className="flex items-center gap-4">
+              <ThemeToggle />
+              <ul className="flex items-center gap-4">
               <li>
                 <a
                   href="https://x.com/btrindadeabreu"
@@ -145,7 +148,8 @@ export default function RootLayout({
                     </a>
                   </li>
                 </ul>
-              </footer>
+            </div>
+          </footer>
           <Analytics />
         </ThemeProvider>
       </body>
