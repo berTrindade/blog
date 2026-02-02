@@ -35,22 +35,10 @@ export default function WritingPage() {
       {/* Header with back link and navigation */}
       <header className="mb-16 flex items-center justify-between gap-4">
         <Link 
-          className="group flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-gray-300 dark:bg-gray-200 transition-colors duration-300 ease-out hover:bg-gray-400 dark:hover:bg-gray-300 active:scale-[0.97] will-change-transform" 
+          className="text-sm text-primary hover:opacity-70 transition-opacity no-underline" 
           href="/"
-          aria-label="Home"
         >
-          <svg 
-            aria-label="Arrow back icon" 
-            className="size-[18px] stroke-gray-1000 transition-colors duration-300 ease-out group-hover:stroke-gray-1200 dark:stroke-gray-1000 dark:group-hover:stroke-gray-1200" 
-            fill="none" 
-            strokeLinecap="round" 
-            strokeLinejoin="round" 
-            strokeWidth="2.25" 
-            viewBox="0 0 24 24" 
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M19 12H5m6-6l-6 6 6 6" />
-          </svg>
+          ← Home
         </Link>
         <Navigation showShare />
       </header>
@@ -59,8 +47,8 @@ export default function WritingPage() {
         {/* Main content */}
         <div className="min-h-[600px]">
           <div className="mb-12">
-            <h1 className="text-4xl font-bold text-gray-1200 dark:text-white mb-2">Writing</h1>
-            <p className="text-gray-1000 dark:text-white opacity-70">Thoughts, ideas, and explorations.</p>
+            <h1 className="text-4xl font-bold text-primary mb-2">Writing</h1>
+            <p className="text-tertiary">Thoughts, ideas, and explorations.</p>
           </div>
 
           {/* Category filter pills */}
@@ -138,7 +126,7 @@ export default function WritingPage() {
             )}
 
             {filteredPosts.length === 0 && !loading && (
-              <p className="text-center text-gray-1000 dark:text-white opacity-70 py-12">No articles found in this category.</p>
+              <p className="text-center text-tertiary py-12">No articles found in this category.</p>
             )}
           </div>
       </main>
@@ -165,13 +153,13 @@ function ArticleListItem({ post }: { post: BlogPost }) {
         <ArticleCover title={post.meta.title} tags={post.meta.tags} size="thumbnail" />
       </div>
       <div className="flex h-20 w-full min-w-0 flex-col items-start justify-center gap-0.5">
-        <span className="w-full truncate font-medium text-gray-1200 dark:text-white">
+        <span className="w-full truncate font-medium text-primary">
           {post.meta.title}
         </span>
-        <p className="text-sm text-gray-1000 dark:text-white opacity-70 line-clamp-1 mb-0.5">
+        <p className="text-sm text-secondary line-clamp-1 mb-0.5">
           {shortExcerpt}
         </p>
-        <span className="shrink-0 whitespace-nowrap text-sm text-gray-1000 dark:text-white opacity-70">
+        <span className="shrink-0 whitespace-nowrap text-sm text-tertiary">
           {new Date(post.meta.date).toLocaleDateString('en-US', { 
             year: 'numeric', 
             month: 'short', 

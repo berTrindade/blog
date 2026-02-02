@@ -21,31 +21,18 @@ export default function BooksPage() {
       {/* Header with back link and navigation */}
       <header className="mb-16 flex items-center justify-between gap-4">
         <Link 
-          className="group flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-gray-300 dark:bg-gray-200 transition-colors duration-300 ease-out hover:bg-gray-400 dark:hover:bg-gray-300 active:scale-[0.97] will-change-transform" 
+          className="text-sm text-primary hover:opacity-70 transition-opacity no-underline" 
           href="/"
-          aria-label="Home"
         >
-          <svg 
-            aria-label="Arrow back icon" 
-            className="size-[18px] stroke-gray-1000 transition-colors duration-300 ease-out group-hover:stroke-gray-1200 dark:stroke-gray-1000 dark:group-hover:stroke-gray-1200" 
-            fill="none" 
-            height="24" 
-            role="graphics-symbol" 
-            viewBox="0 0 24 24" 
-            width="24" 
-            xmlns="http://www.w3.org/2000/svg"
-            strokeWidth="2.25"
-          >
-            <path d="M19 12H5m6-6l-6 6 6 6" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
+          ← Home
         </Link>
         <Navigation showShare />
       </header>
 
       <main>
         <div className="mb-12">
-          <h1 className="text-4xl font-bold text-gray-1200 dark:text-white mb-2">Books</h1>
-          <p className="text-gray-1000 dark:text-white opacity-70">My own little library.</p>
+          <h1 className="text-4xl font-bold text-primary mb-2">Books</h1>
+          <p className="text-tertiary">My own little library.</p>
         </div>
 
         {/* Category filter pills */}
@@ -141,10 +128,10 @@ export default function BooksPage() {
                 
                 {/* Book info */}
                 <div className="flex flex-col gap-1">
-                  <span className="font-semibold text-sm leading-tight text-gray-1200 dark:text-white line-clamp-2">
+                  <span className="font-semibold text-sm leading-tight text-primary line-clamp-2">
                   {book.title}
                 </span>
-                <span className="text-sm text-gray-1000 dark:text-white opacity-70">
+                <span className="text-sm text-tertiary">
                   {book.author}
                 </span>
                 </div>

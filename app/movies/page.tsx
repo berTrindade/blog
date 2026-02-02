@@ -35,23 +35,10 @@ export default function MoviesPage() {
       {/* Header with back link and navigation */}
       <header className="mb-16 flex items-center justify-between gap-4">
         <Link 
-          className="group flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-gray-300 dark:bg-gray-200 transition-colors duration-300 ease-out hover:bg-gray-400 dark:hover:bg-gray-300 active:scale-[0.97] will-change-transform" 
+          className="text-sm text-primary hover:opacity-70 transition-opacity no-underline" 
           href="/"
-          aria-label="Home"
         >
-          <svg 
-            aria-label="Arrow back icon" 
-            className="size-[18px] stroke-gray-1000 transition-colors duration-300 ease-out group-hover:stroke-gray-1200 dark:stroke-gray-1000 dark:group-hover:stroke-gray-1200" 
-            fill="none" 
-            height="24" 
-            role="graphics-symbol" 
-            viewBox="0 0 24 24" 
-            width="24" 
-            xmlns="http://www.w3.org/2000/svg"
-            strokeWidth="2.25"
-          >
-            <path d="M19 12H5m6-6l-6 6 6 6" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
+          ← Home
         </Link>
         <Navigation showShare />
       </header>
@@ -59,12 +46,12 @@ export default function MoviesPage() {
       <main>
 
         <div className="mb-12">
-          <h1 className="text-4xl font-bold text-gray-1200 dark:text-white mb-2">Movies</h1>
-          <p className="text-gray-1000 dark:text-white opacity-70">Films I've watched recently.</p>
+          <h1 className="text-4xl font-bold text-primary mb-2">Movies</h1>
+          <p className="text-tertiary">Films I've watched recently.</p>
         </div>
 
         <section className="mb-16">
-          <h2 className="text-xl font-semibold text-gray-1200 dark:text-white mb-6">All Movies</h2>
+          <h2 className="text-xl font-semibold text-primary mb-6">All Movies</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {films.map((film, index) => (
               <a
@@ -85,10 +72,10 @@ export default function MoviesPage() {
                   />
                 </div>
                 <div className="flex flex-col">
-                  <span className="truncate font-medium text-sm text-gray-1200 dark:text-white">
+                  <span className="truncate font-medium text-sm text-primary">
                     {film.title}
                   </span>
-                  <span className="text-xs text-gray-1000 dark:text-white opacity-70">
+                  <span className="text-xs text-tertiary">
                     {film.year}
                   </span>
                 </div>

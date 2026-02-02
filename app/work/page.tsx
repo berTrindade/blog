@@ -50,30 +50,17 @@ export default function WorkPage() {
       {/* Header with navigation */}
       <header className="mb-16 flex items-center justify-between gap-4">
         <Link 
-          className="group flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-gray-300 dark:bg-gray-200 transition-colors duration-300 ease-out hover:bg-gray-400 dark:hover:bg-gray-300 active:scale-[0.97] will-change-transform" 
+          className="text-sm text-primary hover:opacity-70 transition-opacity no-underline" 
           href="/"
-          aria-label="Home"
         >
-          <svg 
-            aria-label="Arrow back icon" 
-            className="size-[18px] stroke-gray-1000 transition-colors duration-300 ease-out group-hover:stroke-gray-1200 dark:stroke-gray-1000 dark:group-hover:stroke-gray-1200" 
-            fill="none" 
-            height="24" 
-            role="graphics-symbol" 
-            viewBox="0 0 24 24" 
-            width="24" 
-            xmlns="http://www.w3.org/2000/svg"
-            strokeWidth="2.25"
-          >
-            <path d="M19 12H5m6-6l-6 6 6 6" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
+          ← Work
         </Link>
         <Navigation showShare />
       </header>
 
       {/* Experiments/Articles section */}
       <section className="mb-32">
-        <h1 className="mb-8 text-2xl font-medium leading-none text-gray-1200 dark:text-white">
+        <h1 className="mb-8 text-2xl font-medium leading-none text-primary">
           Experiments
         </h1>
 
@@ -100,7 +87,7 @@ export default function WorkPage() {
 
           <button
             onClick={() => setGroupByYear(!groupByYear)}
-            className="text-sm text-gray-1200 dark:text-white hover:opacity-70 transition-opacity"
+            className="text-sm text-primary hover:opacity-70 transition-opacity"
           >
             {groupByYear ? "Show all" : "Group by year"}
           </button>
@@ -111,7 +98,7 @@ export default function WorkPage() {
           <div className="space-y-16">
             {years.map(year => (
               <div key={year}>
-                <h2 className="mb-6 text-xl font-medium text-gray-1200 dark:text-white">{year}</h2>
+                <h2 className="mb-6 text-xl font-medium text-primary">{year}</h2>
                 <div className="space-y-2">
                   {postsByYear[Number(year)].map(post => (
                     <ArticleListItem key={post.slug} post={post} />
@@ -130,7 +117,7 @@ export default function WorkPage() {
         )}
 
         {filteredPosts.length === 0 && (
-          <p className="text-center text-gray-1000 dark:text-white opacity-70 py-12">No articles found in this category.</p>
+          <p className="text-center text-tertiary py-12">No articles found in this category.</p>
         )}
       </section>
     </div>
@@ -145,20 +132,20 @@ function ArticleListItem({ post }: { post: BlogPost }) {
     >
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
-          <h2 className="font-medium text-gray-1200 dark:text-white">
+          <h2 className="font-medium text-primary">
             {post.meta.title}
           </h2>
           {post.meta.category && post.meta.category !== "Uncategorized" && (
-            <span className="shrink-0 rounded-full bg-gray-200 dark:bg-white/10 px-2 py-0.5 text-xs text-gray-1200 dark:text-white">
+            <span className="shrink-0 rounded-full bg-gray-200 dark:bg-white/10 px-2 py-0.5 text-xs text-primary">
               {post.meta.category}
             </span>
           )}
         </div>
-        <p className="text-sm text-gray-1000 dark:text-white opacity-70 line-clamp-2">
+        <p className="text-sm text-secondary line-clamp-2">
           {post.meta.excerpt}
         </p>
       </div>
-      <time className="shrink-0 text-xs text-gray-1000 dark:text-white opacity-70 mt-1">
+      <time className="shrink-0 text-xs text-tertiary mt-1">
         {new Date(post.meta.date).toLocaleDateString('en-US', { 
           year: 'numeric', 
           month: 'short', 

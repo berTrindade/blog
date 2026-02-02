@@ -74,23 +74,10 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       {/* Header with back link and navigation */}
       <header className="mb-16 flex items-center justify-between gap-4">
         <Link 
-          className="group flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-gray-300 dark:bg-gray-200 transition-colors duration-300 ease-out hover:bg-gray-400 dark:hover:bg-gray-300 active:scale-[0.97] will-change-transform" 
+          className="text-sm text-primary hover:opacity-70 transition-opacity no-underline" 
           href="/writing"
-          aria-label="Back to Writing"
         >
-          <svg 
-            aria-label="Arrow back icon" 
-            className="size-[18px] stroke-gray-1000 transition-colors duration-300 ease-out group-hover:stroke-gray-1200 dark:stroke-gray-1000 dark:group-hover:stroke-gray-1200" 
-            fill="none" 
-            height="24" 
-            role="graphics-symbol" 
-            viewBox="0 0 24 24" 
-            width="24" 
-            xmlns="http://www.w3.org/2000/svg"
-            strokeWidth="2.25"
-          >
-            <path d="M19 12H5m6-6l-6 6 6 6" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
+          ← Writing
         </Link>
         <Navigation showShare />
       </header>
@@ -98,8 +85,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       <main>
       <div className="article" data-main-content>
         {/* Article Header */}
-        <h1 className="mb-2 font-semibold text-gray-1200 dark:text-white">{post.meta.title}</h1>
-        <div className="mb-8 text-sm text-gray-1000 dark:text-white opacity-70">
+        <h1 className="mb-2 font-semibold text-primary">{post.meta.title}</h1>
+        <div className="mb-8 text-sm text-tertiary">
           {formattedDate} · {readingTime}min
         </div>
 
@@ -113,13 +100,13 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
         {/* Thank you section */}
         <div className="pt-12">
-          <p className="text-gray-1000 dark:text-white opacity-70 mb-4">
+          <p className="text-secondary mb-4">
             Thank you for reading! I hope you found this useful. Feel free to reach out to me on{' '}
             <a 
               href="https://x.com/btrindadeabreu" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gray-200 dark:bg-white/10 text-gray-1200 dark:text-white font-medium text-sm transition-colors duration-200 hover:bg-gray-300 dark:hover:bg-white/20 no-underline"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gray-200 dark:bg-white/10 text-primary font-medium text-sm transition-colors duration-200 hover:bg-gray-300 dark:hover:bg-white/20 no-underline"
             >
               <svg 
                 width="14" 
@@ -147,15 +134,15 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             className="flex w-1/2 flex-col items-start text-sm no-underline hover:opacity-70 transition-opacity" 
             href={`/writing/${prevPost.slug}`}
           >
-            <span className="text-gray-1000 dark:text-white opacity-70">Previous</span>
-            <span className="text-gray-1200 dark:text-white line-clamp-2">{prevPost.meta.title}</span>
+            <span className="text-tertiary">Previous</span>
+            <span className="text-primary line-clamp-2">{prevPost.meta.title}</span>
           </Link>
           <Link 
             className="flex w-1/2 flex-col items-end text-sm no-underline hover:opacity-70 transition-opacity" 
             href={`/writing/${nextPost.slug}`}
           >
-            <span className="text-gray-1000 dark:text-white opacity-70">Next</span>
-            <span className="text-gray-1200 dark:text-white text-right line-clamp-2">{nextPost.meta.title}</span>
+            <span className="text-tertiary">Next</span>
+            <span className="text-primary text-right line-clamp-2">{nextPost.meta.title}</span>
           </Link>
         </div>
       </div>
