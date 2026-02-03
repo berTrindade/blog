@@ -34,7 +34,7 @@ export default async function HomePage() {
             When I'm not coding, I love spending time with my family, watching films, reading books, finding new music, or traveling.
           </p>
           <p className="mt-4 text-base leading-relaxed text-secondary">
-            I write about engineering topics, thoughts, and whatever else I'm exploring.
+            I write about engineering topics, reflections, and whatever else I'm exploring.
             Feel free to reach out if you want to chat.{" "}
             <a
               href="https://cal.com/bertrindade"

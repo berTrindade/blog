@@ -24,18 +24,18 @@ export default function WritingPage() {
 
   // Get unique categories
   const categories = ["All", ...new Set(posts.map(p => p.meta.category || "Uncategorized"))]
-  
+
   // Filter posts by category
-  const filteredPosts = selectedCategory === "All" 
-    ? posts 
+  const filteredPosts = selectedCategory === "All"
+    ? posts
     : posts.filter(p => p.meta.category === selectedCategory)
 
   return (
     <div className="root layout-root">
       {/* Header with back link and navigation */}
       <header className="mb-16 flex items-center justify-between gap-4">
-        <Link 
-          className="text-sm text-primary hover:opacity-70 transition-opacity no-underline" 
+        <Link
+          className="text-sm text-primary hover:opacity-70 transition-opacity no-underline"
           href="/"
         >
           ← Home
@@ -54,81 +54,77 @@ export default function WritingPage() {
           {/* Category filter pills */}
           <div className="mb-8 flex flex-wrap gap-3">
             <button
-                onClick={() => setSelectedCategory('All')}
-                className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-colors ${
-                  selectedCategory === 'All'
-                    ? 'bg-black dark:bg-white text-white dark:text-black'
-                    : 'bg-gray-200 dark:bg-[#1A1A1A] text-black dark:text-white hover:bg-gray-300 dark:hover:bg-[#262626]'
+              onClick={() => setSelectedCategory('All')}
+              className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-colors ${selectedCategory === 'All'
+                  ? 'bg-black dark:bg-white text-white dark:text-black'
+                  : 'bg-gray-200 dark:bg-[#1A1A1A] text-black dark:text-white hover:bg-gray-300 dark:hover:bg-[#262626]'
                 }`}
-              >
-                All
-              </button>
-              <button
-                onClick={() => setSelectedCategory('Engineering')}
-                className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-colors ${
-                  selectedCategory === 'Engineering'
-                    ? 'bg-black dark:bg-white text-white dark:text-black'
-                    : 'bg-gray-200 dark:bg-[#1A1A1A] text-black dark:text-white hover:bg-gray-300 dark:hover:bg-[#262626]'
+            >
+              All
+            </button>
+            <button
+              onClick={() => setSelectedCategory('Engineering')}
+              className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-colors ${selectedCategory === 'Engineering'
+                  ? 'bg-black dark:bg-white text-white dark:text-black'
+                  : 'bg-gray-200 dark:bg-[#1A1A1A] text-black dark:text-white hover:bg-gray-300 dark:hover:bg-[#262626]'
                 }`}
-              >
-                <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>
-                </svg>
-                Engineering
-              </button>
-              <button
-                onClick={() => setSelectedCategory('Thoughts')}
-                className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-colors ${
-                  selectedCategory === 'Thoughts'
-                    ? 'bg-black dark:bg-white text-white dark:text-black'
-                    : 'bg-gray-200 dark:bg-[#1A1A1A] text-black dark:text-white hover:bg-gray-300 dark:hover:bg-[#262626]'
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+              </svg>
+              Engineering
+            </button>
+            <button
+              onClick={() => setSelectedCategory('Reflections')}
+              className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-colors ${selectedCategory === 'Reflections'
+                  ? 'bg-black dark:bg-white text-white dark:text-black'
+                  : 'bg-gray-200 dark:bg-[#1A1A1A] text-black dark:text-white hover:bg-gray-300 dark:hover:bg-[#262626]'
                 }`}
-              >
-                <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M21 15.61l-2.83-2.83c-.2-.19-.45-.29-.71-.29-.26 0-.51.1-.71.29l-2.83 2.83a.996.996 0 1 0 1.41 1.41L17 15.36V20a1 1 0 0 0 2 0v-4.64l1.66 1.66a.996.996 0 1 0 1.41-1.41zM13 5a4 4 0 0 0-4 4v1a2 2 0 0 0-2 2v7a1 1 0 0 0 2 0v-7h1v7a1 1 0 0 0 2 0v-7h1v7a1 1 0 0 0 2 0v-7a2 2 0 0 0-2-2V9a2 2 0 0 1 4 0v1a1 1 0 0 0 2 0V9a4 4 0 0 0-4-4h-2z"/>
-                </svg>
-                Thoughts
-              </button>
-              <button
-                onClick={() => setSelectedCategory('Personal')}
-                className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-colors ${
-                  selectedCategory === 'Personal'
-                    ? 'bg-black dark:bg-white text-white dark:text-black'
-                    : 'bg-gray-200 dark:bg-[#1A1A1A] text-black dark:text-white hover:bg-gray-300 dark:hover:bg-[#262626]'
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              </svg>
+              Reflections
+            </button>
+            <button
+              onClick={() => setSelectedCategory('Personal')}
+              className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-colors ${selectedCategory === 'Personal'
+                  ? 'bg-black dark:bg-white text-white dark:text-black'
+                  : 'bg-gray-200 dark:bg-[#1A1A1A] text-black dark:text-white hover:bg-gray-300 dark:hover:bg-[#262626]'
                 }`}
-              >
-                <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                </svg>
-                Personal
-              </button>
-            </div>
-
-            {loading ? (
-              <div className="space-y-2">
-                {[1, 2, 3, 4, 5].map(i => (
-                  <div key={i} className="flex items-start gap-4 rounded-md py-3">
-                    <div className="relative h-20 w-32 bg-gray-300 dark:bg-gray-200 rounded animate-pulse" />
-                    <div className="flex-1 flex flex-col gap-2">
-                      <div className="h-5 w-3/4 bg-gray-300 dark:bg-gray-200 rounded animate-pulse" />
-                      <div className="h-4 w-full bg-gray-300 dark:bg-gray-200 rounded animate-pulse" />
-                      <div className="h-4 w-20 bg-gray-300 dark:bg-gray-200 rounded animate-pulse" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {filteredPosts.map(post => (
-                  <ArticleListItem key={post.slug} post={post} />
-                ))}
-              </div>
-            )}
-
-            {filteredPosts.length === 0 && !loading && (
-              <p className="text-center text-tertiary py-12">No articles found in this category.</p>
-            )}
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              Personal
+            </button>
           </div>
+
+          {loading ? (
+            <div className="space-y-2">
+              {[1, 2, 3, 4, 5].map(i => (
+                <div key={i} className="flex items-start gap-4 rounded-md py-3">
+                  <div className="relative h-20 w-32 bg-gray-300 dark:bg-gray-200 rounded animate-pulse" />
+                  <div className="flex-1 flex flex-col gap-2">
+                    <div className="h-5 w-3/4 bg-gray-300 dark:bg-gray-200 rounded animate-pulse" />
+                    <div className="h-4 w-full bg-gray-300 dark:bg-gray-200 rounded animate-pulse" />
+                    <div className="h-4 w-20 bg-gray-300 dark:bg-gray-200 rounded animate-pulse" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {filteredPosts.map(post => (
+                <ArticleListItem key={post.slug} post={post} />
+              ))}
+            </div>
+          )}
+
+          {filteredPosts.length === 0 && !loading && (
+            <p className="text-center text-tertiary py-12">No articles found in this category.</p>
+          )}
+        </div>
       </main>
     </div>
   )
@@ -138,14 +134,14 @@ function ArticleListItem({ post }: { post: BlogPost }) {
   // Calculate reading time
   const wordCount = post.meta.excerpt.split(/\s+/).length * 10
   const readingTime = Math.max(1, Math.ceil(wordCount / 200))
-  
+
   // Shorten excerpt to first 80 characters
-  const shortExcerpt = post.meta.excerpt.length > 80 
+  const shortExcerpt = post.meta.excerpt.length > 80
     ? post.meta.excerpt.substring(0, 80).trim() + '...'
     : post.meta.excerpt
 
   return (
-    <Link 
+    <Link
       href={`/writing/${post.slug}`}
       className="group -mx-3 flex items-center gap-4 rounded-xl py-3 pr-4 pl-3 no-underline hover:bg-gray-200 dark:hover:bg-gray-300"
     >
@@ -160,10 +156,10 @@ function ArticleListItem({ post }: { post: BlogPost }) {
           {shortExcerpt}
         </p>
         <span className="shrink-0 whitespace-nowrap text-sm text-tertiary">
-          {new Date(post.meta.date).toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'short', 
-            day: 'numeric' 
+          {new Date(post.meta.date).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
           })} · {readingTime} min read
         </span>
       </div>
